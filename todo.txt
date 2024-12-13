@@ -2,3 +2,5 @@
 - Regarder le classement de lequipe dans son championnat
 - JSP
 - faire un systeme de point en fonction du classement de lequipe en championnat
+
+
