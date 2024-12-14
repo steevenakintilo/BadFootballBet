@@ -20,7 +20,7 @@ from os import system
 import time
 import os.path
 
-
+from teamData import *
 
 class Scraper:
     
@@ -46,21 +46,40 @@ class Scraper:
     username_xpath = '/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[4]/label/div/div[2]/div/input'
     
 
+def accept_cookie(S):
+    time.sleep(0.5)
+    try:
+        acceptBtnXpath = "/html/body/div[1]/div/div/div/div/div/div[2]/button[1]"
 
-def Get_Last_X_Games_Result(S,team):
-    years = ["2024","2025","2026"]
-    S.driver.get(f"https://www.footmercato.net/club/{team}/calendrier")
+        element = WebDriverWait(S.driver,3).until(
+        EC.presence_of_element_located((By.XPATH, acceptBtnXpath)))
 
-    acceptBtnXpath = "/html/body/div[1]/div/div/div/div/div/div[2]/button[1]"
+        element.click()
+    except:
+        pass    
 
-    element = WebDriverWait(S.driver,15).until(
-    EC.presence_of_element_located((By.XPATH, acceptBtnXpath)))
-
-    element.click()
+def Get_Last_X_Games_Result(S,team,posTeam):
     
+    years = ["2024","2025","2026"]
+    all_url = print_file_info("teamUrl.txt").split("\n")
+    S.driver.get(all_url[posTeam])
+
+    accept_cookie(S)
+
     lastResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/nav/a[2]"
     
-    element = WebDriverWait(S.driver,15).until(
+    calendarXpath = "/html/body/div[3]/div[4]/div/div/nav/ul/li[4]/a"
+
+    try:
+        element = WebDriverWait(S.driver,3).until(
+        EC.presence_of_element_located((By.XPATH, calendarXpath)))
+
+        element.click()
+
+    except:
+        pass
+
+    element = WebDriverWait(S.driver,3).until(
     EC.presence_of_element_located((By.XPATH, lastResultXpath)))
 
     element.click()
@@ -68,7 +87,7 @@ def Get_Last_X_Games_Result(S,team):
     time.sleep(1)
     tabResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div"
 
-    element = WebDriverWait(S.driver,15).until(
+    element = WebDriverWait(S.driver,3).until(
     EC.presence_of_element_located((By.XPATH, tabResultXpath)))
 
     listOfResult = []
@@ -77,12 +96,10 @@ def Get_Last_X_Games_Result(S,team):
     index = 1
     string = ""
     first = True
-    team = "Arsenal"
     team = team.lower()
     for i in range(len(lastXmatchSplit)):
         #print(lastXmatchSplit[i])
-        if "2024" in lastXmatchSplit[i] or "2025" in lastXmatchSplit[i] or "2026" in lastXmatchSplit[i]:
-            
+        if "2024" in lastXmatchSplit[i] or "2025" in lastXmatchSplit[i] or "2026" in lastXmatchSplit[i] or "terminé" in lastXmatchSplit[i].lower():
             continue
         else:
             #print("not caca")
@@ -97,15 +114,32 @@ def Get_Last_X_Games_Result(S,team):
             if len(listOfResult) >= 20:
                 break
             index+=1
-        
+
     return listOfResult
 
 
 
 
+def Position_Of_A_Team_On_Its_League(S,team):
+    data = teamData()
+    x = pos_league_team(team)
+    S.driver.get(data.all_league_url[x])
+    team = team.lower()
+    accept_cookie(S)
+    for i in range(1,40):
+        try:
+            element = WebDriverWait(S.driver,2).until(
+            EC.presence_of_element_located((By.XPATH, f"/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a/span")))
+            if team == element.text.lower().replace(" ","-"):
+                return i
+            #time.sleep(3)
+        except:
+            return -999
+
+    return -999
+    
 
 def checkTeamNameIsRight(S,teamName):
-    
     try:
         S.driver.get(f"https://www.footmercato.net/club/{teamName}/calendrier")
 
@@ -142,13 +176,8 @@ def list_of_team_league(S,nb):
         S.driver.get("https://www.footmercato.net/club/bsc-young-boys/classement")
 
 
-    acceptBtnXpath = "/html/body/div[1]/div/div/div/div/div/div[2]/button[1]"
+    accept_cookie(S)
 
-    element = WebDriverWait(S.driver,15).until(
-    EC.presence_of_element_located((By.XPATH, acceptBtnXpath)))
-
-    element.click()
-    
     #time.sleep(101010)
 
     for i in range(1,30):
@@ -165,7 +194,17 @@ def list_of_team_league(S,nb):
             time.sleep(3)
         except:
             return
+
+
+def pos_league_team(team):
+    data = teamData()
+    for i in range(len(data.allTeam_)):
+        _league_team_ = data.allTeam_[i]
+        for j in range(len(_league_team_)):
+            if team.lower().strip().replace(" ","-") == _league_team_[j].lower().strip().replace(" ","-"):
+                return i
         
+
 def write_into_file(path, x):
     with open(path, "ab") as f:
         f.write(str(x).encode("utf-8"))

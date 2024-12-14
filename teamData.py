@@ -236,7 +236,52 @@ class teamData:
     SWISS = 1
     NONE = 0
     
+    pos_league_team = 0
+
     for team in allTeam_:
         for lilTeam in team:
             if len(lilTeam.strip().replace(" ","-")) > 1:
                 allTeam.append(lilTeam.strip().replace(" ","-"))
+
+    all_league_url = ["https://www.footmercato.net/club/psg/classement"
+                      ,"https://www.footmercato.net/club/liverpool/classement",
+                      "https://www.footmercato.net/club/fc-barcelone/classement",
+                      "https://www.footmercato.net/club/bayer-04-leverkusen/classement",
+                      "https://www.footmercato.net/club/inter/classement",
+                      "https://www.footmercato.net/club/sporting-clube-de-portugal/classement",
+                      "https://www.footmercato.net/club/feyenoord-rotterdam/classement",
+                      "https://www.footmercato.net/club/galatasaray-spor-kulubu/classement",
+                      "https://www.footmercato.net/club/club-brugge-kv/classement",
+                      "https://www.footmercato.net/club/bsc-young-boys/classement"]
+    
+    all_league_name = ["League 1","Premiere League","Liga","Bundesliga","Serie A","Liga Portugal","Eredivise","Super Lig Türkiye","Jupiter Pro League","Super Lig Switzerland"]
+    country_of_the_team = ["France","England","Spain","Germany","Italy","Portugal","Netherland","Turkiye","Belgium","Switzerland"]
+
+
+class TeamStat:
+    name = ""
+    point = 0
+    pos_on_the_league = ""
+    league_of_the_team = ""
+    last_x_game_list = []
+    last_x_game_win = []
+    last_x_game_draw = []
+    last_x_game_loose = []
+    last_x_game_list_score = []
+    last_x_game_win_score = []
+    last_x_game_draw_score = []
+    last_x_game_loose_score = []
+    nb_of_win = 0
+    nb_of_loose = 0
+    nb_of_draw = 0
+    nb_of_game = 0
+    win_rate_percent = 0
+    loose_rate_percent = 0
+    draw_rate_percent = 0
+    nb_of_goal_scored = 0
+    nb_of_goal_conceded = 0
+    nb_of_goal_scored_per_match = 0
+    nb_of_goal_conceded_per_match = 0
+    
+    
+    
