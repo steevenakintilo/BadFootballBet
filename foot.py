@@ -9,9 +9,6 @@ def last_X_Games_Result(listOfResult):
     team =  stats.name
     win,draw,loose = 0,0,0
     totalOfGame = len(listOfResult)
-
-    nb_of_goal_scored = 0
-    nb_of_goal_conceded = 0
     
     for result in listOfResult:
         result = result.split()
@@ -24,7 +21,18 @@ def last_X_Games_Result(listOfResult):
                 stats.nb_of_goal_conceded+=int(result[3])
                 stats.last_x_game_list.append(result[0]+"_"+result[2])
                 stats.last_x_game_list_score.append(result[1]+"_"+result[3])
-
+                res = pos_league_team(result[2])
+                if res == -1:
+                    stats.last_x_game_list_league_or_not.append("X")
+                    stats.last_x_game_win_league_or_not.append("X")
+                else:
+                    if stats.league_of_the_team == data.all_league_name[res]:
+                        stats.last_x_game_list_league_or_not.append("L")
+                        stats.last_x_game_win_league_or_not.append("L")
+                    else:
+                        stats.last_x_game_list_league_or_not.append("N")
+                        stats.last_x_game_win_league_or_not.append("N")
+    
             else:
                 stats.last_x_game_win.append(result[2]+"_"+result[0])
                 stats.last_x_game_win_score.append(result[3]+"_"+result[1])
@@ -32,7 +40,17 @@ def last_X_Games_Result(listOfResult):
                 stats.nb_of_goal_conceded+=int(result[1])
                 stats.last_x_game_list.append(result[2]+"_"+result[0])
                 stats.last_x_game_list_score.append(result[3]+"_"+result[1])
-
+                res = pos_league_team(result[0])
+                if res == -1:
+                    stats.last_x_game_list_league_or_not.append("X")
+                    stats.last_x_game_draw_league_or_not.append("X")
+                else:
+                    if stats.league_of_the_team == data.all_league_name[res]:
+                        stats.last_x_game_list_league_or_not.append("L")
+                        stats.last_x_game_win_league_or_not.append("L")
+                    else:
+                        stats.last_x_game_list_league_or_not.append("N")
+                        stats.last_x_game_win_league_or_not.append("N")
         elif (int(result[1]) == int(result[3])):
             if team in result[0]:
                 stats.last_x_game_draw.append(result[0]+"_"+result[2])
@@ -41,7 +59,17 @@ def last_X_Games_Result(listOfResult):
                 stats.nb_of_goal_conceded+=int(result[3])
                 stats.last_x_game_list.append(result[0]+"_"+result[2])
                 stats.last_x_game_list_score.append(result[1]+"_"+result[3])
-
+                res = pos_league_team(result[2])
+                if res == -1:
+                    stats.last_x_game_list_league_or_not.append("X")
+                    stats.last_x_game_loose_league_or_not.append("X")
+                else:
+                    if stats.league_of_the_team == data.all_league_name[res]:
+                        stats.last_x_game_list_league_or_not.append("L")
+                        stats.last_x_game_draw_league_or_not.append("L")
+                    else:
+                        stats.last_x_game_list_league_or_not.append("N")
+                        stats.last_x_game_draw_league_or_not.append("N")
 
             else:
                 stats.last_x_game_draw.append(result[2]+"_"+result[0])
@@ -50,7 +78,18 @@ def last_X_Games_Result(listOfResult):
                 stats.nb_of_goal_conceded+=int(result[1])
                 stats.last_x_game_list.append(result[2]+"_"+result[0])
                 stats.last_x_game_list_score.append(result[3]+"_"+result[1])
-
+                res = pos_league_team(result[0])
+                if res == -1:
+                    stats.last_x_game_list_league_or_not.append("X")
+                    stats.last_x_game_win_league_or_not.append("X")
+                else:
+                    if stats.league_of_the_team == data.all_league_name[res]:
+                        stats.last_x_game_list_league_or_not.append("L")
+                        stats.last_x_game_draw_league_or_not.append("L")
+                    else:
+                        stats.last_x_game_list_league_or_not.append("N")
+                        stats.last_x_game_draw_league_or_not.append("N")
+            
 
             draw+=1
         else:
@@ -61,7 +100,17 @@ def last_X_Games_Result(listOfResult):
                 stats.nb_of_goal_conceded+=int(result[3])
                 stats.last_x_game_list.append(result[0]+"_"+result[2])
                 stats.last_x_game_list_score.append(result[1]+"_"+result[3])
-
+                res = pos_league_team(result[2])
+                if res == -1:
+                    stats.last_x_game_list_league_or_not.append("X")
+                    stats.last_x_game_win_league_or_not.append("X")
+                else:    
+                    if stats.league_of_the_team == data.all_league_name[res]:
+                        stats.last_x_game_list_league_or_not.append("L")
+                        stats.last_x_game_loose_league_or_not.append("L")
+                    else:
+                        stats.last_x_game_list_league_or_not.append("N")
+                        stats.last_x_game_loose_league_or_not.append("N")
 
             else:
                 stats.last_x_game_loose.append(result[2]+"_"+result[0])
@@ -70,7 +119,18 @@ def last_X_Games_Result(listOfResult):
                 stats.nb_of_goal_conceded+=int(result[1])
                 stats.last_x_game_list.append(result[2]+"_"+result[0])
                 stats.last_x_game_list_score.append(result[3]+"_"+result[1])
-
+                res = pos_league_team(result[0])
+                if res == -1:
+                    stats.last_x_game_list_league_or_not.append("X")
+                    stats.last_x_game_win_league_or_not.append("X")
+                else:
+                    if stats.league_of_the_team == data.all_league_name[res]:
+                        stats.last_x_game_list_league_or_not.append("L")
+                        stats.last_x_game_draw_league_or_not.append("L")
+                    else:
+                        stats.last_x_game_list_league_or_not.append("N")
+                        stats.last_x_game_draw_league_or_not.append("N")
+            
             loose+=1
     
     stats.nb_of_game = len(listOfResult)
@@ -104,9 +164,13 @@ def print_all_data():
     print(f"Position in the League: {stats.pos_on_the_league}")
     print(f"League of the Team: {stats.league_of_the_team}")
     print(f"Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_list}")
+    print(f"Last X Game League or Not: {stats.last_x_game_list_league_or_not}")
     print(f"Wins in Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_win}")
+    print(f"Last X Game Win League or Not: {stats.last_x_game_win_league_or_not}")
     print(f"Draws in Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_draw}")
+    print(f"Last X Game Draw League or Not: {stats.last_x_game_draw_league_or_not}")
     print(f"Losses in Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_loose}")
+    print(f"Last X Game Loose League or Not: {stats.last_x_game_loose_league_or_not}")
     print(f"Scores of Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_list_score}")
     print(f"Scores in Wins: {stats.last_x_game_win_score}")
     print(f"Scores in Draws: {stats.last_x_game_draw_score}")
@@ -122,13 +186,13 @@ def print_all_data():
     print(f"Goals Conceded: {stats.nb_of_goal_conceded}")
     print(f"Goals Scored per Match: {stats.nb_of_goal_scored_per_match}")
     print(f"Goals Conceded per Match: {stats.nb_of_goal_conceded_per_match}")
+        
 
-
-
+    
 data = teamData()
 stats = TeamStat()
 #stats.name = "man-city"
-stats.name = "psg"
+stats.name = "montpellier"
 
 stats.name = stats.name.lower()
 

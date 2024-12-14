@@ -58,6 +58,21 @@ def accept_cookie(S):
     except:
         pass    
 
+def is_num(nb):
+    try:
+        int(nb)
+        return True
+    except:
+        return False
+ 
+def remove_first_two_elem(str):
+    words = str.split()
+    print("wowowo  " , words)
+    if len(words) < 2:
+        return str
+    unique_words = words[2:]
+    return ' '.join(unique_words)
+
 def Get_Last_X_Games_Result(S,team,posTeam):
     
     years = ["2024","2025","2026"]
@@ -87,7 +102,7 @@ def Get_Last_X_Games_Result(S,team,posTeam):
     time.sleep(1)
     tabResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div"
 
-    element = WebDriverWait(S.driver,3).until(
+    element = WebDriverWait(S.driver,15).until(
     EC.presence_of_element_located((By.XPATH, tabResultXpath)))
 
     listOfResult = []
@@ -97,24 +112,50 @@ def Get_Last_X_Games_Result(S,team,posTeam):
     string = ""
     first = True
     team = team.lower()
+    change = False
     for i in range(len(lastXmatchSplit)):
-        #print(lastXmatchSplit[i])
         if "2024" in lastXmatchSplit[i] or "2025" in lastXmatchSplit[i] or "2026" in lastXmatchSplit[i] or "terminé" in lastXmatchSplit[i].lower():
             continue
         else:
-            #print("not caca")
-            string+= lastXmatchSplit[i].replace(" ","-") + " "
-            #print("ok " , lastXmatchSplit[i] , "  " , i , index)
+            if is_num(lastXmatchSplit[i].replace(" ","-")) == False and lastXmatchSplit[i].replace(" ","-") in string:
+                string+= remove_first_two_elem(lastXmatchSplit[i].replace(" ","-")) + " "
+                #print("dzdzd " ,  remove_first_two_elem(lastXmatchSplit[i].replace(" ","-")))
+            else:
+                string+= lastXmatchSplit[i].replace(" ","-") + " "
             if index % 4 == 0 and index > 0:
-                #print(string)
-                index = 0
-                listOfResult.append(string.lower())
-                string = ""
-            
+                checkStr = string.split(" ")
+                notNb = 0
+                lst = []
+                for str in checkStr:
+                    if len(lst) > 4:
+                        lst = []
+                        break
+                    if is_num(str) == False:
+                        notNb+=1
+                        lst.append(str.lower())
+                    else:
+                        notNb = 0
+                    if notNb == 2:
+                        index-=1
+                        change = True
+                    
+                    if notNb == 3:
+                        string = string.lower().replace(lst[0],"",1).replace(lst[1],"",1)
+                        index-=1
+                        change = True
+                    
+                lst = []
+                if index == 4 or (change == True and index == 2) and len(string.split()) == 4:
+                    listOfResult.append(string.strip().lower())
+                    string = ""
+                    change = False
+                    index = 0
             if len(listOfResult) >= 20:
                 break
+            #print("index " , index)
             index+=1
 
+    print(listOfResult)
     return listOfResult
 
 
@@ -203,7 +244,7 @@ def pos_league_team(team):
         for j in range(len(_league_team_)):
             if team.lower().strip().replace(" ","-") == _league_team_[j].lower().strip().replace(" ","-"):
                 return i
-        
+    return -1
 
 def write_into_file(path, x):
     with open(path, "ab") as f:

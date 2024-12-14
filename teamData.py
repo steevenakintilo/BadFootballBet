@@ -282,6 +282,10 @@ class TeamStat:
     nb_of_goal_conceded = 0
     nb_of_goal_scored_per_match = 0
     nb_of_goal_conceded_per_match = 0
-    
+    last_x_game_list_league_or_not = []
+    last_x_game_win_league_or_not = []
+    last_x_game_draw_league_or_not = []
+    last_x_game_loose_league_or_not = []
+        
     
     
