@@ -43,7 +43,7 @@ def last_X_Games_Result(listOfResult):
                 res = pos_league_team(result[0])
                 if res == -1:
                     stats.last_x_game_list_league_or_not.append("X")
-                    stats.last_x_game_draw_league_or_not.append("X")
+                    stats.last_x_game_win_league_or_not.append("X")
                 else:
                     if stats.league_of_the_team == data.all_league_name[res]:
                         stats.last_x_game_list_league_or_not.append("L")
@@ -62,7 +62,7 @@ def last_X_Games_Result(listOfResult):
                 res = pos_league_team(result[2])
                 if res == -1:
                     stats.last_x_game_list_league_or_not.append("X")
-                    stats.last_x_game_loose_league_or_not.append("X")
+                    stats.last_x_game_draw_league_or_not.append("X")
                 else:
                     if stats.league_of_the_team == data.all_league_name[res]:
                         stats.last_x_game_list_league_or_not.append("L")
@@ -81,7 +81,7 @@ def last_X_Games_Result(listOfResult):
                 res = pos_league_team(result[0])
                 if res == -1:
                     stats.last_x_game_list_league_or_not.append("X")
-                    stats.last_x_game_win_league_or_not.append("X")
+                    stats.last_x_game_draw_league_or_not.append("X")
                 else:
                     if stats.league_of_the_team == data.all_league_name[res]:
                         stats.last_x_game_list_league_or_not.append("L")
@@ -103,7 +103,7 @@ def last_X_Games_Result(listOfResult):
                 res = pos_league_team(result[2])
                 if res == -1:
                     stats.last_x_game_list_league_or_not.append("X")
-                    stats.last_x_game_win_league_or_not.append("X")
+                    stats.last_x_game_loose_league_or_not.append("X")
                 else:    
                     if stats.league_of_the_team == data.all_league_name[res]:
                         stats.last_x_game_list_league_or_not.append("L")
@@ -122,14 +122,14 @@ def last_X_Games_Result(listOfResult):
                 res = pos_league_team(result[0])
                 if res == -1:
                     stats.last_x_game_list_league_or_not.append("X")
-                    stats.last_x_game_win_league_or_not.append("X")
+                    stats.last_x_game_loose_league_or_not.append("X")
                 else:
                     if stats.league_of_the_team == data.all_league_name[res]:
                         stats.last_x_game_list_league_or_not.append("L")
-                        stats.last_x_game_draw_league_or_not.append("L")
+                        stats.last_x_game_loose_league_or_not.append("L")
                     else:
                         stats.last_x_game_list_league_or_not.append("N")
-                        stats.last_x_game_draw_league_or_not.append("N")
+                        stats.last_x_game_loose_league_or_not.append("N")
             
             loose+=1
     
@@ -192,7 +192,7 @@ def print_all_data():
 data = teamData()
 stats = TeamStat()
 #stats.name = "man-city"
-stats.name = "montpellier"
+stats.name = "psg"
 
 stats.name = stats.name.lower()
 
