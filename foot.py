@@ -10,17 +10,28 @@ def last_X_Games_Result(listOfResult):
     win,draw,loose = 0,0,0
     totalOfGame = len(listOfResult)
     
+    
+    
     for result in listOfResult:
         result = result.split()
         if (team in result[0] and int(result[1]) > int(result[3])) or (team in result[2] and int(result[3]) > int(result[1])):
             win+=1
+
             if team in result[0]:
+                stats.last_x_game_list_away_or_home.append("A")
+                stats.nb_of_win_away+=1
+                stats.nb_of_game_away +=1
+                stats.last_x_game_away_list.append(result[0]+"_"+result[2])
+                stats.last_x_game_away_score.append(result[1]+"_"+result[3])
                 stats.last_x_game_win.append(result[0]+"_"+result[2])
                 stats.last_x_game_win_score.append(result[1]+"_"+result[3])
                 stats.nb_of_goal_scored+=int(result[1])
+                stats.nb_of_goal_scored_away+=int(result[1])
                 stats.nb_of_goal_conceded+=int(result[3])
+                stats.nb_of_goal_conceded_away+=int(result[3])
                 stats.last_x_game_list.append(result[0]+"_"+result[2])
                 stats.last_x_game_list_score.append(result[1]+"_"+result[3])
+
                 res = pos_league_team(result[2])
                 if res == -1:
                     stats.last_x_game_list_league_or_not.append("X")
@@ -34,10 +45,17 @@ def last_X_Games_Result(listOfResult):
                         stats.last_x_game_win_league_or_not.append("N")
     
             else:
+                stats.last_x_game_list_away_or_home.append("H")
+                stats.nb_of_win_home+=1
+                stats.nb_of_game_home +=1
+                stats.last_x_game_home_list.append(result[2]+"_"+result[0])
+                stats.last_x_game_home_score.append(result[3]+"_"+result[1])
                 stats.last_x_game_win.append(result[2]+"_"+result[0])
                 stats.last_x_game_win_score.append(result[3]+"_"+result[1])
                 stats.nb_of_goal_scored+=int(result[3])
+                stats.nb_of_goal_scored_home+=int(result[3])
                 stats.nb_of_goal_conceded+=int(result[1])
+                stats.nb_of_goal_conceded_home+=int(result[1])
                 stats.last_x_game_list.append(result[2]+"_"+result[0])
                 stats.last_x_game_list_score.append(result[3]+"_"+result[1])
                 res = pos_league_team(result[0])
@@ -53,10 +71,17 @@ def last_X_Games_Result(listOfResult):
                         stats.last_x_game_win_league_or_not.append("N")
         elif (int(result[1]) == int(result[3])):
             if team in result[0]:
+                stats.last_x_game_list_away_or_home.append("A")
+                stats.nb_of_game_away +=1
+                stats.nb_of_draw_away+=1
                 stats.last_x_game_draw.append(result[0]+"_"+result[2])
                 stats.last_x_game_draw_score.append(result[1]+"_"+result[3])
+                stats.last_x_game_away_list.append(result[0]+"_"+result[2])
+                stats.last_x_game_away_score.append(result[1]+"_"+result[3])
                 stats.nb_of_goal_scored+=int(result[1])
+                stats.nb_of_goal_scored_away+=int(result[1])
                 stats.nb_of_goal_conceded+=int(result[3])
+                stats.nb_of_goal_conceded_away+=int(result[3])
                 stats.last_x_game_list.append(result[0]+"_"+result[2])
                 stats.last_x_game_list_score.append(result[1]+"_"+result[3])
                 res = pos_league_team(result[2])
@@ -72,10 +97,17 @@ def last_X_Games_Result(listOfResult):
                         stats.last_x_game_draw_league_or_not.append("N")
 
             else:
+                stats.last_x_game_list_away_or_home.append("H")
+                stats.nb_of_draw_home+=1
+                stats.nb_of_game_home +=1
                 stats.last_x_game_draw.append(result[2]+"_"+result[0])
                 stats.last_x_game_draw_score.append(result[3]+"_"+result[1])
+                stats.last_x_game_home_list.append(result[2]+"_"+result[0])
+                stats.last_x_game_home_score.append(result[3]+"_"+result[1])
                 stats.nb_of_goal_scored+=int(result[3])
+                stats.nb_of_goal_scored_home+=int(result[3])
                 stats.nb_of_goal_conceded+=int(result[1])
+                stats.nb_of_goal_conceded_home+=int(result[1])
                 stats.last_x_game_list.append(result[2]+"_"+result[0])
                 stats.last_x_game_list_score.append(result[3]+"_"+result[1])
                 res = pos_league_team(result[0])
@@ -94,10 +126,17 @@ def last_X_Games_Result(listOfResult):
             draw+=1
         else:
             if team in result[0]:
+                stats.last_x_game_list_away_or_home.append("A")
+                stats.nb_of_game_away +=1
+                stats.nb_of_loose_away+=1
                 stats.last_x_game_loose.append(result[0]+"_"+result[2])
                 stats.last_x_game_loose_score.append(result[1]+"_"+result[3])
+                stats.last_x_game_away_list.append(result[0]+"_"+result[2])
+                stats.last_x_game_away_score.append(result[1]+"_"+result[3])
                 stats.nb_of_goal_scored+=int(result[1])
+                stats.nb_of_goal_scored_away+=int(result[1])
                 stats.nb_of_goal_conceded+=int(result[3])
+                stats.nb_of_goal_conceded_away+=int(result[3])
                 stats.last_x_game_list.append(result[0]+"_"+result[2])
                 stats.last_x_game_list_score.append(result[1]+"_"+result[3])
                 res = pos_league_team(result[2])
@@ -113,10 +152,17 @@ def last_X_Games_Result(listOfResult):
                         stats.last_x_game_loose_league_or_not.append("N")
 
             else:
+                stats.last_x_game_list_away_or_home.append("H")
+                stats.nb_of_loose_home+=1
+                stats.nb_of_game_home +=1
                 stats.last_x_game_loose.append(result[2]+"_"+result[0])
                 stats.last_x_game_loose_score.append(result[3]+"_"+result[1])
+                stats.last_x_game_home_list.append(result[2]+"_"+result[0])
+                stats.last_x_game_home_score.append(result[3]+"_"+result[1])
                 stats.nb_of_goal_scored+=int(result[3])
                 stats.nb_of_goal_conceded+=int(result[1])
+                stats.nb_of_goal_conceded_home+=int(result[1])
+                stats.nb_of_goal_scored_home+=int(result[3])
                 stats.last_x_game_list.append(result[2]+"_"+result[0])
                 stats.last_x_game_list_score.append(result[3]+"_"+result[1])
                 res = pos_league_team(result[0])
@@ -142,6 +188,19 @@ def last_X_Games_Result(listOfResult):
     stats.loose_rate_percent = int((loose/totalOfGame) * 100)
     stats.nb_of_goal_scored_per_match = round(float(stats.nb_of_goal_scored/stats.nb_of_game),1)
     stats.nb_of_goal_conceded_per_match = round(float(stats.nb_of_goal_conceded/stats.nb_of_game),1)
+    
+    stats.win_rate_percent_away = int((stats.nb_of_win_away/stats.nb_of_game_away) * 100)
+    stats.loose_rate_percent_away = int((stats.nb_of_loose_away/stats.nb_of_game_away) * 100)
+    stats.draw_rate_percent_away = int((stats.nb_of_draw_away/stats.nb_of_game_away) * 100)
+    
+    stats.win_rate_percent_home = int((stats.nb_of_win_home/stats.nb_of_game_home) * 100)
+    stats.loose_rate_percent_home = int((stats.nb_of_loose_home/stats.nb_of_game_home) * 100)
+    stats.draw_rate_percent_home = int((stats.nb_of_draw_home/stats.nb_of_game_home) * 100)
+    
+    stats.nb_of_goal_conceded_per_match_away = round(float(stats.nb_of_goal_scored_away/stats.nb_of_game_away),1)
+    stats.nb_of_goal_scored_per_match_away = round(float(stats.nb_of_goal_scored_away/stats.nb_of_game_away),1)
+    stats.nb_of_goal_scored_per_match_home = round(float(stats.nb_of_goal_scored_home/stats.nb_of_game_home),1)
+    stats.nb_of_goal_conceded_per_match_home = round(float(stats.nb_of_goal_scored_home/stats.nb_of_game_home),1)
     
     # print(stats.last_x_game_win)
     # print(stats.last_x_game_win_score)
@@ -186,8 +245,34 @@ def print_all_data():
     print(f"Goals Conceded: {stats.nb_of_goal_conceded}")
     print(f"Goals Scored per Match: {stats.nb_of_goal_scored_per_match}")
     print(f"Goals Conceded per Match: {stats.nb_of_goal_conceded_per_match}")
-        
-
+    print(f"Last X Game Away List: {stats.last_x_game_away_list}")
+    print(f"Last X Game Away Score: {stats.last_x_game_away_score}")
+    print(f"Number of Wins Away: {stats.nb_of_win_away}")
+    print(f"Number of Losses Away: {stats.nb_of_loose_away}")
+    print(f"Number of Draws Away: {stats.nb_of_draw_away}")
+    print(f"Total Number of Away Games Played: {stats.nb_of_game_away}")
+    print(f"Win Rate Away: {stats.win_rate_percent_away}%")
+    print(f"Loss Rate Away: {stats.loose_rate_percent_away}%")
+    print(f"Draw Rate Away: {stats.draw_rate_percent_away}%")
+    print(f"Goals Scored Away: {stats.nb_of_goal_scored_away}")
+    print(f"Goals Conceded Away: {stats.nb_of_goal_conceded_away}")
+    print(f"Goals Scored per Match Away: {stats.nb_of_goal_scored_per_match_away}")
+    print(f"Goals Conceded per Match Away: {stats.nb_of_goal_conceded_per_match_away}")
+    print(f"Last X Game Home List: {stats.last_x_game_home_list}")
+    print(f"Last X Game Home List: {stats.last_x_game_home_score}")
+    print(f"Number of Wins Home: {stats.nb_of_win_home}")
+    print(f"Number of Losses Home: {stats.nb_of_loose_home}")
+    print(f"Number of Draws Home: {stats.nb_of_draw_home}")
+    print(f"Total Number of Home Games Played: {stats.nb_of_game_home}")
+    print(f"Win Rate Home: {stats.win_rate_percent_home}%")
+    print(f"Loss Rate Home: {stats.loose_rate_percent_home}%")
+    print(f"Draw Rate Home: {stats.draw_rate_percent_home}%")
+    print(f"Goals Scored Home: {stats.nb_of_goal_scored_home}")
+    print(f"Goals Conceded Home: {stats.nb_of_goal_conceded_home}")
+    print(f"Goals Scored per Match Home: {stats.nb_of_goal_scored_per_match_home}")
+    print(f"Goals Conceded per Match Home: {stats.nb_of_goal_conceded_per_match_home}")
+    
+    
     
 data = teamData()
 stats = TeamStat()

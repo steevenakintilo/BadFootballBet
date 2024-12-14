@@ -155,7 +155,6 @@ def Get_Last_X_Games_Result(S,team,posTeam):
             #print("index " , index)
             index+=1
 
-    print(listOfResult)
     return listOfResult
 
 

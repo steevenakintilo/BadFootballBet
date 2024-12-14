@@ -286,6 +286,40 @@ class TeamStat:
     last_x_game_win_league_or_not = []
     last_x_game_draw_league_or_not = []
     last_x_game_loose_league_or_not = []
-        
+    
+    last_x_game_list_away_or_home = []
+    
+    nb_of_win_away = 0
+    nb_of_loose_away = 0
+    nb_of_draw_away = 0
+    nb_of_game_away = 0
+    win_rate_percent_away = 0
+    loose_rate_percent_away = 0
+    draw_rate_percent_away = 0
+    last_x_game_away_list = []
+    last_x_game_away_score = []
+
+    nb_of_goal_scored_away = 0
+    nb_of_goal_conceded_away = 0
+    nb_of_goal_scored_per_match_away = 0
+    nb_of_goal_conceded_per_match_away = 0
+    
+    nb_of_win_home = 0
+    nb_of_loose_home = 0
+    nb_of_draw_home = 0
+    nb_of_game_home = 0
+    win_rate_percent_home = 0
+    loose_rate_percent_home = 0
+    draw_rate_percent_home = 0
+    last_x_game_home_list = []
+    last_x_game_home_score = []
+    
+    
+    nb_of_goal_scored_home = 0
+    nb_of_goal_conceded_home = 0
+    nb_of_goal_scored_per_match_home = 0
+    nb_of_goal_conceded_per_match_home = 0
+    
+
     
     
