@@ -83,7 +83,8 @@ def Get_Last_X_Games_Result(S,team,posTeam):
 
     time.sleep(5)
 
-    S.driver.get(f"{all_url[posTeam]}calendrier")
+    S.driver.get(f"{all_url[posTeam]}calendrier/#tabPlayed")
+    print("iii")
     time.sleep(5)
     lastResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/nav/a[2]"
     
@@ -98,11 +99,10 @@ def Get_Last_X_Games_Result(S,team,posTeam):
     # except:
     #     pass
 
-    element = WebDriverWait(S.driver,3).until(
-    EC.presence_of_element_located((By.XPATH, lastResultXpath)))
+    # element = WebDriverWait(S.driver,3).until(
+    # EC.presence_of_element_located((By.XPATH, lastResultXpath)))
 
-    element.click()
-
+    # element.click()
     time.sleep(1)
     tabResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div"
 
@@ -117,6 +117,7 @@ def Get_Last_X_Games_Result(S,team,posTeam):
     first = True
     team = team.lower()
     change = False
+
     for i in range(len(lastXmatchSplit)):
         if "2024" in lastXmatchSplit[i] or "2025" in lastXmatchSplit[i] or "2026" in lastXmatchSplit[i] or "terminé" in lastXmatchSplit[i].lower():
             continue

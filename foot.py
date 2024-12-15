@@ -32,6 +32,7 @@ def last_X_Games_Result(stats,listOfResult):
     
     for result in listOfResult:
         result = result.split()
+        #print("res " , result)
         if (team in result[0] and int(result[1]) > int(result[3])) or (team in result[2] and int(result[3]) > int(result[1])):
             win+=1
             
@@ -302,9 +303,11 @@ def get_score_based_on_the_league(team):
         
         if pos_league_team(team) == -1:
             return 100
+        if score_based_on_league_and_league_place < 100:
+            return 100
         return score_based_on_league_and_league_place
     except:
-        return 10
+        return 100
 
 def get_the_score_of_a_team(team):
     
@@ -324,7 +327,10 @@ def get_the_score_of_a_team(team):
     # print("Country " , data.country_of_the_team[data.pos_league_team])
     allTeamTxt = print_file_info("allteam.txt").split("\n")
     team_pos = allTeamTxt.index(statsT.name)
-    last_X_Games_Result(statsT,Get_Last_X_Games_Result(S,statsT.name,team_pos))
+    try:
+        last_X_Games_Result(statsT,Get_Last_X_Games_Result(S,statsT.name,team_pos))
+    except:
+        return score_based_on_league_and_league_place
     # print(statsT.name)
     # print("Scooore " , score_based_on_league_and_league_place)
     # print(statsT.last_x_game_win_draw_or_loose)
@@ -338,7 +344,7 @@ def get_the_score_of_a_team(team):
     oppenentGoal = 0
 
     for teams in statsT.last_x_game_list:
-        print("ok " , teams , index , 20)
+        #print("ok " , teams , index , 20)
         facedTeam = teams.split("_")[0]
         teamScore = get_score_based_on_the_league(facedTeam)
         #print("timtim " , teamScore , facedTeam , score_based_on_league_and_league_place)
@@ -481,7 +487,10 @@ def get_the_score_of_the_main_team(team):
     for teams in statsTeam.last_x_game_list:
         facedTeam = teams.split("_")[0]
         print("faceeeeee " , facedTeam)
-        x_team_score = get_the_score_of_a_team(facedTeam)
+        try:
+            x_team_score = get_the_score_of_a_team(facedTeam)
+        except:
+            x_team_score = get_score_based_on_the_league(facedTeam)
         print("Scooore of my team " , score_based_on_league_and_league_place , " Oppenent score " , x_team_score)
         teamScore = x_team_score
         teamGoal = int(statsTeam.last_x_game_list_score[index].split("_")[1])
@@ -599,8 +608,32 @@ def get_the_score_of_the_main_team(team):
 
 
 
-a = get_the_score_of_the_main_team("liverpool")
+
+#test = ["r"]
+
+t1 = "man-city"
+a = get_the_score_of_the_main_team(t1)
 print(a)
+
+t2 = "man-united"
+b = get_the_score_of_the_main_team(t2)
+print(b)
+
+
+print(f"Score of {t1}: {a} , Score of {t2}: {b}")
+
+if a > b:
+    if int(b/10) * 2 + b <a:
+        print(f"{t2} will loose against {t1}")
+    else:
+        print(f"{t2} will loose against {t1} but it could still draw")
+    
+else:
+    if int(a/10) * 2 + a < b:
+        print(f"{t1} will loose against {t2}")
+    else:
+        print(f"{t1} will loose against {t2} but it could still draw")
+
 
 # data = teamData()
 # stats = TeamStat()
