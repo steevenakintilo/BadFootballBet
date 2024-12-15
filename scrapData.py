@@ -25,24 +25,9 @@ from teamData import *
 class Scraper:
     
     wait_time = 5
-    #headless = data["headless"]
     options = webdriver.ChromeOptions()
-    
-    
-    # #proxy_server_url = "185.199.229.156"
-    # #options.add_argument(f'--proxy-server={proxy_server_url}')
-    #options.add_argument('headless')
     options.add_argument("--log-level=3")  # Suppress all logging levels
-    
-    # driver = webdriver.Chrome(options=options)  # to open the chromedriver    
-    # FIREFOX
-
-    #options = webdriver.FirefoxOptions()
-    #options.headless = False
-
     driver = webdriver.Chrome(options=options)
-    
-    # CACA
     username_xpath = '/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[4]/label/div/div[2]/div/input'
     
 
@@ -90,19 +75,6 @@ def Get_Last_X_Games_Result(S,team,posTeam):
     
     calendarXpath = "/html/body/div[3]/div[4]/div/div/nav/ul/li[4]/a"
 
-    # try:
-    #     element = WebDriverWait(S.driver,3).until(
-    #     EC.presence_of_element_located((By.XPATH, calendarXpath)))
-
-    #     element.click()
-
-    # except:
-    #     pass
-
-    # element = WebDriverWait(S.driver,3).until(
-    # EC.presence_of_element_located((By.XPATH, lastResultXpath)))
-
-    # element.click()
     time.sleep(1)
     tabResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div"
 
@@ -168,7 +140,11 @@ def Get_Last_X_Games_Result(S,team,posTeam):
 def Position_Of_A_Team_On_Its_League(S,team):
     data = teamData()
     x = pos_league_team(team)
-    S.driver.get(data.all_league_url[x])
+    try:
+       S.driver.get(data.all_league_url[x])
+    except:
+       time.sleep(120)
+       S.driver.get(data.all_league_url[x])
     team = team.lower()
     accept_cookie(S)
     for i in range(1,40):
@@ -177,7 +153,6 @@ def Position_Of_A_Team_On_Its_League(S,team):
             EC.presence_of_element_located((By.XPATH, f"/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a/span")))
             if team == element.text.lower().replace(" ","-"):
                 return i
-            #time.sleep(3)
         except:
             return -999
 

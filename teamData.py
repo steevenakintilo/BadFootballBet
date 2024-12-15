@@ -256,7 +256,7 @@ class teamData:
                       "https://www.footmercato.net/club/bsc-young-boys/classement"]
     
     all_league_name = ["Premiere League","Liga","Serie A","Bundesliga","League 1","Liga Portugal","Eredivise","Super Lig Türkiye","Jupiter Pro League","Super Lig Switzerland"]
-    country_of_the_team = ["England","Spain","Italy","France","Germany","Portugal","Netherland","Turkiye","Belgium","Switzerland"]
+    country_of_the_team = ["England","Spain","Italy","Germany","France","Portugal","Netherland","Turkiye","Belgium","Switzerland"]
 
 
 class TeamStat:

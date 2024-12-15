@@ -311,31 +311,21 @@ def get_score_based_on_the_league(team):
 
 def get_the_score_of_a_team(team):
     
-    # Regarder toute les stats sauf les adversaires des adversaires affronter bref
     score = 0
     statsT = TeamStat()
     statsT.name = team
 
     if statsT.name not in data.allTeam:
-        #print("team not in the team data default score is 1")
+        print("team not in the data default score is 100")
         return 100
 
     score_based_on_league_and_league_place = get_score_based_on_the_league(statsT.name)
-    # # print("Team Name " , stats.name)
-    # print("League name " , data.all_league_name[data.pos_league_team])
-    # print("Position on the league " , stats.pos_on_the_league)
-    # print("Country " , data.country_of_the_team[data.pos_league_team])
     allTeamTxt = print_file_info("allteam.txt").split("\n")
     team_pos = allTeamTxt.index(statsT.name)
     try:
         last_X_Games_Result(statsT,Get_Last_X_Games_Result(S,statsT.name,team_pos))
     except:
         return score_based_on_league_and_league_place
-    # print(statsT.name)
-    # print("Scooore " , score_based_on_league_and_league_place)
-    # print(statsT.last_x_game_win_draw_or_loose)
-    # print(statsT.last_x_game_list)
-    # print(statsT.last_x_game_list_away_or_home)
     
     index = 0
     diffScore = 0
@@ -454,36 +444,37 @@ def get_the_score_of_a_team(team):
 
     
 def get_the_score_of_the_main_team(team):
+    print("Program take on average between 1 to 2 hours to run so do something else in the meantime")
     x_team_score = 0
     index = 0
     statsTeam = TeamStat()
-    #stats.name = "man-city"
     statsTeam.name = team
-
     statsTeam.name = statsTeam.name.lower()
 
     if statsTeam.name not in data.allTeam:
-        print("team not in the team data default score is 1")
-        return 1
-
+        print("team not in the data default score is 100")
+        return 100
     statsTeam.pos_on_the_league = Position_Of_A_Team_On_Its_League(S,statsTeam.name)
     data.pos_league_team = pos_league_team(statsTeam.name)
     statsTeam.league_of_the_team = data.all_league_name[data.pos_league_team]
-    # print("Team Name " , stats.name)
-    # print("League name " , data.all_league_name[data.pos_league_team])
-    # print("Position on the league " , stats.pos_on_the_league)
-    # print("Country " , data.country_of_the_team[data.pos_league_team])
     allTeamTxt = print_file_info("allteam.txt").split("\n")
     team_pos = allTeamTxt.index(statsTeam.name)
     last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos))
-    #print(vars(stats))
     diffScore = 0
     finalScore = 0
     teamGoal = 0
     oppenentGoal = 0
     score_based_on_league_and_league_place = get_score_based_on_the_league(statsTeam.name)
     score = score_based_on_league_and_league_place
-    print("default score of " , team ,  " " , score)
+    print(f"Country {data.country_of_the_team[data.pos_league_team]}")
+    print(f"Default score of {team}:  {score} (based on it position on the league and the league the team play in)")
+    print(f"Position on the {data.all_league_name[data.pos_league_team]}: {statsTeam.pos_on_the_league}")
+    print(f"Last {len(statsTeam.last_x_game_list)} games of the team:")
+    print(statsTeam.last_x_game_list)
+    print("The score: ")
+    print(statsTeam.last_x_game_away_score)
+    print("The outcome: ")
+    print(statsTeam.last_x_game_win_draw_or_loose)
     for teams in statsTeam.last_x_game_list:
         facedTeam = teams.split("_")[0]
         print("faceeeeee " , facedTeam)
@@ -587,75 +578,85 @@ def get_the_score_of_the_main_team(team):
                 
         
 
-        finalScore = int(finalScore)
-        
+        finalScore = int(finalScore)    
         #print("Score basique " , score_based_on_league_and_league_place)
         if finalScore < 0:
             score-=abs(finalScore)
         else:
             score+=finalScore
-        print("Diiif scoree " , diffScore , f" Score finito finit {score}" , f" {team} VS {facedTeam} result: {statsTeam.last_x_game_win_draw_or_loose[index]} is oppenent weaker ? {teamScore < score_based_on_league_and_league_place}")
+        #print("Diiif scoree " , diffScore , f" Score finito finit {score}" , f" {team} VS {facedTeam} result: {statsTeam.last_x_game_win_draw_or_loose[index]} is oppenent weaker ? {teamScore < score_based_on_league_and_league_place}")
         #print("zebi " , statsTeam.last_x_game_list_away_or_home, " zebo")
         index+=1
-        
-    
-    #print(statsTeam.last_x_game_list)
-    #print(statsTeam.last_x_game_home_score)
-    #print(statsTeam.last_x_game_win_draw_or_loose)
     print(f"Score final de  {team} : {score}")
     return score
-    #print_all_data(statsTeam)
+    
+
+def calc_pourcent_of_win(nb1,nb2):
+    try:
+        return int(((nb2 - nb1)/nb1) * 100)
+    except:
+        return 1
+
+def is_num(nb):
+    try:
+        int(nb)
+        return True
+    except:
+        return False
 
 
+def check_data_entered_is_good(country_nb,leen):
+    if is_num(country_nb) == False:
+        print("Wrong data entered exiting the program")
+        quit()
+    
+    if is_num(country_nb) == True and (int(country_nb) < 1 or int(country_nb) > leen):
+        print("Wrong data entered exiting the program")
+        exit()
 
 
-#test = ["r"]
+def choose_a_team(nbnb):
+    for i in range(len(data.country_of_the_team)):
+        print(f"{i+1}. {data.country_of_the_team[i]}")
+    country_nb = input(f"Country of Team {nbnb} (choose between 1 and {len(data.country_of_the_team)}): ")
+    check_data_entered_is_good(country_nb , len(data.country_of_the_team))
 
-t1 = "man-city"
-a = get_the_score_of_the_main_team(t1)
-print(a)
+    inputError = 0
+    for i in range(len(data.allTeam_[int(country_nb) - 1])):
+        if len(data.allTeam_[int(country_nb) - 1][i].strip()) > 1:
+            print(f"{i}. {data.allTeam_[int(country_nb) - 1][i].strip()}")
+        else:
+            inputError+=1
 
-t2 = "man-united"
-b = get_the_score_of_the_main_team(t2)
-print(b)
+    team_nb = input(f"Choose your team (choose between 1 and {len(data.allTeam_[int(country_nb) - 1]) - inputError}): ")
+    check_data_entered_is_good(team_nb , len(data.allTeam_[int(country_nb) - 1]) - inputError)
+    
+    return data.allTeam_[int(country_nb) - 1][int(team_nb)].strip()
 
 
-print(f"Score of {t1}: {a} , Score of {t2}: {b}")
+team1 = choose_a_team(1)
+team2 = choose_a_team(2)
 
-if a > b:
-    if int(b/10) * 2 + b <a:
-        print(f"{t2} will loose against {t1}")
+print(f"{team1} vs {team2}")
+
+score_of_team1 = get_the_score_of_the_main_team(team1)
+score_of_team2 = get_the_score_of_the_main_team(team2)
+
+
+print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
+
+if score_of_team1 > score_of_team2:
+    if score_of_team2 * 1.2 < score_of_team1:
+        print(f"{team2} will loose against {team1}")
     else:
-        print(f"{t2} will loose against {t1} but it could still draw")
+        print(f"{team2} will loose against {team1} but it could still draw")
+    print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
+    print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
     
 else:
-    if int(a/10) * 2 + a < b:
-        print(f"{t1} will loose against {t2}")
+    if score_of_team1 * 1.2 < score_of_team2:
+        print(f"{team1} will loose against {team2}")
     else:
-        print(f"{t1} will loose against {t2} but it could still draw")
-
-
-# data = teamData()
-# stats = TeamStat()
-# #stats.name = "man-city"
-# stats.name = "liverpool"
-
-# stats.name = stats.name.lower()
-
-# if stats.name not in data.allTeam:
-#     print("team not in the team data")
-#     exit()
-
-# stats.pos_on_the_league = Position_Of_A_Team_On_Its_League(S,stats.name)
-# data.pos_league_team = pos_league_team(stats.name)
-# stats.league_of_the_team = data.all_league_name[data.pos_league_team]
-# # print("Team Name " , stats.name)
-# # print("League name " , data.all_league_name[data.pos_league_team])
-# # print("Position on the league " , stats.pos_on_the_league)
-# # print("Country " , data.country_of_the_team[data.pos_league_team])
-# allTeamTxt = print_file_info("allteam.txt").split("\n")
-# team_pos = allTeamTxt.index(stats.name)
-# last_X_Games_Result(stats,Get_Last_X_Games_Result(S,stats.name,team_pos))
-# #print(vars(stats))
-
-# print_all_data(stats)
+        print(f"{team1} will loose against {team2} but it could still draw")
+    print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
+    print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
