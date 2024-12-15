@@ -212,7 +212,6 @@ class teamData:
 
     allTeam = []
     
-    
     NB_OF_TEAM_ENGLISH = len(englishTeam)
     NB_OF_TEAM_SPANISH = len(spanishTeam)
     NB_OF_TEAM_ITALIAN = len(italianTeam)
@@ -224,18 +223,20 @@ class teamData:
     NB_OF_TEAM_BELGIUM = len(belgiumTeam)
     NB_OF_TEAM_SWISS = len(swissTeam)
     
-    ENGLISH = 10
-    SPANISH = 9
-    ITALIAN = 8
-    GERMAN = 7
-    FRENCH = 6
-    PORTUGAL = 5
-    NETHERLAND = 4
-    TURKISH = 3
-    BELGIUM = 2
-    SWISS = 1
-    NONE = 0
+    ENGLISH = 100
+    SPANISH = 95
+    ITALIAN = 90
+    GERMAN = 85
+    FRENCH = 80
+    PORTUGAL = 70
+    NETHERLAND = 65
+    TURKISH = 60
+    BELGIUM = 50
+    SWISS = 20
+    NONE = 1
     
+    default_score_based_on_the_league = [ENGLISH,SPANISH,ITALIAN,GERMAN,FRENCH,PORTUGAL,NETHERLAND,TURKISH,BELGIUM,SWISS,NONE]
+    nb_of_team_on_all_league = [NB_OF_TEAM_ENGLISH,NB_OF_TEAM_SPANISH,NB_OF_TEAM_ITALIAN,NB_OF_TEAM_GERMAN,NB_OF_TEAM_FRENCH,NB_OF_TEAM_PORTUGAL,NB_OF_TEAM_NETHERLAND,NB_OF_TEAM_TURKISH,NB_OF_TEAM_BELGIUM,NB_OF_TEAM_SWISS]
     pos_league_team = 0
 
     for team in allTeam_:
@@ -271,6 +272,7 @@ class TeamStat:
     last_x_game_win_score = []
     last_x_game_draw_score = []
     last_x_game_loose_score = []
+    
     nb_of_win = 0
     nb_of_loose = 0
     nb_of_draw = 0
@@ -298,7 +300,7 @@ class TeamStat:
     draw_rate_percent_away = 0
     last_x_game_away_list = []
     last_x_game_away_score = []
-
+    
     nb_of_goal_scored_away = 0
     nb_of_goal_conceded_away = 0
     nb_of_goal_scored_per_match_away = 0
@@ -320,6 +322,8 @@ class TeamStat:
     nb_of_goal_scored_per_match_home = 0
     nb_of_goal_conceded_per_match_home = 0
     
-
+    last_x_game_win_draw_or_loose = []
+    last_x_game_win_draw_or_loose_away = []
+    last_x_game_win_draw_or_loose_home = []
     
     
