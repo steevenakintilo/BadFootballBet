@@ -208,55 +208,55 @@ class teamData:
     GC Zurich
     """.lower().split("\n")
 
-    allTeam_ = [frenchTeam,englishTeam,spanishTeam,germanTeam,italianTeam,portugalTeam,netherlandTeam,turkishTeam,belgiumTeam,swissTeam]
+    allTeam_ = [englishTeam,spanishTeam,italianTeam,germanTeam,frenchTeam,portugalTeam,netherlandTeam,turkishTeam,belgiumTeam,swissTeam]
 
     allTeam = []
     
-    NB_OF_TEAM_ENGLISH = len(englishTeam)
-    NB_OF_TEAM_SPANISH = len(spanishTeam)
-    NB_OF_TEAM_ITALIAN = len(italianTeam)
-    NB_OF_TEAM_GERMAN = len(germanTeam)
-    NB_OF_TEAM_FRENCH = len(frenchTeam)
-    NB_OF_TEAM_PORTUGAL = len(portugalTeam)
-    NB_OF_TEAM_NETHERLAND = len(netherlandTeam)
-    NB_OF_TEAM_TURKISH = len(turkishTeam)
-    NB_OF_TEAM_BELGIUM = len(belgiumTeam)
-    NB_OF_TEAM_SWISS = len(swissTeam)
+    NB_OF_TEAM_ENGLISH = len(englishTeam) - 2
+    NB_OF_TEAM_SPANISH = len(spanishTeam) - 2
+    NB_OF_TEAM_ITALIAN = len(italianTeam) - 2
+    NB_OF_TEAM_GERMAN = len(germanTeam) - 2
+    NB_OF_TEAM_FRENCH = len(frenchTeam) - 2
+    NB_OF_TEAM_PORTUGAL = len(portugalTeam) - 2
+    NB_OF_TEAM_NETHERLAND = len(netherlandTeam) - 2
+    NB_OF_TEAM_TURKISH = len(turkishTeam) - 2
+    NB_OF_TEAM_BELGIUM = len(belgiumTeam) - 2
+    NB_OF_TEAM_SWISS = len(swissTeam) - 2
     
-    ENGLISH = 100
-    SPANISH = 95
-    ITALIAN = 90
-    GERMAN = 85
-    FRENCH = 80
-    PORTUGAL = 70
-    NETHERLAND = 65
-    TURKISH = 60
-    BELGIUM = 50
-    SWISS = 20
-    NONE = 1
+    ENGLISH = 300 * 5
+    SPANISH = 295 * 4.8
+    ITALIAN = 290 * 4.6
+    GERMAN = 285 * 4.4
+    FRENCH = 280 * 4.2
+    PORTUGAL = 270 * 4
+    NETHERLAND = 265 * 3.5
+    TURKISH = 260 * 3
+    BELGIUM = 250 * 2
+    SWISS = 220 * 1.2
+    NONE = 10
     
     default_score_based_on_the_league = [ENGLISH,SPANISH,ITALIAN,GERMAN,FRENCH,PORTUGAL,NETHERLAND,TURKISH,BELGIUM,SWISS,NONE]
     nb_of_team_on_all_league = [NB_OF_TEAM_ENGLISH,NB_OF_TEAM_SPANISH,NB_OF_TEAM_ITALIAN,NB_OF_TEAM_GERMAN,NB_OF_TEAM_FRENCH,NB_OF_TEAM_PORTUGAL,NB_OF_TEAM_NETHERLAND,NB_OF_TEAM_TURKISH,NB_OF_TEAM_BELGIUM,NB_OF_TEAM_SWISS]
     pos_league_team = 0
-
+    #print("dodod " , nb_of_team_on_all_league)
     for team in allTeam_:
         for lilTeam in team:
             if len(lilTeam.strip().replace(" ","-")) > 1:
                 allTeam.append(lilTeam.strip().replace(" ","-"))
 
-    all_league_url = ["https://www.footmercato.net/club/psg/classement"
-                      ,"https://www.footmercato.net/club/liverpool/classement",
+    all_league_url = ["https://www.footmercato.net/club/liverpool/classement",
                       "https://www.footmercato.net/club/fc-barcelone/classement",
-                      "https://www.footmercato.net/club/bayer-04-leverkusen/classement",
                       "https://www.footmercato.net/club/inter/classement",
+                      "https://www.footmercato.net/club/bayer-04-leverkusen/classement",
+                      "https://www.footmercato.net/club/psg/classement",
                       "https://www.footmercato.net/club/sporting-clube-de-portugal/classement",
                       "https://www.footmercato.net/club/feyenoord-rotterdam/classement",
                       "https://www.footmercato.net/club/galatasaray-spor-kulubu/classement",
                       "https://www.footmercato.net/club/club-brugge-kv/classement",
                       "https://www.footmercato.net/club/bsc-young-boys/classement"]
     
-    all_league_name = ["League 1","Premiere League","Liga","Bundesliga","Serie A","Liga Portugal","Eredivise","Super Lig Türkiye","Jupiter Pro League","Super Lig Switzerland"]
-    country_of_the_team = ["France","England","Spain","Germany","Italy","Portugal","Netherland","Turkiye","Belgium","Switzerland"]
+    all_league_name = ["Premiere League","Liga","Serie A","Bundesliga","League 1","Liga Portugal","Eredivise","Super Lig Türkiye","Jupiter Pro League","Super Lig Switzerland"]
+    country_of_the_team = ["England","Spain","Italy","France","Germany","Portugal","Netherland","Turkiye","Belgium","Switzerland"]
 
 
 class TeamStat:

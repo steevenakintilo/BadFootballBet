@@ -81,18 +81,22 @@ def Get_Last_X_Games_Result(S,team,posTeam):
 
     accept_cookie(S)
 
+    time.sleep(5)
+
+    S.driver.get(f"{all_url[posTeam]}calendrier")
+    time.sleep(5)
     lastResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/nav/a[2]"
     
     calendarXpath = "/html/body/div[3]/div[4]/div/div/nav/ul/li[4]/a"
 
-    try:
-        element = WebDriverWait(S.driver,3).until(
-        EC.presence_of_element_located((By.XPATH, calendarXpath)))
+    # try:
+    #     element = WebDriverWait(S.driver,3).until(
+    #     EC.presence_of_element_located((By.XPATH, calendarXpath)))
 
-        element.click()
+    #     element.click()
 
-    except:
-        pass
+    # except:
+    #     pass
 
     element = WebDriverWait(S.driver,3).until(
     EC.presence_of_element_located((By.XPATH, lastResultXpath)))
