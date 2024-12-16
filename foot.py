@@ -483,6 +483,7 @@ def get_the_score_of_the_main_team(team):
     statsTeam.name = statsTeam.name.lower()
 
     if statsTeam.name not in data.allTeam:
+        print("cacacaca " , statsTeam.name)
         print("team not in the data default score is 1")
         return 1
     statsTeam.pos_on_the_league = Position_Of_A_Team_On_Its_League(S,statsTeam.name)
@@ -685,8 +686,8 @@ def calc_pourcent_of_win(nb1,nb2):
 
 
 
-team1 = choose_a_team(1)
-team2 = choose_a_team(2)
+team1 = choose_a_team(1).replace(" ","-")
+team2 = choose_a_team(2).replace(" ","-")
 
 print(f"{team1} vs {team2}")
 
