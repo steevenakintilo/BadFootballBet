@@ -363,7 +363,7 @@ def get_the_score_of_a_team(team):
     oppenentGoal = 0
 
     for teams in statsT.last_x_game_list:
-        #print("ok " , teams , index , 20)
+        print("ok " , teams , index , 20)
         #print("caca " , statsT.last_x_game_list_league_or_not[index] , statsT.last_x_game_list_league_or_not)
         facedTeam = teams.split("_")[0]
         teamScore = get_score_based_on_the_league(facedTeam)

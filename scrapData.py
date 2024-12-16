@@ -206,7 +206,7 @@ def list_of_team_league(S,nb):
         try:
             element = WebDriverWait(S.driver,2).until(
             EC.presence_of_element_located((By.XPATH, f"/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a")))
-
+            print(element.text)
             element.click()
 
             current_url = S.driver.current_url
