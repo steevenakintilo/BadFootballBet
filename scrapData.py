@@ -20,6 +20,9 @@ from os import system
 import time
 import os.path
 
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow logs (3 = ERROR)
+
 from teamData import *
 
 class Scraper:
@@ -69,7 +72,6 @@ def Get_Last_X_Games_Result(S,team,posTeam):
     time.sleep(5)
 
     S.driver.get(f"{all_url[posTeam]}calendrier/#tabPlayed")
-    print("iii")
     time.sleep(5)
     lastResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/nav/a[2]"
     
