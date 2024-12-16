@@ -301,12 +301,12 @@ def get_score_based_on_the_league(team):
         score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - pos_on_the_league - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
         
         if pos_league_team(team) == -1:
-            return 1
+            return 1,1
         if score_based_on_league_and_league_place < 100:
-            return 1
+            return 1,1
         return score_based_on_league_and_league_place
     except:
-        return 1
+        return 1,1
 
 def little_ratio_based_on_team_place_on_league(team,team2):
     return 0
@@ -334,9 +334,8 @@ def little_ratio_based_on_team_place_on_league(team,team2):
         return lilRes
     except:
         return 0
-    
-def get_the_score_of_a_team(team):
-    
+
+def get_the_score_of_a_team(team):    
     score = 0
     statsT = TeamStat()
     statsT.name = team
@@ -468,9 +467,9 @@ def get_the_score_of_a_team(team):
     finalScore = int(finalScore)
     #print("Score basique " , score_based_on_league_and_league_place)
     if finalScore < 0:
-        return score_based_on_league_and_league_place - abs(finalScore)
+        return score_based_on_league_and_league_place - abs(finalScore) , statsT.win_rate_percent
     else:
-        return score_based_on_league_and_league_place + finalScore
+        return score_based_on_league_and_league_place + finalScore , statsT.win_rate_percent
 
     
 def get_the_score_of_the_main_team(team):
@@ -513,17 +512,19 @@ def get_the_score_of_the_main_team(team):
             index+=1
             continue
         #print("faceeeeee " , facedTeam)
+        win_rate_nb = 0
         try:
-            x_team_score = get_the_score_of_a_team(facedTeam)
+            x_team_score , win_rate_nb = get_the_score_of_a_team(facedTeam)
         except:
-            x_team_score = get_score_based_on_the_league(facedTeam)
+            x_team_score , win_rate_nb = get_score_based_on_the_league(facedTeam) , 1
         #print("Scooore of my team " , score_based_on_league_and_league_place , " Oppenent score " , x_team_score)
         #print("----Next----")
         teamScore = x_team_score
         teamGoal = int(statsTeam.last_x_game_list_score[index].split("_")[1])
         oppenentGoal = int(statsTeam.last_x_game_list_score[index].split("_")[0])
         #print("ME " , teamGoal , " OPS " , oppenentGoal)
-        if teamScore < score_based_on_league_and_league_place:
+
+        if teamScore < score_based_on_league_and_league_place:                
             if statsTeam.last_x_game_list_away_or_home[index] == "A":
                 if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
                     print("ici  1")
@@ -680,8 +681,6 @@ def calc_pourcent_of_win(nb1,nb2):
         return (round(nb1/(nb2/100),1))
     except:
         return 1
-
-
 
 
 
