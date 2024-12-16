@@ -701,7 +701,7 @@ if score_of_team1 > score_of_team2:
     if score_of_team2 * 1.2 < score_of_team1:
         print(f"{team2} will loose against {team1}")
     else:
-        print(f"{team2} will loose against {team1} but it could still draw")
+        print(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
     print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
     print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
     
@@ -709,6 +709,6 @@ else:
     if score_of_team1 * 1.2 < score_of_team2:
         print(f"{team1} will loose against {team2}")
     else:
-        print(f"{team1} will loose against {team2} but it could still draw")
+        print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
     print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
     print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
