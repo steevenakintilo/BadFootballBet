@@ -55,7 +55,6 @@ def is_num(nb):
  
 def remove_first_two_elem(str):
     words = str.split()
-    print("wowowo  " , words)
     if len(words) < 2:
         return str
     unique_words = words[2:]
@@ -124,16 +123,19 @@ def Get_Last_X_Games_Result(S,team,posTeam):
                         change = True
                     
                 lst = []
-                if index == 4 or (change == True and index == 2) and len(string.split()) == 4:
+                if index == 4 or (change == True and index == 2) and len(string.split()) == 4 and "/" not in string.strip().lower():
                     listOfResult.append(string.strip().lower())
                     string = ""
                     change = False
                     index = 0
             if len(listOfResult) >= 20:
                 break
-            #print("index " , index)
+            #print("dendex " , index)
             index+=1
 
+    # print("toto")
+    # print(listOfResult)
+    # print("toto")
     return listOfResult
     
 

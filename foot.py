@@ -308,30 +308,34 @@ def get_score_based_on_the_league(team):
     except:
         return 1,1
 
-def little_ratio_based_on_team_place_on_league(team,team2):
-    return 0
+def little_ratio_based_on_team_place_on_league(team,team2,teamScore,score_based_on_league_and_league_place,type=2):
     try:
         pos_on_the_league = Position_Of_A_Team_On_Its_League(S,team)
         pos_on_the_league2 = Position_Of_A_Team_On_Its_League(S,team2)
         data.pos_league_team = pos_league_team(team)
         d2 = pos_league_team(team2)
-        #print("pipi " ,d2,data.pos_league_team,team,team2," caca" )
-        z=convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - pos_on_the_league - 1, data.nb_of_team_on_all_league[data.pos_league_team])
-        if d2 != data.pos_league_team:
-            return 0
-        if pos_on_the_league2 < pos_on_the_league:
-            lilRes = z / 150
-            #print("ladversaure est + faible team " , team , " team2 " , team2 , " lilres ", lilRes , " clc" , z)
+        z = ((teamScore-score_based_on_league_and_league_place)/teamScore)
+        if score_based_on_league_and_league_place >= teamScore:
+            z = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place)
+        # if d2 != data.pos_league_team:
+        #     return 0
         
-        else:
-            lil = z / 150
-            lilRes = 1 - lil
-            #print("ladversere est + fort team " , team , " team2 " , team2 , " lilres ", lilRes , " clc " , z)
-        if pos_league_team(team) == -1:
-            return 0
-        if lilRes < 100:
-            return lilRes
-        return lilRes
+        try:
+            if score_based_on_league_and_league_place < teamScore:
+                z = abs(z)
+                if type == 1:
+                    z = 1 - abs(z)
+                    z = abs(z)
+                return z
+            
+            else:
+                z = abs(z)
+                if type == 1:
+                    z = 1 - abs(z)
+                    z = abs(z)
+                return z
+        except:
+            return 0    
     except:
         return 0
 
@@ -369,46 +373,48 @@ def get_the_score_of_a_team(team):
         teamGoal = int(statsT.last_x_game_list_score[index].split("_")[1])
         oppenentGoal = int(statsT.last_x_game_list_score[index].split("_")[0])
         #print("ME " , teamGoal , " OPS " , oppenentGoal)
+        
         if teamScore < score_based_on_league_and_league_place:
             if statsT.last_x_game_list_away_or_home[index] == "A":
                 if statsT.last_x_game_win_draw_or_loose[index] == "W":
-                    #print("ici  1")
-                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (1.1 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name))
-                    diffScore = abs(diffScore)
+                    #print("kci  1")
+                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (1.1 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,1))
+                    # 1 - diffscore
+                    diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 5 - oppenentGoal * 25
                     finalScore+= (diffScore + abs(resultGoal))
                 if statsT.last_x_game_win_draw_or_loose[index] == "D":
-                    #print("ici  2")
-                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.1 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name))
-                    diffScore = abs(diffScore)
+                    #print("kci  2")
+                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.1 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,1))
+                    diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 5 - oppenentGoal * 25
                     finalScore-= (diffScore + abs(resultGoal))
                 
                 if statsT.last_x_game_win_draw_or_loose[index] == "L":
-                    #print("ici  3")
-                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.5 + little_ratio_based_on_team_place_on_league(facedTeam,statsT.name))
+                    #print("kci  3")
+                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.5 + little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,2))
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 5 - oppenentGoal * 25
                     finalScore-= (diffScore + abs(resultGoal))
                 
             elif statsT.last_x_game_list_away_or_home[index] == "H":
                 if statsT.last_x_game_win_draw_or_loose[index] == "W":
-                    #print("ici  4")
-                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100
-                    diffScore = abs(diffScore)
+                    #print("kci  4")
+                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (1 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,1))
+                    diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 10 - oppenentGoal * 20
                     finalScore+= (diffScore + abs(resultGoal))
                 
                 if statsT.last_x_game_win_draw_or_loose[index] == "D":
-                    #print("ici  5")
-                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.2 + little_ratio_based_on_team_place_on_league(facedTeam,statsT.name))
-                    diffScore = abs(diffScore)
+                    #print("kci  5")
+                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.2 + little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,1))
+                    diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 10 - oppenentGoal * 20
                     finalScore-= (diffScore + abs(resultGoal))
                 
                 if statsT.last_x_game_win_draw_or_loose[index] == "L":
-                    #print("ici  6")
-                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.6 + little_ratio_based_on_team_place_on_league(facedTeam,statsT.name))
+                    #print("kci  6")
+                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.6 + little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,2))
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 10 - oppenentGoal * 20
                     finalScore-= (diffScore + abs(resultGoal))
@@ -416,47 +422,48 @@ def get_the_score_of_a_team(team):
         else:
             if statsT.last_x_game_list_away_or_home[index] == "A":
                 if statsT.last_x_game_win_draw_or_loose[index] == "W":
-                    #print("ici  7")
-                    diffScore = (teamScore/score_based_on_league_and_league_place) * 100 * (2.6 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name))
+                    #print("kci  7")
+                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.6 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,2))
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 25 - oppenentGoal * 5
                     finalScore+= (diffScore + abs(resultGoal))
                 
                 if statsT.last_x_game_win_draw_or_loose[index] == "D":
-                    #print("ici  8")
-                    diffScore = (teamScore/score_based_on_league_and_league_place) * 100 * (2.2 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name))
+                    #print("kci  8")
+                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.2 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,2))
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 25 - oppenentGoal * 5
                     finalScore+= (diffScore + abs(resultGoal))
                 
                 if statsT.last_x_game_win_draw_or_loose[index] == "L":
-                    #print("ici  9")
-                    diffScore = (teamScore/score_based_on_league_and_league_place) * 100 * (0.75 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name))
-                    diffScore = abs(diffScore)
+                    #print("kci  9")
+                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (0.75 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,1))
+                    diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 25 - oppenentGoal * 5
                     finalScore-= (diffScore + abs(resultGoal))
                 
             elif statsT.last_x_game_list_away_or_home[index] == "H":
                 if statsT.last_x_game_win_draw_or_loose[index] == "W":
-                    #print("ici  10")
-                    diffScore = (teamScore/score_based_on_league_and_league_place) * 100 * (2.5 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name))
+                    #print("kci  10")
+                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.5 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,2))
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 20 - oppenentGoal * 10
                     finalScore+= (diffScore + abs(resultGoal))
                 
                 if statsT.last_x_game_win_draw_or_loose[index] == "D":
-                    #print("ici  11")
-                    diffScore = (teamScore/score_based_on_league_and_league_place) * 100 * (2.1 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name))
+                    #print("kci  11")
+                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.1 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,2))
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 20 - oppenentGoal * 10
                     finalScore+= (diffScore + abs(resultGoal))
                 
                 if statsT.last_x_game_win_draw_or_loose[index] == "L":
-                    #print("ici  12")
-                    diffScore = (teamScore/score_based_on_league_and_league_place) * 100 * (0.8 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name))
-                    diffScore = abs(diffScore)
+                    #print("kci  12")
+                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (0.8 - little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,1))
+                    diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 20 - oppenentGoal * 10
                     finalScore-= (diffScore + abs(resultGoal))
+                
                 
         
         #print("DIIF SCORE " , diffScore , " Final Score "  , finalScore , f" {team} VS {facedTeam} result: {statsT.last_x_game_win_draw_or_loose[index]} is oppenent weaker ? {teamScore < score_based_on_league_and_league_place}")
@@ -524,107 +531,96 @@ def get_the_score_of_the_main_team(team):
         oppenentGoal = int(statsTeam.last_x_game_list_score[index].split("_")[0])
         #print("ME " , teamGoal , " OPS " , oppenentGoal)
 
-        if teamScore < score_based_on_league_and_league_place:                
-            if statsTeam.last_x_game_list_away_or_home[index] == "A":
-                if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
-                    print("ici  1")
-                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (1.1 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name))
-                    diffScore = abs(diffScore)
-                    resultGoal = teamGoal * 5 - oppenentGoal * 25
-                    finalScore+= (diffScore + abs(resultGoal))
-                    print("diff score " , diffScore , " Ressf " , resultGoal , " FINlz " , finalScore)
-                if statsTeam.last_x_game_win_draw_or_loose[index] == "D":
-                    print("ici  2")
-                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.1 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name))
-                    diffScore = abs(diffScore)
-                    resultGoal = teamGoal * 5 - oppenentGoal * 25
-                    finalScore-= (diffScore + abs(resultGoal))
-                    print("diff score " , diffScore , " Ressf " , resultGoal , " FINlz " , finalScore)
-                
-                if statsTeam.last_x_game_win_draw_or_loose[index] == "L":
-                    print("ici  3")
-                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.5 + little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name))
-                    diffScore = abs(diffScore)
-                    resultGoal = teamGoal * 5 - oppenentGoal * 25
-                    finalScore-= (diffScore + abs(resultGoal))
-                    print("diff score " , diffScore , " Ressf " , resultGoal , " FINlz " , finalScore)
-                
-            elif statsTeam.last_x_game_list_away_or_home[index] == "H":
-                if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
-                    print("ici  4")
-                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100
-                    diffScore = abs(diffScore)
-                    resultGoal = teamGoal * 10 - oppenentGoal * 20
-                    finalScore+= (diffScore + abs(resultGoal))
-                    print("diff score " , diffScore , " Ressf " , resultGoal , " FINlz " , finalScore)
-
-                if statsTeam.last_x_game_win_draw_or_loose[index] == "D":
-                    print("ici  5")
-                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.2 + little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name))
-                    diffScore = abs(diffScore)
-                    resultGoal = teamGoal * 10 - oppenentGoal * 20
-                    finalScore-= (diffScore + abs(resultGoal))
-                    print("diff score " , diffScore , " Ressf " , resultGoal , " FINlz " , finalScore)
-                
-                if statsTeam.last_x_game_win_draw_or_loose[index] == "L":
-                    print("ici  6")
-                    diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.6 + little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name))
-                    diffScore = abs(diffScore)
-                    resultGoal = teamGoal * 10 - oppenentGoal * 20
-                    finalScore-= (diffScore + abs(resultGoal))
-                    print("diff score " , diffScore , " Ressf " , resultGoal , " FINlz " , finalScore)
-                
-        else:
-            if statsTeam.last_x_game_list_away_or_home[index] == "A":
-                if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
-                    print("ici  7")
-                    diffScore = (teamScore/score_based_on_league_and_league_place) * 100 * (2.6 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name))
-                    diffScore = abs(diffScore)
-                    resultGoal = teamGoal * 25 - oppenentGoal * 5
-                    finalScore+= (diffScore + abs(resultGoal))
-                    print("diff score " , diffScore , " Ressf " , resultGoal , " FINlz " , finalScore)
-                
-                if statsTeam.last_x_game_win_draw_or_loose[index] == "D":
-                    print("ici  8")
-                    diffScore = (teamScore/score_based_on_league_and_league_place) * 100 * (2.2 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name))
-                    diffScore = abs(diffScore)
-                    resultGoal = teamGoal * 25 - oppenentGoal * 5
-                    finalScore+= (diffScore + abs(resultGoal))
-                    print("diff score " , diffScore , " Ressf " , resultGoal , " FINlz " , finalScore)
-                
-                if statsTeam.last_x_game_win_draw_or_loose[index] == "L":
-                    print("ici  9")
-                    diffScore = (teamScore/score_based_on_league_and_league_place) * 100 * (0.75 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name))
-                    diffScore = abs(diffScore)
-                    resultGoal = teamGoal * 25 - oppenentGoal * 5
-                    finalScore-= (diffScore + abs(resultGoal))
-                    print("diff score " , diffScore , " Ressf " , resultGoal , " FINlz " , finalScore)
-                
-            elif statsTeam.last_x_game_list_away_or_home[index] == "H":
-                if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
-                    print("ici  10")
-                    diffScore = (teamScore/score_based_on_league_and_league_place) * 100 * (2.5 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name))
-                    diffScore = abs(diffScore)
-                    resultGoal = teamGoal * 20 - oppenentGoal * 10
-                    finalScore+= (diffScore + abs(resultGoal))
-                    print("diff score " , diffScore , " Ressf " , resultGoal , " FINlz " , finalScore)
-                
-                if statsTeam.last_x_game_win_draw_or_loose[index] == "D":
-                    print("ici  11")
-                    diffScore = (teamScore/score_based_on_league_and_league_place) * 100 * (2.1 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name))
-                    diffScore = abs(diffScore)
-                    resultGoal = teamGoal * 20 - oppenentGoal * 10
-                    finalScore+= (diffScore + abs(resultGoal))
-                    print("diff score " , diffScore , " Ressf " , resultGoal , " FINlz " , finalScore)
-                
-                if statsTeam.last_x_game_win_draw_or_loose[index] == "L":
-                    print("ici  12")
-                    diffScore = (teamScore/score_based_on_league_and_league_place) * 100 * (0.8 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name))
-                    diffScore = abs(diffScore)
-                    resultGoal = teamGoal * 20 - oppenentGoal * 10
-                    finalScore-= (diffScore + abs(resultGoal))
-                    print("diff score " , diffScore , " Ressf " , resultGoal , " FINlz " , finalScore)
-                
+        if teamScore < score_based_on_league_and_league_place:
+            if teamScore < score_based_on_league_and_league_place:
+                if statsTeam.last_x_game_list_away_or_home[index] == "A":
+                    if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
+                        #print("ici  1")
+                        diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (1.1 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,1))
+                        # 1 - diffscore
+                        diffScore = 1 - abs(diffScore)
+                        resultGoal = teamGoal * 5 - oppenentGoal * 25
+                        finalScore+= (diffScore + abs(resultGoal))
+                    if statsTeam.last_x_game_win_draw_or_loose[index] == "D":
+                        #print("ici  2")
+                        diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.1 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,1))
+                        diffScore = 1 - abs(diffScore)
+                        resultGoal = teamGoal * 5 - oppenentGoal * 25
+                        finalScore-= (diffScore + abs(resultGoal))
+                    
+                    if statsTeam.last_x_game_win_draw_or_loose[index] == "L":
+                        #print("ici  3")
+                        diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.5 + little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,2))
+                        diffScore = abs(diffScore)
+                        resultGoal = teamGoal * 5 - oppenentGoal * 25
+                        finalScore-= (diffScore + abs(resultGoal))
+                    
+                elif statsTeam.last_x_game_list_away_or_home[index] == "H":
+                    if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
+                        #print("ici  4")
+                        diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (1 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,1))
+                        diffScore = 1 - abs(diffScore)
+                        resultGoal = teamGoal * 10 - oppenentGoal * 20
+                        finalScore+= (diffScore + abs(resultGoal))
+                    
+                    if statsTeam.last_x_game_win_draw_or_loose[index] == "D":
+                        #print("ici  5")
+                        diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.2 + little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,1))
+                        diffScore = 1 - abs(diffScore)
+                        resultGoal = teamGoal * 10 - oppenentGoal * 20
+                        finalScore-= (diffScore + abs(resultGoal))
+                    
+                    if statsTeam.last_x_game_win_draw_or_loose[index] == "L":
+                        #print("ici  6")
+                        diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.6 + little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,2))
+                        diffScore = abs(diffScore)
+                        resultGoal = teamGoal * 10 - oppenentGoal * 20
+                        finalScore-= (diffScore + abs(resultGoal))
+                    
+            else:
+                if statsTeam.last_x_game_list_away_or_home[index] == "A":
+                    if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
+                        #print("ici  7")
+                        diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.6 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,2))
+                        diffScore = abs(diffScore)
+                        resultGoal = teamGoal * 25 - oppenentGoal * 5
+                        finalScore+= (diffScore + abs(resultGoal))
+                    
+                    if statsTeam.last_x_game_win_draw_or_loose[index] == "D":
+                        #print("ici  8")
+                        diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.2 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,2))
+                        diffScore = abs(diffScore)
+                        resultGoal = teamGoal * 25 - oppenentGoal * 5
+                        finalScore+= (diffScore + abs(resultGoal))
+                    
+                    if statsTeam.last_x_game_win_draw_or_loose[index] == "L":
+                        #print("ici  9")
+                        diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (0.75 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,1))
+                        diffScore = 1 - abs(diffScore)
+                        resultGoal = teamGoal * 25 - oppenentGoal * 5
+                        finalScore-= (diffScore + abs(resultGoal))
+                    
+                elif statsTeam.last_x_game_list_away_or_home[index] == "H":
+                    if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
+                        #print("ici  10")
+                        diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.5 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,2))
+                        diffScore = abs(diffScore)
+                        resultGoal = teamGoal * 20 - oppenentGoal * 10
+                        finalScore+= (diffScore + abs(resultGoal))
+                    
+                    if statsTeam.last_x_game_win_draw_or_loose[index] == "D":
+                        #print("ici  11")
+                        diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (2.1 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,2))
+                        diffScore = abs(diffScore)
+                        resultGoal = teamGoal * 20 - oppenentGoal * 10
+                        finalScore+= (diffScore + abs(resultGoal))
+                    
+                    if statsTeam.last_x_game_win_draw_or_loose[index] == "L":
+                        #print("ici  12")
+                        diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * (0.8 - little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,1))
+                        diffScore = 1 - abs(diffScore)
+                        resultGoal = teamGoal * 20 - oppenentGoal * 10
+                        finalScore-= (diffScore + abs(resultGoal))
         finalScore = int(finalScore)    
         #print("Score basique " , score_based_on_league_and_league_place)
         if finalScore < 0:
@@ -697,7 +693,7 @@ score_of_team2 = get_the_score_of_the_main_team(team2)
 print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
 
 if score_of_team1 > score_of_team2:
-    if score_of_team2 * 1.2 < score_of_team1:
+    if score_of_team2 * 1.3 < score_of_team1:
         print(f"{team2} will loose against {team1}")
     else:
         print(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
@@ -705,7 +701,7 @@ if score_of_team1 > score_of_team2:
     print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
     
 else:
-    if score_of_team1 * 1.2 < score_of_team2:
+    if score_of_team1 * 1.3 < score_of_team2:
         print(f"{team1} will loose against {team2}")
     else:
         print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
