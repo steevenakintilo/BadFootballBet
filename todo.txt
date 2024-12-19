@@ -1,6 +1,5 @@
-- Recup le nom de la majorite des grosse team
-- Regarder le classement de lequipe dans son championnat
-- JSP
-- faire un systeme de point en fonction du classement de lequipe en championnat
+Fix Problem when some team get too much point for no reason
 
+Making sure every team on the list exist
 
+Maybe some unknown problem
