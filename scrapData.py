@@ -60,6 +60,24 @@ def remove_first_two_elem(str):
     unique_words = words[2:]
     return ' '.join(unique_words)
 
+def isSlash(string):
+    letter = "abcdefghijklmnopqrstuvwxyz"
+    if "/" not in string:
+        return False
+    
+    for char in string:
+        if char in letter:
+            return False
+
+    return True
+
+def checkNum(string):
+    string = string.strip().split(" ")
+    if len(string) < 4:
+        return False
+    if is_num(string[1]) == True and is_num(string[3]) == True:
+        return True
+    return False
 def Get_Last_X_Games_Result(S,team,posTeam):
     
     years = ["2024","2025","2026"]
@@ -90,9 +108,10 @@ def Get_Last_X_Games_Result(S,team,posTeam):
     first = True
     team = team.lower()
     change = False
-
+    #print(lastXmatchSplit)
+    
     for i in range(len(lastXmatchSplit)):
-        if "2024" in lastXmatchSplit[i] or "2025" in lastXmatchSplit[i] or "2026" in lastXmatchSplit[i] or "terminé" in lastXmatchSplit[i].lower():
+        if "2022" in lastXmatchSplit[i] or "2023" in lastXmatchSplit[i] or "2024" in lastXmatchSplit[i] or "2025" in lastXmatchSplit[i] or "2026" in lastXmatchSplit[i] or "terminé" in lastXmatchSplit[i].lower() or isSlash(lastXmatchSplit[i].lower()) == True:
             continue
         else:
             if is_num(lastXmatchSplit[i].replace(" ","-")) == False and lastXmatchSplit[i].replace(" ","-") in string:
@@ -123,8 +142,11 @@ def Get_Last_X_Games_Result(S,team,posTeam):
                         change = True
                     
                 lst = []
+                digit_count = sum(char.isdigit() for char in string.strip().lower())
                 if index == 4 or (change == True and index == 2) and len(string.split()) == 4 and "/" not in string.strip().lower():
-                    listOfResult.append(string.strip().lower())
+                    #print("on est al " , string.strip().lower())
+                    if checkNum(string.strip().lower()) == True:
+                        listOfResult.append(string.strip().lower())
                     string = ""
                     change = False
                     index = 0
@@ -132,10 +154,10 @@ def Get_Last_X_Games_Result(S,team,posTeam):
                 break
             #print("dendex " , index)
             index+=1
-
-    # print("toto")
-    # print(listOfResult)
-    # print("toto")
+    if len(listOfResult) == 1:
+        print(f"Sorry but {team} has played 0 match this season can't compare or get that stat of it")
+        S.driver.close()
+        quit()
     return listOfResult
     
 
@@ -177,46 +199,60 @@ def checkTeamNameIsRight(S,teamName):
         print(teamName)
         return False
 
-def list_of_team_league(S,nb):
-    if nb == 1:
-        S.driver.get("https://www.footmercato.net/club/hac/classement")
-    if nb == 2:
-        S.driver.get("https://www.footmercato.net/club/liverpool/classement")
-    if nb == 3:
-        S.driver.get("https://www.footmercato.net/club/fc-barcelone/classement")
-    if nb == 4:
-        S.driver.get("https://www.footmercato.net/club/bayer-04-leverkusen/classement")
-    if nb == 5:
-        S.driver.get("https://www.footmercato.net/club/inter/classement")
-    if nb == 6:
-        S.driver.get("https://www.footmercato.net/club/sporting-clube-de-portugal/classement")
-    if nb == 7:
-        S.driver.get("https://www.footmercato.net/club/feyenoord-rotterdam/classement")
-    if nb == 8:
-        S.driver.get("https://www.footmercato.net/club/galatasaray-spor-kulubu/classement")
-    if nb == 9:
-        S.driver.get("https://www.footmercato.net/club/club-brugge-kv/classement")
-    if nb == 10:
-        S.driver.get("https://www.footmercato.net/club/bsc-young-boys/classement")
-
-
+def list_of_team_league(S,url):
+    # if nb == 1:
+    #     S.driver.get("https://www.footmercato.net/club/hac/classement")
+    # if nb == 2:
+    #     S.driver.get("https://www.footmercato.net/club/liverpool/classement")
+    # if nb == 3:
+    #     S.driver.get("https://www.footmercato.net/club/fc-barcelone/classement")
+    # if nb == 4:
+    #     S.driver.get("https://www.footmercato.net/club/bayer-04-leverkusen/classement")
+    # if nb == 5:
+    #     S.driver.get("https://www.footmercato.net/club/inter/classement")
+    # if nb == 6:
+    #     S.driver.get("https://www.footmercato.net/club/sporting-clube-de-portugal/classement")
+    # if nb == 7:
+    #     S.driver.get("https://www.footmercato.net/club/feyenoord-rotterdam/classement")
+    # if nb == 8:
+    #     S.driver.get("https://www.footmercato.net/club/galatasaray-spor-kulubu/classement")
+    # if nb == 9:
+    #     S.driver.get("https://www.footmercato.net/club/club-brugge-kv/classement")
+    # if nb == 10:
+    #     S.driver.get("https://www.footmercato.net/club/bsc-young-boys/classement")
+    # if nb == 11:
+    #     S.driver.get("https://www.footmercato.net/club/glasgow-rangers/classement")
+    S.driver.get(url)
+    
+    time.sleep(3)
     accept_cookie(S)
 
     #time.sleep(101010)
+    write_into_file("teamUrl.txt"," "+"\n")
+    write_into_file("allteam.txt"," "+"\n")
+    print(" ")
 
     for i in range(1,30):
         try:
-            element = WebDriverWait(S.driver,2).until(
-            EC.presence_of_element_located((By.XPATH, f"/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a")))
+            try:
+                element = WebDriverWait(S.driver,5).until(
+                EC.presence_of_element_located((By.XPATH, f"/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a")))
+            except:
+                return
             print(element.text)
+            write_into_file("allteam.txt",element.text+"\n")
             element.click()
 
             current_url = S.driver.current_url
-            print(current_url)
+            #print(current_url)
             write_into_file("teamUrl.txt",current_url+"\n")
+            
             S.driver.back()
             time.sleep(3)
         except:
+            import traceback
+            traceback.print_exc()
+            print("caca")
             return
 
 
