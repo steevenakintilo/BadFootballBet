@@ -78,7 +78,7 @@ def checkNum(string):
     if is_num(string[1]) == True and is_num(string[3]) == True:
         return True
     return False
-def Get_Last_X_Games_Result(S,team,posTeam):
+def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
     
     years = ["2024","2025","2026"]
     all_url = print_file_info("teamUrl.txt").split("\n")
@@ -150,7 +150,7 @@ def Get_Last_X_Games_Result(S,team,posTeam):
                     string = ""
                     change = False
                     index = 0
-            if len(listOfResult) >= 20:
+            if len(listOfResult) >= nbOfGameToAnalyze:
                 break
             #print("dendex " , index)
             index+=1

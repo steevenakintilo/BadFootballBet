@@ -338,7 +338,7 @@ def little_ratio_based_on_team_place_on_league(team,team2,teamScore,score_based_
     except:
         return 0
 
-def get_the_score_of_a_team(team):    
+def get_the_score_of_a_team(team,nbOfGameToAnalyze):    
     score = 0
     statsT = TeamStat()
     statsT.name = team
@@ -350,10 +350,10 @@ def get_the_score_of_a_team(team):
     
 
     score_based_on_league_and_league_place = get_score_based_on_the_league(statsT.name)
-    allTeamTxt = print_file_info("allteam.txt").split("\n")
-    team_pos = allTeamTxt.index(statsT.name)
+    allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
+    team_pos = allTeamTxt.index(statsT.name.lower())
     try:
-        last_X_Games_Result(statsT,Get_Last_X_Games_Result(S,statsT.name,team_pos))
+        last_X_Games_Result(statsT,Get_Last_X_Games_Result(S,statsT.name,team_pos,nbOfGameToAnalyze))
     except:
         return score_based_on_league_and_league_place
     
@@ -482,8 +482,11 @@ def get_the_score_of_a_team(team):
         return score_based_on_league_and_league_place + finalScore , statsT.win_rate_percent
 
     
-def get_the_score_of_the_main_team(team):
-    print("Program take on average between 1 to 2 hours to run so do something else in the meantime")
+def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
+    if NoPrint == True:
+        print("Program could take long time to run depending on how many games to analyze you put :)")
+    if NoPrint == False:
+        print("Wait beetween 1 to 3 minutes until it get the data of your team")
     x_team_score = 0
     index = 0
     statsTeam = TeamStat()
@@ -499,27 +502,31 @@ def get_the_score_of_the_main_team(team):
     statsTeam.league_of_the_team = data.all_league_name[data.pos_league_team]
     allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
     team_pos = allTeamTxt.index(statsTeam.name.lower())
-    last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos))
+    last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos,nbOfGameToAnalyze))
+    if NoPrint == False:
+        print_all_data(statsTeam)
+        return
     diffScore = 0
     finalScore = 0
     teamGoal = 0
     oppenentGoal = 0
     score_based_on_league_and_league_place = get_score_based_on_the_league(statsTeam.name)
     score = score_based_on_league_and_league_place
-    print(f"Country {data.country_of_the_team[data.pos_league_team]}")
-    print(f"Default score of {team}:  {score} (based on it position on the league and the league the team play in)")
-    print(f"Position of team on the {data.all_league_name[data.pos_league_team]}: {statsTeam.pos_on_the_league}")
-    print(f"Last {len(statsTeam.last_x_game_list)} games of the team:")
-    print(statsTeam.last_x_game_list)
-    print("The score: ")
-    print(statsTeam.last_x_game_list_score)
-    print("The outcome: ")
-    print(statsTeam.last_x_game_win_draw_or_loose)
+    if NoPrint == True:
+        print(f"Country {data.country_of_the_team[data.pos_league_team]}")
+        print(f"Default score of {team}:  {score} (based on it position on the league and the league the team play in)")
+        print(f"Position of team on the {data.all_league_name[data.pos_league_team]}: {statsTeam.pos_on_the_league}")
+        print(f"Last {len(statsTeam.last_x_game_list)} games of the team:")
+        print(statsTeam.last_x_game_list)
+        print("The score: ")
+        print(statsTeam.last_x_game_list_score)
+        print("The outcome: ")
+        print(statsTeam.last_x_game_win_draw_or_loose)
     for teams in statsTeam.last_x_game_list:
         isLastFive = False
         x2Points = 1
         if index in [0,1,2,3,4]:
-            print("Last 5 games")
+            #print("Last 5 games")
             isLastFive = True
             x2Points = 2.5
         facedTeam = teams.split("_")[0]
@@ -631,13 +638,16 @@ def get_the_score_of_the_main_team(team):
                     finalScore-= (diffScore + abs(resultGoal))
         finalScore = int(finalScore)    
         #print("Score basique " , score_based_on_league_and_league_place)
+
         if finalScore < 0:
             score-=abs(finalScore)
         else:
             score+=finalScore
-        print(f"Score de base du {team}: {score_based_on_league_and_league_place} , Score actuel du {team}: {score} et de {facedTeam}: {x_team_score}" , f" result: {statsTeam.last_x_game_win_draw_or_loose[index]} is oppenent weaker ? {teamScore < score_based_on_league_and_league_place}")
+        if NoPrint == True:
+            print(f"Score de base du {team}: {score_based_on_league_and_league_place} , Score actuel du {team}: {score} et de {facedTeam}: {x_team_score}" , f" result: {statsTeam.last_x_game_win_draw_or_loose[index]} is oppenent weaker ? {teamScore < score_based_on_league_and_league_place}")
         index+=1
-    print(f"Score final de  {team} : {score}")
+    if NoPrint == True:
+        print(f"Score final de  {team} : {score}")
     return score
     
 
@@ -692,31 +702,46 @@ def calc_pourcent_of_win(nb1,nb2):
         return 1
 
 
+chooose = input(f"1. Team VS Team \n2. Stat of a team \n3. Exit\n:")
+check_data_entered_is_good(chooose,3)
 
-team1 = choose_a_team(1).replace(" ","-")
-team2 = choose_a_team(2).replace(" ","-")
+if int(chooose) == 2:
+    team1 = choose_a_team(1).replace(" ","-")
+    get_the_score_of_the_main_team(team1,20,False)
 
-print(f"{team1} vs {team2}")
-
-score_of_team1 = get_the_score_of_the_main_team(team1)
-print("+"*200)
-score_of_team2 = get_the_score_of_the_main_team(team2)
-
-
-print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
-
-if score_of_team1 > score_of_team2:
-    if score_of_team2 * 1.25 < score_of_team1:
-        print(f"{team2} will loose against {team1}")
-    else:
-        print(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
-    print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
-    print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
+elif int(chooose) == 1:
     
-else:
-    if score_of_team1 * 1.25 < score_of_team2:
-        print(f"{team1} will loose against {team2}")
+    team1 = choose_a_team(1).replace(" ","-")
+    team2 = choose_a_team(2).replace(" ","-")
+
+    nbOfGameToAnalyze = input("How many games to you want the bot to analyze? " + "\n" + " The bigger the number is the better the analyze will be :")
+    check_data_entered_is_good(nbOfGameToAnalyze,20)
+
+    print(f"{team1} vs {team2}")
+
+    score_of_team1 = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze))
+    print("+"*200)
+    score_of_team2 = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze))
+
+
+    print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
+
+    if score_of_team1 > score_of_team2:
+        if score_of_team2 * 1.25 < score_of_team1:
+            print(f"{team2} will loose against {team1}")
+        else:
+            print(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
+        print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
+        print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
+        
     else:
-        print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
-    print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
-    print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
+        if score_of_team1 * 1.25 < score_of_team2:
+            print(f"{team1} will loose against {team2}")
+        else:
+            print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
+        print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
+        print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
+
+else:
+    print("Good Bye")
+    quit()
