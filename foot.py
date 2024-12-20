@@ -3,7 +3,7 @@ from teamData import *
 S = Scraper()
 data = teamData()
 
-def last_X_Games_Result(stats,listOfResult):
+def last_X_Games_Result(stats,listOfResult,url=""):
     team =  stats.name
     win,draw,loose = 0,0,0
     totalOfGame = len(listOfResult)
@@ -53,7 +53,7 @@ def last_X_Games_Result(stats,listOfResult):
                 stats.last_x_game_list.append(result[0]+"_"+result[2])
                 stats.last_x_game_list_score.append(result[1]+"_"+result[3])
 
-                res = pos_league_team(result[2])
+                res = pos_league_team(result[0])
                 if res == -1:
                     stats.last_x_game_list_league_or_not.append("X")
                     stats.last_x_game_win_league_or_not.append("X")
@@ -80,7 +80,7 @@ def last_X_Games_Result(stats,listOfResult):
                 stats.nb_of_goal_conceded_home+=int(result[3])
                 stats.last_x_game_list.append(result[2]+"_"+result[0])
                 stats.last_x_game_list_score.append(result[3]+"_"+result[1])
-                res = pos_league_team(result[0])
+                res = pos_league_team(result[2])
                 if res == -1:
                     stats.last_x_game_list_league_or_not.append("X")
                     stats.last_x_game_win_league_or_not.append("X")
@@ -108,7 +108,7 @@ def last_X_Games_Result(stats,listOfResult):
                 stats.nb_of_goal_conceded_away+=int(result[1])
                 stats.last_x_game_list.append(result[0]+"_"+result[2])
                 stats.last_x_game_list_score.append(result[1]+"_"+result[3])
-                res = pos_league_team(result[2])
+                res = pos_league_team(result[0])
                 if res == -1:
                     stats.last_x_game_list_league_or_not.append("X")
                     stats.last_x_game_draw_league_or_not.append("X")
@@ -135,7 +135,7 @@ def last_X_Games_Result(stats,listOfResult):
                 stats.nb_of_goal_conceded_home+=int(result[3])
                 stats.last_x_game_list.append(result[2]+"_"+result[0])
                 stats.last_x_game_list_score.append(result[3]+"_"+result[1])
-                res = pos_league_team(result[0])
+                res = pos_league_team(result[2])
                 if res == -1:
                     stats.last_x_game_list_league_or_not.append("X")
                     stats.last_x_game_draw_league_or_not.append("X")
@@ -166,7 +166,7 @@ def last_X_Games_Result(stats,listOfResult):
                 stats.nb_of_goal_conceded_away+=int(result[1])
                 stats.last_x_game_list.append(result[0]+"_"+result[2])
                 stats.last_x_game_list_score.append(result[1]+"_"+result[3])
-                res = pos_league_team(result[2])
+                res = pos_league_team(result[0])
                 if res == -1:
                     stats.last_x_game_list_league_or_not.append("X")
                     stats.last_x_game_loose_league_or_not.append("X")
@@ -193,7 +193,7 @@ def last_X_Games_Result(stats,listOfResult):
                 stats.nb_of_goal_scored_home+=int(result[1])
                 stats.last_x_game_list.append(result[2]+"_"+result[0])
                 stats.last_x_game_list_score.append(result[3]+"_"+result[1])
-                res = pos_league_team(result[0])
+                res = pos_league_team(result[2])
                 if res == -1:
                     stats.last_x_game_list_league_or_not.append("X")
                     stats.last_x_game_loose_league_or_not.append("X")
@@ -207,6 +207,7 @@ def last_X_Games_Result(stats,listOfResult):
             
             loose+=1
     
+    stats.team_url = url
     stats.nb_of_game = len(listOfResult)
     stats.nb_of_win = win
     stats.nb_of_draw = draw
@@ -234,6 +235,7 @@ def last_X_Games_Result(stats,listOfResult):
 
 def print_all_data(stats):
     print(f"Team Name: {stats.name}")
+    print(f"Team url: {stats.team_url}")
     print(f"Points: {stats.point}")
     print(f"Position in the League: {stats.pos_on_the_league}")
     print(f"League of the Team: {stats.league_of_the_team}")
@@ -318,7 +320,6 @@ def little_ratio_based_on_team_place_on_league(team,team2,teamScore,score_based_
         z = ((teamScore-score_based_on_league_and_league_place)/teamScore)
         if score_based_on_league_and_league_place >= teamScore:
             z = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place)
-        
         try:
             if score_based_on_league_and_league_place < teamScore:
                 z = abs(z)
@@ -502,7 +503,8 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
     statsTeam.league_of_the_team = data.all_league_name[data.pos_league_team]
     allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
     team_pos = allTeamTxt.index(statsTeam.name.lower())
-    last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos,nbOfGameToAnalyze))
+    urlOfTeam = get_url_of_a_team(team_pos)
+    last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos,nbOfGameToAnalyze),urlOfTeam)
     if NoPrint == False:
         print_all_data(statsTeam)
         return
@@ -718,7 +720,7 @@ elif int(chooose) == 1:
 
     nbOfGameToAnalyze = input("How many games to you want the bot to analyze? " + "\n" + "The bigger the number is the better the analyze will be:")
     check_data_entered_is_good(nbOfGameToAnalyze,20)
-
+    
     print(f"{team1} vs {team2}")
 
     score_of_team1 = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze))

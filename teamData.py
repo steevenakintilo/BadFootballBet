@@ -1090,5 +1090,7 @@ class TeamStat:
     last_x_game_win_draw_or_loose = []
     last_x_game_win_draw_or_loose_away = []
     last_x_game_win_draw_or_loose_home = []
+
+    team_url = ""
     
     

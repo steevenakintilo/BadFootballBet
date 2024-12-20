@@ -1,16 +1,12 @@
-import feedparser
 from random import randint
 
 import requests
-from bs4 import BeautifulSoup
 from os import system
 
-import pickle
+#import pickle
 from selenium.webdriver.common.action_chains import ActionChains
 
 from selenium.webdriver.common.by import By
-import traceback
-from discord_webhook import DiscordWebhook
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -21,7 +17,6 @@ import time
 import os.path
 
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow logs (3 = ERROR)
 
 from teamData import *
 
@@ -29,6 +24,7 @@ class Scraper:
     
     wait_time = 5
     options = webdriver.ChromeOptions()
+    options.add_argument('--log-level=1')
     options.add_argument("--log-level=3")  # Suppress all logging levels
     driver = webdriver.Chrome(options=options)
     username_xpath = '/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[4]/label/div/div[2]/div/input'
@@ -78,6 +74,14 @@ def checkNum(string):
     if is_num(string[1]) == True and is_num(string[3]) == True:
         return True
     return False
+
+def get_url_of_a_team(posTeam):
+    try:
+        all_url = print_file_info("teamUrl.txt").split("\n")
+        time.sleep(3)
+        return all_url[posTeam]
+    except:
+        return("")
 def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
     
     years = ["2024","2025","2026"]
@@ -200,34 +204,11 @@ def checkTeamNameIsRight(S,teamName):
         return False
 
 def list_of_team_league(S,url):
-    # if nb == 1:
-    #     S.driver.get("https://www.footmercato.net/club/hac/classement")
-    # if nb == 2:
-    #     S.driver.get("https://www.footmercato.net/club/liverpool/classement")
-    # if nb == 3:
-    #     S.driver.get("https://www.footmercato.net/club/fc-barcelone/classement")
-    # if nb == 4:
-    #     S.driver.get("https://www.footmercato.net/club/bayer-04-leverkusen/classement")
-    # if nb == 5:
-    #     S.driver.get("https://www.footmercato.net/club/inter/classement")
-    # if nb == 6:
-    #     S.driver.get("https://www.footmercato.net/club/sporting-clube-de-portugal/classement")
-    # if nb == 7:
-    #     S.driver.get("https://www.footmercato.net/club/feyenoord-rotterdam/classement")
-    # if nb == 8:
-    #     S.driver.get("https://www.footmercato.net/club/galatasaray-spor-kulubu/classement")
-    # if nb == 9:
-    #     S.driver.get("https://www.footmercato.net/club/club-brugge-kv/classement")
-    # if nb == 10:
-    #     S.driver.get("https://www.footmercato.net/club/bsc-young-boys/classement")
-    # if nb == 11:
-    #     S.driver.get("https://www.footmercato.net/club/glasgow-rangers/classement")
     S.driver.get(url)
     
     time.sleep(3)
     accept_cookie(S)
 
-    #time.sleep(101010)
     write_into_file("teamUrl.txt"," "+"\n")
     write_into_file("allteam.txt"," "+"\n")
     print(" ")
@@ -250,9 +231,8 @@ def list_of_team_league(S,url):
             S.driver.back()
             time.sleep(3)
         except:
-            import traceback
-            traceback.print_exc()
-            print("caca")
+            #import traceback
+            #traceback.print_exc()
             return
 
 
