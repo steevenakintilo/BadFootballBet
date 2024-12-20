@@ -154,7 +154,7 @@ def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
                 break
             #print("dendex " , index)
             index+=1
-    if len(listOfResult) == 1:
+    if len(listOfResult) == 0:
         print(f"Sorry but {team} has played 0 match this season can't compare or get that stat of it")
         S.driver.close()
         quit()

@@ -673,6 +673,8 @@ def check_data_entered_is_good(country_nb,leen):
 def choose_a_team(nbnb):
     for i in range(len(data.country_of_the_team)):
         print(f"{i+1}. {data.country_of_the_team[i]}")
+    print()
+    print()
     country_nb = input(f"Country of Team {nbnb} (choose between 1 and {len(data.country_of_the_team)}): ")
     check_data_entered_is_good(country_nb , len(data.country_of_the_team))
 
@@ -714,7 +716,7 @@ elif int(chooose) == 1:
     team1 = choose_a_team(1).replace(" ","-")
     team2 = choose_a_team(2).replace(" ","-")
 
-    nbOfGameToAnalyze = input("How many games to you want the bot to analyze? " + "\n" + " The bigger the number is the better the analyze will be :")
+    nbOfGameToAnalyze = input("How many games to you want the bot to analyze? " + "\n" + "The bigger the number is the better the analyze will be:")
     check_data_entered_is_good(nbOfGameToAnalyze,20)
 
     print(f"{team1} vs {team2}")

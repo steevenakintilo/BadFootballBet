@@ -224,7 +224,7 @@ class teamData:
     """.lower().split("\n")
 
     czechTeam = """
-    Sparta
+    Sparta_CZECH
     Slavia
     Plzeň
     Baník
@@ -330,7 +330,7 @@ class teamData:
     russianTeam = """
     Krasnodar
     Zénith
-    Spartak
+    Spartak_RUSSIAN
     Dinamo M
     Lokomotiv M
     CSKA
@@ -379,7 +379,7 @@ class teamData:
     Atl. Tucumán
     Unión
     Platense
-    Independiente
+    Independiente2
     Estudiantes
     Instituto
     Lanús
@@ -401,10 +401,10 @@ class teamData:
 
     uruguayanTeam = """
     Peñarol
-    Nacional
+    Nacional_URUGUAY
     Defensor
     Cerro Largo
-    Liverpool
+    Liverpool_URUGUAY
     Wanderers
     River Plate
     Maldonado
@@ -413,7 +413,7 @@ class teamData:
     City Torque
     Plaza Colonia
     Danubio
-    Racing
+    Racing_URUGUAY
     Boston River
     Fénix
     """.lower().split("\n")
@@ -515,7 +515,7 @@ class teamData:
     Masry
     ENPPI
     Mokawloon
-    Ittihad
+    Ittihad_EGYPTIAN
     Pharco
     Smouha
     Ismaily
@@ -623,7 +623,7 @@ class teamData:
     Qatar
     Gharafa
     Markhiya
-    Ahli
+    Ahli_QATAR
     Rayyan
     Umm Salal
     Shamal
@@ -635,12 +635,12 @@ class teamData:
     The Strongest
     GVSJ
     Always Ready
-    Nacional
+    Nacional_BOLIVIE
     Aurora
     Blooming
     Wilstermann
     Real Tomayapo
-    Independiente
+    Independiente_BOLIVIA
     O. Petrolero
     Universitario
     San Antonio BB
@@ -915,9 +915,9 @@ class teamData:
     SOUTH_KOREA = 820
     ARMENIA = 500
     GREECE = 800
-    QATAR = 0
-    BOLIVIA = 0
-
+    BOLIVIA = 680
+    QATAR = 800
+    
     LIGUE_2 = 720
     CHAMPIONSHIP = 900
     BUNDESLIGA_2 = 800
