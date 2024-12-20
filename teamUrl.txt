@@ -494,10 +494,6 @@ https://www.footmercato.net/club/fk-khimki/
 https://www.footmercato.net/club/fk-fakel-voronezh/
 https://www.footmercato.net/club/fk-akhmat-grozny/
 https://www.footmercato.net/club/fk-gazovik-orenburg/
- 
- 
- 
- 
 https://www.footmercato.net/club/alashkert-fc/
 https://www.footmercato.net/club/fc-ararat-yerevan/
 https://www.footmercato.net/club/ararat-armenia-fc/
@@ -507,8 +503,7 @@ https://www.footmercato.net/club/pyunik-fc/
 https://www.footmercato.net/club/shirak-fc/
 https://www.footmercato.net/club/fc-urartu/
 https://www.footmercato.net/club/fk-van/
-https://www.footmercato.net/club/fk-west-armenia/
- 
+https://www.footmercato.net/club/fk-west-armenia/ 
 https://www.footmercato.net/club/paok-thessaloniki-fc/
 https://www.footmercato.net/club/aek-athens-fc/
 https://www.footmercato.net/club/olympiakos-cfp/
@@ -523,7 +518,6 @@ https://www.footmercato.net/club/panaitolikos-gfs-agrinio/
 https://www.footmercato.net/club/volos-new-football-club/
 https://www.footmercato.net/club/kifisia/
 https://www.footmercato.net/club/pas-giannina-fc/
- 
 https://www.footmercato.net/club/al-duhail-sc/
 https://www.footmercato.net/club/al-arabi-sc/
 https://www.footmercato.net/club/al-sadd-sc/
@@ -536,7 +530,6 @@ https://www.footmercato.net/club/al-rayyan-sc/
 https://www.footmercato.net/club/umm-salal-sc/
 https://www.footmercato.net/club/al-shamal-sc/
 https://www.footmercato.net/club/al-sailiya-sc/
- 
 https://www.footmercato.net/club/club-bolivar/
 https://www.footmercato.net/club/club-the-strongest/
 https://www.footmercato.net/club/gualberto-villarroel-sj/
@@ -553,8 +546,6 @@ https://www.footmercato.net/club/san-antonio-bulo-bulo/
 https://www.footmercato.net/club/cd-guabira/
 https://www.footmercato.net/club/royal-pari-fc/
 https://www.footmercato.net/club/real-santa-cruz/
- 
- 
 https://www.footmercato.net/club/sheffield-united-fc/
 https://www.footmercato.net/club/leeds-united-fc/
 https://www.footmercato.net/club/burnley-fc/
@@ -579,7 +570,6 @@ https://www.footmercato.net/club/cardiff-city-fc/
 https://www.footmercato.net/club/portsmouth-fc/
 https://www.footmercato.net/club/plymouth-argyle/
 https://www.footmercato.net/club/hull-city-afc/
- 
 https://www.footmercato.net/club/sv-07-elversberg/
 https://www.footmercato.net/club/1-fc-cologne/
 https://www.footmercato.net/club/sc-paderborn-07/
@@ -598,7 +588,6 @@ https://www.footmercato.net/club/sc-preussen-06-munster/
 https://www.footmercato.net/club/ssv-ulm-1846/
 https://www.footmercato.net/club/braunschweiger-tsv-eintracht-1895/
 https://www.footmercato.net/club/ssv-jahn-2000-regensburg/
- 
 https://www.footmercato.net/club/ud-almeria/
 https://www.footmercato.net/club/real-racing-club-de-santander/
 https://www.footmercato.net/club/cd-mirandes/
@@ -621,7 +610,6 @@ https://www.footmercato.net/club/cd-eldense/
 https://www.footmercato.net/club/racing-club-de-ferrol/
 https://www.footmercato.net/club/fc-cartagena/
 https://www.footmercato.net/club/cd-tenerife/
- 
 https://www.footmercato.net/club/us-sassuolo-calcio/
 https://www.footmercato.net/club/ac-pisa-1909/
 https://www.footmercato.net/club/asd-spezia-calcio-2008/
@@ -642,7 +630,6 @@ https://www.footmercato.net/club/cosenza-calcio/
 https://www.footmercato.net/club/frosinone-calcio/
 https://www.footmercato.net/club/fc-sudtirol/
 https://www.footmercato.net/club/as-cittadella/
- 
 https://www.footmercato.net/club/club-america/
 https://www.footmercato.net/club/csyd-atlas-de-guadalajara/
 https://www.footmercato.net/club/atletico-san-luis/
@@ -661,7 +648,6 @@ https://www.footmercato.net/club/club-santos-laguna/
 https://www.footmercato.net/club/cf-tigres-de-la-universidad-autonoma-de-nuevo-leon/
 https://www.footmercato.net/club/club-tijuana-xoloitzcuintles-de-caliente/
 https://www.footmercato.net/club/deportivo-toluca-fc/
- 
 https://www.footmercato.net/club/vissel-kobe/
 https://www.footmercato.net/club/yokohama-f-marinos/
 https://www.footmercato.net/club/sanfrecce-hiroshima/
@@ -680,7 +666,6 @@ https://www.footmercato.net/club/shonan-bellmare/
 https://www.footmercato.net/club/gamba-osaka/
 https://www.footmercato.net/club/kashiwa-reysol/
 https://www.footmercato.net/club/yokohama-fc/
- 
 https://www.footmercato.net/club/ulsan-hyundai-horang-i/
 https://www.footmercato.net/club/pohang-steelers-fc/
 https://www.footmercato.net/club/fc-seoul/
@@ -693,7 +678,6 @@ https://www.footmercato.net/club/jeju-united-fc/
 https://www.footmercato.net/club/suwon-fc/
 https://www.footmercato.net/club/suwon-samsung-bluewings-fc/
 https://www.footmercato.net/club/gangwon-fc/
- 
 https://www.footmercato.net/club/fc-lorient/
 https://www.footmercato.net/club/paris-fc/
 https://www.footmercato.net/club/us-du-littoral-de-dunkerque/
