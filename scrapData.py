@@ -3,7 +3,7 @@ from random import randint
 import requests
 from os import system
 
-#import pickle
+import pickle
 from selenium.webdriver.common.action_chains import ActionChains
 
 from selenium.webdriver.common.by import By
@@ -20,12 +20,27 @@ import os
 
 from teamData import *
 
+def print_pkl_info():
+    try:
+        file_path = f"cookies{0}.pkl"
+        with open(file_path, 'rb') as file:
+            try:
+                data = pickle.load(file)
+            except:
+                return ""
+        return (data)
+    except:
+        return ("")
+
 class Scraper:
     
     wait_time = 5
     options = webdriver.ChromeOptions()
     options.add_argument('--log-level=1')
     options.add_argument("--log-level=3")  # Suppress all logging levels
+    if len(str(print_pkl_info())) > 20:
+        options.add_argument('headless')
+    #print("caca " , len(sprint_pkl_info()),print_pkl_info())
     driver = webdriver.Chrome(options=options)
     username_xpath = '/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[4]/label/div/div[2]/div/input'
     
@@ -33,13 +48,26 @@ class Scraper:
 def accept_cookie(S):
     time.sleep(0.5)
     try:
-        acceptBtnXpath = "/html/body/div[1]/div/div/div/div/div/div[2]/button[1]"
+        try:
+            ck = print_pkl_info()
+        except:
+            ck = ""
+        if len(str(ck)) > 20:
+            cookies = pickle.load(open(f"cookies{0}.pkl","rb"))
+            for cookie in cookies:
+                S.driver.add_cookie(cookie)
 
-        element = WebDriverWait(S.driver,3).until(
-        EC.presence_of_element_located((By.XPATH, acceptBtnXpath)))
+        else:
+            acceptBtnXpath = "/html/body/div[1]/div/div/div/div/div/div[2]/button[1]"
 
-        element.click()
+            element = WebDriverWait(S.driver,3).until(
+            EC.presence_of_element_located((By.XPATH, acceptBtnXpath)))
+
+            element.click()
+            pickle.dump(S.driver.get_cookies(), open(f"cookies{0}.pkl", "wb"))
     except:
+        import traceback
+        traceback.print_exc()    
         pass    
 
 def is_num(nb):
@@ -88,7 +116,7 @@ def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
     all_url = print_file_info("teamUrl.txt").split("\n")
     S.driver.get(all_url[posTeam])
 
-    accept_cookie(S)
+    #accept_cookie(S)
 
     time.sleep(5)
 
