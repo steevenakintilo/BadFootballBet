@@ -111,7 +111,6 @@ def get_url_of_a_team(posTeam):
     except:
         return("")
 def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
-    
     years = ["2024","2025","2026"]
     all_url = print_file_info("teamUrl.txt").split("\n")
     S.driver.get(all_url[posTeam])
@@ -249,7 +248,7 @@ def list_of_team_league(S,url):
             except:
                 return
             print(element.text)
-            write_into_file("allteam.txt",element.text+"\n")
+            write_into_file("allteam.txt",element.text.replace(" ","-")+"\n")
             element.click()
 
             current_url = S.driver.current_url
