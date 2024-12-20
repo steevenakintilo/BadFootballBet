@@ -634,7 +634,7 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 20 - oppenentGoal * 10
                     finalScore+= (diffScore + abs(resultGoal))
-                    print(finalScore,little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,2),(score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place)
+                    #print(finalScore,little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,2),(score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place)
                     #print('ok")
                 if statsTeam.last_x_game_win_draw_or_loose[index] == "L":
                     #print("ici  12")
@@ -722,9 +722,9 @@ elif int(chooose) == 1:
     team1 = choose_a_team(1).replace(" ","-")
     team2 = choose_a_team(2).replace(" ","-")
 
-    #nbOfGameToAnalyze = input("How many games to you want the bot to analyze? " + "\n" + "The bigger the number is the better the analyze will be:")
-    #check_data_entered_is_good(nbOfGameToAnalyze,20)
-    nbOfGameToAnalyze = 20
+    nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
+    check_data_entered_is_good(nbOfGameToAnalyze,20)
+    #nbOfGameToAnalyze = 5
     print(f"{team1} vs {team2}")
 
     score_of_team1 = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze))
@@ -749,7 +749,7 @@ elif int(chooose) == 1:
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
         print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
         print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
-
+    
 else:
     print("Good Bye")
     quit()
