@@ -4,6 +4,8 @@ S = Scraper()
 data = teamData()
 
 def last_X_Games_Result(stats,listOfResult,url=""):
+    if len(listOfResult) == 0:
+        return -1
     team =  stats.name
     win,draw,loose = 0,0,0
     totalOfGame = len(listOfResult)
@@ -236,7 +238,6 @@ def last_X_Games_Result(stats,listOfResult,url=""):
 def print_all_data(stats):
     print(f"Team Name: {stats.name}")
     print(f"Team url: {stats.team_url}")
-    print(f"Points: {stats.point}")
     print(f"Position in the League: {stats.pos_on_the_league}")
     print(f"League of the Team: {stats.league_of_the_team}")
     print(f"Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_list}")
@@ -302,13 +303,15 @@ def get_score_based_on_the_league(team):
         data.pos_league_team = pos_league_team(team)
         league_of_the_team = data.all_league_name[data.pos_league_team]
         score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - pos_on_the_league - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
-        
         if pos_league_team(team) == -1:
             return 100
         if score_based_on_league_and_league_place < 100:
             return 100
         return score_based_on_league_and_league_place
     except:
+        #import traceback
+        #traceback.print_exc()
+            
         return 100
 
 def little_ratio_based_on_team_place_on_league(team,team2,teamScore,score_based_on_league_and_league_place,type=2):
@@ -339,7 +342,7 @@ def little_ratio_based_on_team_place_on_league(team,team2,teamScore,score_based_
     except:
         return 0
 
-def get_the_score_of_a_team(team,nbOfGameToAnalyze):    
+def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):    
     score = 0
     statsT = TeamStat()
     statsT.name = team
@@ -354,7 +357,10 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze):
     allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
     team_pos = allTeamTxt.index(statsT.name.lower())
     try:
-        last_X_Games_Result(statsT,Get_Last_X_Games_Result(S,statsT.name,team_pos,nbOfGameToAnalyze))
+        x = last_X_Games_Result(statsT,Get_Last_X_Games_Result(S,statsT.name,team_pos,nbOfGameToAnalyze))
+        if x == -1:
+            print("Team didnt play a game this year or a bug happend so the score is 1")
+            return 1
     except:
         return score_based_on_league_and_league_place
     
@@ -710,6 +716,7 @@ def calc_pourcent_of_win(nb1,nb2):
         return 1
 
 
+reset_file("ckk.txt")
 chooose = input(f"1. Team VS Team \n2. Stat of a team \n3. Exit\n:")
 check_data_entered_is_good(chooose,3)
 
@@ -724,7 +731,7 @@ elif int(chooose) == 1:
 
     nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
     check_data_entered_is_good(nbOfGameToAnalyze,20)
-    #nbOfGameToAnalyze = 5
+    #nbOfGameToAnalyze = 20
     print(f"{team1} vs {team2}")
 
     score_of_team1 = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze))

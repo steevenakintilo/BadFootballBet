@@ -44,10 +44,8 @@ class Scraper:
     options.add_argument('--blink-settings=imagesEnabled=false')
     options.add_argument("--disable-gpu")  # Disable GPU (helpful in headless mode)
     options.add_argument("--disable-dev-shm-usage")  # Prevent shared memory issues
-
-    #print("caca " , len(sprint_pkl_info()),print_pkl_info())
     driver = webdriver.Chrome(options=options)
-    username_xpath = '/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[4]/label/div/div[2]/div/input'
+    driver.set_page_load_timeout(15)
     
 
 def accept_cookie(S):
