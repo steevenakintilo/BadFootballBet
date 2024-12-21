@@ -47,7 +47,7 @@ If you choose 3 it will just quit the program
 
 ## Result
 
-Result of Arsenal VS Dortmund using only the last 3 games of each team and position of the league of 21 December 2024
+Result of Arsenal VS Dortmund using only the last 3 games of each team (Test done the 21 December 2024)
 
 ![image](https://github.com/user-attachments/assets/bd4d3f6f-4a6e-434f-89aa-eed276633b05)
 
