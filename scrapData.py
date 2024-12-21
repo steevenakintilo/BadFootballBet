@@ -40,13 +40,19 @@ class Scraper:
     options.add_argument("--log-level=3")  # Suppress all logging levels
     if len(str(print_pkl_info())) > 20:
         options.add_argument('headless')
+    
+    options.add_argument('--blink-settings=imagesEnabled=false')
+    options.add_argument("--disable-gpu")  # Disable GPU (helpful in headless mode)
+    options.add_argument("--disable-dev-shm-usage")  # Prevent shared memory issues
+
     #print("caca " , len(sprint_pkl_info()),print_pkl_info())
     driver = webdriver.Chrome(options=options)
     username_xpath = '/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[4]/label/div/div[2]/div/input'
     
 
 def accept_cookie(S):
-    time.sleep(0.5)
+    if print_file_info("ckk.txt") == "1":
+        return
     try:
         try:
             ck = print_pkl_info()
@@ -56,8 +62,10 @@ def accept_cookie(S):
             cookies = pickle.load(open(f"cookies{0}.pkl","rb"))
             for cookie in cookies:
                 S.driver.add_cookie(cookie)
-
+            write_into_file("ckk.txt",1)
+            
         else:
+            reset_file("ckk.txt")
             acceptBtnXpath = "/html/body/div[1]/div/div/div/div/div/div[2]/button[1]"
 
             element = WebDriverWait(S.driver,3).until(
@@ -65,9 +73,11 @@ def accept_cookie(S):
 
             element.click()
             pickle.dump(S.driver.get_cookies(), open(f"cookies{0}.pkl", "wb"))
+            write_into_file("ckk.txt",1)
+
     except:
-        import traceback
-        traceback.print_exc()    
+        #import traceback
+        #traceback.print_exc()    
         pass    
 
 def is_num(nb):
@@ -106,26 +116,24 @@ def checkNum(string):
 def get_url_of_a_team(posTeam):
     try:
         all_url = print_file_info("teamUrl.txt").split("\n")
-        time.sleep(3)
         return all_url[posTeam]
     except:
         return("")
 def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
+    
     years = ["2024","2025","2026"]
     all_url = print_file_info("teamUrl.txt").split("\n")
-    S.driver.get(all_url[posTeam])
+    #S.driver.get(all_url[posTeam])
 
     #accept_cookie(S)
 
-    time.sleep(5)
+    #time.sleep(5)
 
     S.driver.get(f"{all_url[posTeam]}calendrier/#tabPlayed")
-    time.sleep(5)
     lastResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/nav/a[2]"
     
     calendarXpath = "/html/body/div[3]/div[4]/div/div/nav/ul/li[4]/a"
 
-    time.sleep(1)
     tabResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div"
 
     element = WebDriverWait(S.driver,15).until(
@@ -187,8 +195,7 @@ def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
             index+=1
     if len(listOfResult) == 0:
         print(f"Sorry but {team} has played 0 match this season can't compare or get that stat of it")
-        S.driver.close()
-        quit()
+        return []
     return listOfResult
     
 

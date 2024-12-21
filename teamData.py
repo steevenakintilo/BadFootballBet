@@ -344,7 +344,7 @@ class teamData:
     Fakel
     Akhmat
     Gazovik
-    """
+    """.lower().split("\n")
     brazilianTeam = """
     Botafogo
     Palmeiras
@@ -823,29 +823,11 @@ class teamData:
     Martigues
     """.lower().split("\n")
 
-    romanianTeam = """
-    U Cluj
-    Dinamo
-    Steaua
-    U Craiova
-    Cluj
-    Sepsi
-    Rapid
-    Petrolul 52
-    Hermannstadt
-    Oţelul
-    Farul
-    Arad
-    Slobozia
-    Iaşi
-    Botoşani
-    Buzău
-    """.lower().split("\n")
 
     allTeam_ = [englishTeam,spanishTeam,italianTeam,germanTeam,frenchTeam,portugalTeam,netherlandTeam,turkishTeam,belgiumTeam,swissTeam,
                 scottishTeam,czechTeam,croatianTeam, austrianTeam, swedishTeam, norwegianTeam,serbianTeam, ukrainianTeam, russianTeam ,brazilianTeam, argentinianTeam, 
                 uruguayanTeam, mlsTeam,saudiTeam,chineseTeam,egyptianTeam,marocoTeam,algerianTeam,albanianTeam, israeliTeam,armenianTeam,
-                greekTeam, qatarTeam, bolivianTeam,mexicanTeam, japaneseTeam, koreanTeam,frenchTeam2,englishTeam2,germanTeam2,spanishTeam2,italianTeam2,romanianTeam]
+                greekTeam, qatarTeam, bolivianTeam,mexicanTeam, japaneseTeam, koreanTeam,frenchTeam2,englishTeam2,germanTeam2,spanishTeam2,italianTeam2]
 
 
     allTeam = []
@@ -892,8 +874,7 @@ class teamData:
     NB_OF_TEAM_ITALIAN2 = len(italianTeam2) - 2
     NB_OF_TEAM_GERMAN2 = len(germanTeam2) - 2
     NB_OF_TEAM_FRENCH2 = len(frenchTeam2) - 2
-    NB_OF_TEAM_ROMANIA = len(romanianTeam) - 2
-
+    
     #print("chinc chinc " , chineseTeam , len(chineseTeam))
     ENGLISH = 1500
     SPANISH = 1416
@@ -942,14 +923,18 @@ class teamData:
     BUNDESLIGA_2 = 800
     LIGA_2 = 780
     SERIE_B = 750
-    ROMANIA = 740
+
     NONE = 100
-        
+    
+
+    LIGUE_2 ,CHAMPIONSHIP ,BUNDESLIGA_2 ,LIGA_2 ,SERIE_B
+
     default_score_based_on_the_league = [
-        ENGLISH, SPANISH, ITALIAN, GERMAN, FRENCH, PORTUGAL, NETHERLAND, TURKISH, BELGIUM, SWISS, SCOTTISH,CZECH,
+        ENGLISH, SPANISH, ITALIAN, GERMAN, FRENCH, PORTUGAL, NETHERLAND, TURKISH, BELGIUM, SWISS, SCOTTISH,
         CROATIAN, AUSTRIAN, SWEDISH, NORWEGIAN, SERBIAN, UKRAINIAN, RUSSIAN, BRAZILIAN, ARGENTINIAN, URUGUAYAN, MLS,
         SAUDI, CHINESE, EGYPTIAN, MOROCCAN, ALGERIAN, ALBANIAN, ISRAEL,ARMENIA, GREECE, QATAR, BOLIVIA,
-        MEXICAN, JAPANESE, SOUTH_KOREA,LIGUE_2,CHAMPIONSHIP ,BUNDESLIGA_2 ,LIGA_2 ,SERIE_B,ROMANIA
+        MEXICAN, JAPANESE, SOUTH_KOREA,LIGUE_2 ,
+        CHAMPIONSHIP ,BUNDESLIGA_2 ,LIGA_2 ,SERIE_B,NONE
     ]
 
     # Define number of teams for all leagues
@@ -961,9 +946,8 @@ class teamData:
         NB_OF_TEAM_URUGUAYAN, NB_OF_TEAM_AMERICAN, NB_OF_TEAM_SAUDI, NB_OF_TEAM_CHINESE,NB_OF_TEAM_EGYPTIAN,
         NB_OF_TEAM_MAROCCAN,NB_OF_TEAM_ALGERIAN,NB_OF_TEAM_ALBANIAN, NB_OF_TEAM_ISRAELI,NB_OF_TEAM_ARMENIAN, 
         NB_OF_TEAM_GREEK, NB_OF_TEAM_QATAR,NB_OF_TEAM_BOLIVIAN,NB_OF_TEAM_MEXICAN, NB_OF_TEAM_JAPANESE, NB_OF_TEAM_KOREAN,
-        NB_OF_TEAM_ENGLISH2, NB_OF_TEAM_SPANISH2, NB_OF_TEAM_ITALIAN2, NB_OF_TEAM_GERMAN2, NB_OF_TEAM_FRENCH2,NB_OF_TEAM_ROMANIA
+        NB_OF_TEAM_ENGLISH2, NB_OF_TEAM_SPANISH2, NB_OF_TEAM_ITALIAN2, NB_OF_TEAM_GERMAN2, NB_OF_TEAM_FRENCH2
     ]
-
 
     pos_league_team = 0
     #print("dodod " , nb_of_team_on_all_league)
@@ -1014,7 +998,6 @@ class teamData:
                       "https://www.footmercato.net/club/sv-darmstadt-1898/classement",
                       "https://www.footmercato.net/club/real-oviedo/classement",
                       "https://www.footmercato.net/club/us-cremonese/classement",
-                      "https://www.footmercato.net/club/fc-universitatea-cluj-1/classement",
                     ]
     
 
@@ -1028,7 +1011,7 @@ class teamData:
         "Botola Pro (Morocco)", "Ligue 1 Algérienne", "Superliga Albania" , "Ligat Ha'Al",
         "Armenian Premier League", "Super League Greece", "Qatar Stars League", "Primera División Bolivia", 
         "Liga MX", "J.League", "K League 1", "Ligue 2 (France)", 
-        "EFL Championship", "2. Bundesliga", "Segunda División", "Serie B","Liga I"
+        "EFL Championship", "2. Bundesliga", "Segunda División", "Serie B"
     ]
 
     country_of_the_team = [
@@ -1038,7 +1021,7 @@ class teamData:
         "Brazil", "Argentina", "Uruguay", "USA", "Saudi Arabia", "China", "Egypt", 
         "Morocco", "Algeria", "Albania", "Israel", "Armenia", "Greece", "Qatar", "Bolivia", 
         "Mexico", "Japan", "South Korea", "France2ndDivision", 
-        "England2ndDivision", "Germany2ndDivision", "Spain2ndDivision", "Italy2ndDivision","Romania"
+        "England2ndDivision", "Germany2ndDivision", "Spain2ndDivision", "Italy2ndDivision"
     ]
 
 class TeamStat:
