@@ -53,8 +53,8 @@ Result of Arsenal VS Dortmund using only the last 3 games of each team (Test don
 
 ## Disclamer
 
-This program was made for fun therefore the calculus are 100% right and it will never be it's impossible to guess the result of all the possible game.
-Don't use this program to bet money on it you could loose money.
+This program was made for fun therefore the calculus are not 100% right and it will never be, it's impossible to guess the result of all the possible game.
+Don't use this program to bet money you could loose money.
 Afterall the calculus are made with real time stats to make the result as close as possible.
 
 The bot is Still under construction...
