@@ -734,9 +734,9 @@ elif int(chooose) == 1:
     #nbOfGameToAnalyze = 20
     print(f"{team1} vs {team2}")
 
-    score_of_team1 = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze))
+    score_of_team1 = abs(get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze)))
     print("+"*200)
-    score_of_team2 = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze))
+    score_of_team2 = abs(get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze)))
 
 
     print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
