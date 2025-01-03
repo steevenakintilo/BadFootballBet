@@ -717,29 +717,37 @@ def calc_pourcent_of_win(nb1,nb2):
 
 def print_result_info(team1,score_of_team1,team2,score_of_team2):
     print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
-
+    p1 = calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)
+    p2 = calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)
     if score_of_team1 > score_of_team2:
         if score_of_team2 * 1.25 < score_of_team1:
             print(f"{team2} will loose against {team1}")
-            send_message_discord(f"{team2} will loose against {team1}")
+            #send_message_discord(f"{team2} will loose against {team1}")
+            #send_message_discord(f"{team2} {p2} will loose against {team1} {p1}")
+            send_message_discord(f"{team2} {p2} LOOSE VS {team1} {p1}")
         else:
             print(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
-            send_message_discord(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
+            #send_message_discord(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
+            send_message_discord(f"{team1} {p1} DRAW VS {team2} {p2}")
+
         print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
         print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
-        send_message_discord(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
-        send_message_discord(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
+        # send_message_discord(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
+        # send_message_discord(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
     else:
         if score_of_team1 * 1.25 < score_of_team2:
             print(f"{team1} will loose against {team2}")
-            send_message_discord(f"{team1} will loose against {team2}")
+            #send_message_discord(f"{team1} will loose against {team2}")
+            send_message_discord(f"{team1} {p1} LOOSE VS {team2} {p2}")
         else:
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
-            send_message_discord(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
+            #send_message_discord(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
+            send_message_discord(f"{team2} {p2} DRAW VS {team1} {p1}")
+
         print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
         print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
-        send_message_discord(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
-        send_message_discord(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
+        #send_message_discord(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
+        #send_message_discord(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
 
 def send_message_discord(msg):
     try:
@@ -799,24 +807,24 @@ def balanced_sublists(lst, n):
 
     return sublists
 
-# Distribute the original list into 4 balanced sublists
-sublists = balanced_sublists(matches, 4)
+# Distribute the original list into 5 balanced sublists
+sublists = balanced_sublists(matches, 5)
 
-while len(sublists) < 4:
+while len(sublists) < 5:
     sublists.append(['a', 'b'])  # Add a "fake" list with placeholder elements
 
 # Unpack into variables
-list1, list2, list3, list4 = sublists
+list1, list2, list3, list4, list5 = sublists
 
 try:
-    list1, list2, list3, list4 = sublists
-    list_of_list = [list1,list2,list3,list4]
+    list1, list2, list3, list4, list5 = sublists
+    list_of_list = [list1,list2,list3,list4,list5]
     current_list = list_of_list[int(sys.argv[1]) - 1]
 except:
-    print("You must put arguments beetween 1 and 4")
+    print("You must put arguments beetween 1 and 5")
     quit()
 
-
+print("Match of to analyze " , current_list)
 for match in current_list:
     m = match.split("#####")
     print(m[0],m[1])
