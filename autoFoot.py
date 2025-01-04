@@ -1,6 +1,7 @@
 from scrapData import * 
 from teamData import *
 from discord_webhook import DiscordWebhook
+import itertools
 
 S = Scraper()
 data = teamData()
@@ -715,20 +716,59 @@ def calc_pourcent_of_win(nb1,nb2):
     except:
         return 1
 
-def print_result_info(team1,score_of_team1,team2,score_of_team2):
+# MATCH.TXT
+# RESULT.TXT
+# ODDS.TXT
+# PERCENT.TXT
+# WINTEAM.TXT
+
+def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
+    alphaElem = str(idxx)
     print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
-    p1 = calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)
-    p2 = calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)
+    p1 = str(calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2))
+    p2 = str(calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2))
     if score_of_team1 > score_of_team2:
         if score_of_team2 * 1.25 < score_of_team1:
             print(f"{team2} will loose against {team1}")
             #send_message_discord(f"{team2} will loose against {team1}")
             #send_message_discord(f"{team2} {p2} will loose against {team1} {p1}")
-            send_message_discord(f"{team2} {p2} LOOSE VS {team1} {p1}")
+            odds = get_odds(S,team1,team2,"W")
+            if len(odds) > 2 and "." not in odds:
+                odds = get_odds(S,team1,team2,"W",True)
+            
+            if len(odds) > 2 and "." not in odds:
+                odds = -999
+            
+            if odds == - 999:
+                return
+            
+            
+            send_message_discord(f"{team1} {p1} WIN VS {team2} {p2} ODDS {odds}")
+            write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
+            write_into_file("result.txt",alphaElem + " " + team1 + "\n")
+            write_into_file("odds.txt",alphaElem + " " + odds + "\n")
+            write_into_file("percent.txt",alphaElem + " " + p1+ " " + p2 + "\n")
+
         else:
             print(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
             #send_message_discord(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
-            send_message_discord(f"{team1} {p1} DRAW VS {team2} {p2}")
+            odds = get_odds(S,team1,team2,"D")
+            if len(odds) > 2 and "." not in odds:
+                odds = get_odds(S,team1,team2,"D",True)
+            
+            if len(odds) > 2 and "." not in odds:
+                odds = -999
+            
+            if odds == - 999:
+                return
+            
+            
+            send_message_discord(f"{team1} {p1} DRAW VS {team2} {p2} ODDS {odds}")
+            write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
+            write_into_file("result.txt",alphaElem + " " + team1 + "\n")
+            write_into_file("odds.txt",alphaElem + " " + odds + "\n")
+            write_into_file("percent.txt",alphaElem + " " + p1+ " " + p2 + "\n")
+
 
         print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
         print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
@@ -738,12 +778,39 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2):
         if score_of_team1 * 1.25 < score_of_team2:
             print(f"{team1} will loose against {team2}")
             #send_message_discord(f"{team1} will loose against {team2}")
-            send_message_discord(f"{team1} {p1} LOOSE VS {team2} {p2}")
+            odds = get_odds(S,team1,team2,"L")
+            if len(odds) > 2 and "." not in odds:
+                odds = get_odds(S,team1,team2,"L",True)
+            
+            if len(odds) > 2 and "." not in odds:
+                odds = -999
+            if odds == - 999:
+                return
+            
+            
+            send_message_discord(f"{team2} {p2} WIN VS {team1} {p1} ODDS {odds}")
+            write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
+            write_into_file("result.txt",alphaElem + " " + team2 + "\n")
+            write_into_file("odds.txt",alphaElem + " " + odds + "\n")
+            write_into_file("percent.txt",alphaElem + " " + p2+ " " + p1 + "\n")
         else:
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
             #send_message_discord(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
-            send_message_discord(f"{team2} {p2} DRAW VS {team1} {p1}")
-
+            odds = get_odds(S,team1,team2,"W")
+            if len(odds) > 2 and "." not in odds:
+                odds = get_odds(S,team1,team2,"W",True)
+            if len(odds) > 2 and "." not in odds:
+                odds = -999
+            if odds == - 999:
+                return
+            
+            
+            send_message_discord(f"{team2} {p2} DRAW VS {team1} {p1} ODDS {odds}")
+            write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
+            write_into_file("result.txt",alphaElem + " " + team2 + "\n")
+            write_into_file("odds.txt",alphaElem + " " + odds + "\n")
+            write_into_file("percent.txt",alphaElem + " " + p2+ " " + p1 + "\n")
+        
         print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
         print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
         #send_message_discord(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
@@ -757,7 +824,7 @@ def send_message_discord(msg):
     except:
        pass
 
-def team_vs_team(team1,team2):
+def team_vs_team(team1,team2,idxx):
     try:
         team1 = team1.replace(" ","-")
         team2 = team2.replace(" ","-")
@@ -765,7 +832,7 @@ def team_vs_team(team1,team2):
         #nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
         #check_data_entered_is_good(nbOfGameToAnalyze,20)
         nbOfGameToAnalyze = 20
-        send_message_discord(f"{team1} vs {team2}")
+        #send_message_discord(f"{team1} vs {team2}")
         print(f"{team1} vs {team2}")
 
         score_of_team1 = (get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False))
@@ -777,14 +844,28 @@ def team_vs_team(team1,team2):
             score_of_team1 = (get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False))
             print("+"*200)
             score_of_team2 = abs(get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False))
-            print_result_info(team1,score_of_team1,team2,score_of_team2)
+            print_result_info(team1,score_of_team1,team2,score_of_team2,idxx)
         else:
-            print_result_info(team1,score_of_team1,team2,score_of_team2)
+            print_result_info(team1,score_of_team1,team2,score_of_team2,idxx)
     except:
         pass
 
 
-from os import sys 
+def generate_alphabet_list():
+    result = []
+    for length in range(1, 4):  # For 1-letter, 2-letter, and 3-letter combinations
+        result.extend(
+            ''.join(letters) for letters in itertools.product('abcdefghijklmnopqrstuvwxyz', repeat=length)
+        )
+    return result
+
+from os import sys
+matches = get_match_of_the_day(S)
+
+reset_file("result.txt")
+reset_file("percent.txt")
+reset_file("match.txt")
+reset_file("odds.txt")
 
 reset_file("ckk.txt")
 matches = get_match_of_the_day(S)
@@ -816,6 +897,7 @@ while len(sublists) < 5:
 # Unpack into variables
 list1, list2, list3, list4, list5 = sublists
 
+
 try:
     list1, list2, list3, list4, list5 = sublists
     list_of_list = [list1,list2,list3,list4,list5]
@@ -825,9 +907,11 @@ except:
     quit()
 
 print("Match of to analyze " , current_list)
+idx = (int(sys.argv[1])) * 10
 for match in current_list:
     m = match.split("#####")
     print(m[0],m[1])
-    if len(m[0]) > 0 and len(m[1]) > 0:
-        team_vs_team(m[0],m[1])
+    if len(m[0]) > 0 and len(m[1]) > 0 and doesMatchHaveOdds(S,m[0],m[1]) == True:
+        team_vs_team(m[0],m[1],idx)
         time.sleep(60)
+    idx+=1

@@ -15,6 +15,7 @@ from selenium.webdriver.common.keys import Keys
 from os import system
 import time
 import os.path
+from datetime import datetime, timedelta
 
 import os
 
@@ -41,7 +42,7 @@ class Scraper:
     if len(str(print_pkl_info())) > 20:
         options.add_argument('headless')
     
-    options.add_argument('--blink-settings=imagesEnabled=false')
+    #options.add_argument('--blink-settings=imagesEnabled=false')
     options.add_argument("--disable-gpu")  # Disable GPU (helpful in headless mode)
     options.add_argument("--disable-dev-shm-usage")  # Prevent shared memory issues
     driver = webdriver.Chrome(options=options)
@@ -117,6 +118,39 @@ def get_url_of_a_team(posTeam):
         return all_url[posTeam]
     except:
         return("")
+
+def get_match_of_the_day(S):
+    accept_cookie(S)
+    allTeam = print_file_info("allteam.txt").lower().split("\n")
+
+    current_date = datetime.now()
+    next_day = current_date + timedelta(days=1)
+    formatted_next_day = next_day.strftime("%Y-%m-%d")
+
+    S.driver.get(f"https://www.footmercato.net/live/{formatted_next_day}")
+    #S.driver.get(f"https://www.footmercato.net/live/")
+
+    time.sleep(3)
+    list_of_matches = []
+    striiing = ""
+    error = 0
+    for j in range(3,20):
+        for i in range(1,30):
+            try:
+                test = f"/html/body/div[3]/div[3]/div/div[1]/div[{j}]/div[2]/div[{i}]/div/a/span[1]"
+                element = WebDriverWait(S.driver,3).until(
+                EC.presence_of_element_located((By.XPATH, test)))
+                matches = element.text.replace(" ","-").split("\n")
+                if matches[0].lower() in allTeam and matches[1].lower() in allTeam:
+                    list_of_matches.append(matches[0] + "#####" + matches[1])
+                error = 0
+            except:
+                error+=1
+                if error > 3:
+                    return list_of_matches
+                break
+    return list_of_matches
+
 def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
     
     years = ["2024","2025","2026"]
@@ -145,6 +179,7 @@ def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
     first = True
     team = team.lower()
     change = False
+    nbOfGameToAnalyze = 20
     #print(lastXmatchSplit)
     
     for i in range(len(lastXmatchSplit)):
@@ -199,8 +234,72 @@ def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
     return listOfResult
     
 
+def doesMatchHaveOdds(S,team1,team2):
+    try:
+        S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+prono&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+        S.driver.execute_script("document.body.style.zoom='50%'")
+        links = S.driver.find_elements(By.TAG_NAME, "a")
 
+        all_links = [link.get_attribute("href") for link in links]
+        linkToGo = ""
+        for link in all_links:
+            if link:  # Check if the href is not None
+                if "sportytrader.com" in link:
+                    linkToGo = link
+                    break
 
+        S.driver.get(linkToGo)
+        S.driver.execute_script("document.body.style.zoom='30%'")
+        tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
+        
+        element = WebDriverWait(S.driver,5).until(
+        EC.presence_of_element_located((By.XPATH, tableCote)))
+        #print("La cooteee " , odds)
+        return True
+    except:
+        #import traceback
+        #traceback.print_exc()
+        return False
+
+def get_odds(S,team1,team2,result,FirstResultOdd=False):
+    try:
+        S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+prono&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+        S.driver.execute_script("document.body.style.zoom='50%'")
+        links = S.driver.find_elements(By.TAG_NAME, "a")
+
+        all_links = [link.get_attribute("href") for link in links]
+        linkToGo = ""
+        for link in all_links:
+            if link:  # Check if the href is not None
+                if "sportytrader.com" in link:
+                    linkToGo = link
+                    break
+
+        S.driver.get(linkToGo)
+        S.driver.execute_script("document.body.style.zoom='30%'")
+        tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[2]"
+        if FirstResultOdd == True:
+            tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
+        
+        element = WebDriverWait(S.driver,5).until(
+        EC.presence_of_element_located((By.XPATH, tableCote)))
+        odds = element.text.split("\n")
+        if result == "W":
+            odds = odds[0]
+            return odds
+        if result == "D":
+            odds = odds[1]
+            return odds
+        if result == "L":
+            odds = odds[2]
+            return odds
+        #print("La cooteee " , odds)
+        return "-999"
+    except:
+        #import traceback
+        #traceback.print_exc()
+        return "-999"
+        
 def Position_Of_A_Team_On_Its_League(S,team):
     data = teamData()
     x = pos_league_team(team)
