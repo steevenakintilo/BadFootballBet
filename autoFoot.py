@@ -817,8 +817,9 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
         #send_message_discord(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
 
 def send_message_discord(msg):
+    discordUrl = print_file_info("discordWebhookUrl.txt")
     try:
-        urls = "https://discord.com/api/webhooks/1323981759087644707/5S4YyhgSBVwuHDZey2jVegZvJbaomKX2RXanvIL1t7QsSkTrADvL1zO9peVr8fbgc-QV"
+        urls = discordUrl
         webhook = DiscordWebhook(url=urls, content=msg)
         response = webhook.execute()
     except:
