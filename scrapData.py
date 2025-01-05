@@ -39,8 +39,8 @@ class Scraper:
     options = webdriver.ChromeOptions()
     options.add_argument('--log-level=1')
     options.add_argument("--log-level=3")  # Suppress all logging levels
-    #if len(str(print_pkl_info())) > 20:
-    #    options.add_argument('headless')
+    if len(str(print_pkl_info())) > 20:
+        options.add_argument('headless')
     
     #options.add_argument('--blink-settings=imagesEnabled=false')
     options.add_argument("--disable-gpu")  # Disable GPU (helpful in headless mode)
