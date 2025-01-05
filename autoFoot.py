@@ -865,7 +865,6 @@ def generate_alphabet_list():
 
 
 from os import sys
-matches = get_match_of_the_day(S)
 
 reset_file("result.txt")
 reset_file("percent.txt")
@@ -920,7 +919,7 @@ for match in current_list:
     print(m[0],m[1])
     x = doesMatchHaveOdds(S,m[0],m[1])
     if x == False:
-        time.sleep(30)
+        time.sleep(120)
         x = doesMatchHaveOdds(S,m[0],m[1],True)
 
     if len(m[0]) > 0 and len(m[1]) > 0 and x == True:
