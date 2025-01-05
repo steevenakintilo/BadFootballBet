@@ -256,6 +256,9 @@ def doesMatchHaveOdds(S,team1,team2,otherSearch=False):
 
         S.driver.get(linkToGo)
         S.driver.execute_script("document.body.style.zoom='30%'")
+
+        return True
+        
         if otherSearch == True:
             time.sleep(15)
         tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
