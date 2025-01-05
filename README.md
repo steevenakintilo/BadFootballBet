@@ -45,6 +45,35 @@ If you choose 2 it will ask you the same things as choice 1 but for one team onl
 
 If you choose 3 it will just quit the program
 
+# Auto Mode
+Before using this mode you must have a discord channel with a weebhook how to do a weenhook:https://www.svix.com/resources/guides/how-to-make-webhook-discord/
+After that but the webhook url into discordWebhookUrl.txt files
+If you want to analyze all the game available of the next day just run
+
+```bash
+    python autoFoot.py 1
+```
+
+```bash
+    python autoFoot.py 2
+```
+
+```bash
+    python autoFoot.py 3
+```
+
+```bash
+    python autoFoot.py 4
+```
+
+```bash
+    python autoFoot.py 5
+```
+
+It will analyze automaticaly all the game available of the day and will send all the result (Match,Winner,Percent and Odds) to your discord channel
+
+Then If you want all the data on the .txt files just run printData.py and will store all the data into result.txt,percent.txt,odds.txt and match.txt files 
+
 ## Result
 
 Result of Arsenal VS Dortmund using only the last 3 games of each team (Test done the 21 December 2024)
