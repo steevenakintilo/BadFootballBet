@@ -744,7 +744,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
             write_into_file("result.txt",alphaElem + " " + team1 + "\n")
             write_into_file("odds.txt",alphaElem + " " + odds + "\n")
-            write_into_file("percent.txt",alphaElem + " " + p1+ " " + p2 + "\n")
+            write_into_file("percent.txt",alphaElem + " " + p1+ "-" + p2 + "\n")
 
         else:
             print(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
@@ -760,9 +760,9 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
 
             send_message_discord(f"{team1} {p1} DRAW VS {team2} {p2} ODDS {odds}")
             write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
-            write_into_file("result.txt",alphaElem + " " + team1 + "\n")
+            write_into_file("result.txt",alphaElem + " " + team1 + " DRAW" + "\n")
             write_into_file("odds.txt",alphaElem + " " + odds + "\n")
-            write_into_file("percent.txt",alphaElem + " " + p1+ " " + p2 + "\n")
+            write_into_file("percent.txt",alphaElem + " " + p1+ "-" + p2 + "\n")
 
 
         print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
@@ -785,7 +785,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
             write_into_file("result.txt",alphaElem + " " + team2 + "\n")
             write_into_file("odds.txt",alphaElem + " " + odds + "\n")
-            write_into_file("percent.txt",alphaElem + " " + p2+ " " + p1 + "\n")
+            write_into_file("percent.txt",alphaElem + " " + p2+ "-" + p1 + "\n")
         else:
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
             #send_message_discord(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
@@ -797,9 +797,9 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             
             send_message_discord(f"{team2} {p2} DRAW VS {team1} {p1} ODDS {odds}")
             write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
-            write_into_file("result.txt",alphaElem + " " + team2 + "\n")
+            write_into_file("result.txt",alphaElem + " " + team2 + " DRAW" + "\n")
             write_into_file("odds.txt",alphaElem + " " + odds + "\n")
-            write_into_file("percent.txt",alphaElem + " " + p2+ " " + p1 + "\n")
+            write_into_file("percent.txt",alphaElem + " " + p2+ "-" + p1 + "\n")
         
         print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
         print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
