@@ -729,12 +729,12 @@ elif int(chooose) == 1:
     team1 = choose_a_team(1).replace(" ","-")
     team2 = choose_a_team(2).replace(" ","-")
 
-    nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
-    check_data_entered_is_good(nbOfGameToAnalyze,20)
-    #nbOfGameToAnalyze = 20
+    #nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
+    #check_data_entered_is_good(nbOfGameToAnalyze,20)
+    nbOfGameToAnalyze = 20
     print(f"{team1} vs {team2}")
 
-    score_of_team1 = abs(get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze)))
+    score_of_team1 = (get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze)))
     print("+"*200)
     score_of_team2 = abs(get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze)))
 
