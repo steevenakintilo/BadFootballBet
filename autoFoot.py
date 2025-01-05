@@ -722,11 +722,6 @@ def calc_pourcent_of_win(nb1,nb2):
     except:
         return 1
 
-# MATCH.TXT
-# RESULT.TXT
-# ODDS.TXT
-# PERCENT.TXT
-# WINTEAM.TXT
 
 def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
     alphaElem = str(idxx)
@@ -743,11 +738,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
                 odds = get_odds(S,team1,team2,"W",True)
             
             if len(odds) > 2 and "." not in odds:
-                odds = -999
-            
-            if odds == - 999:
-                return
-            
+                odds = "-999"            
             
             send_message_discord(f"{team1} {p1} WIN VS {team2} {p2} ODDS {odds}")
             write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
@@ -763,12 +754,10 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
                 odds = get_odds(S,team1,team2,"D",True)
             
             if len(odds) > 2 and "." not in odds:
-                odds = -999
+                odds = "-999"
             
-            if odds == - 999:
-                return
-            
-            
+            odds = str(odds)
+
             send_message_discord(f"{team1} {p1} DRAW VS {team2} {p2} ODDS {odds}")
             write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
             write_into_file("result.txt",alphaElem + " " + team1 + "\n")
@@ -789,9 +778,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
                 odds = get_odds(S,team1,team2,"L",True)
             
             if len(odds) > 2 and "." not in odds:
-                odds = -999
-            if odds == - 999:
-                return
+                odds = "-999"
             
             
             send_message_discord(f"{team2} {p2} WIN VS {team1} {p1} ODDS {odds}")
@@ -806,10 +793,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             if len(odds) > 2 and "." not in odds:
                 odds = get_odds(S,team1,team2,"D",True)
             if len(odds) > 2 and "." not in odds:
-                odds = -999
-            if odds == - 999:
-                return
-            
+                odds = "-999"
             
             send_message_discord(f"{team2} {p2} DRAW VS {team1} {p1} ODDS {odds}")
             write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
