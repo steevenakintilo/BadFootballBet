@@ -796,9 +796,9 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
         else:
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
             #send_message_discord(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
-            odds = get_odds(S,team1,team2,"W")
+            odds = get_odds(S,team1,team2,"D")
             if len(odds) > 2 and "." not in odds:
-                odds = get_odds(S,team1,team2,"W",True)
+                odds = get_odds(S,team1,team2,"D",True)
             if len(odds) > 2 and "." not in odds:
                 odds = -999
             if odds == - 999:
@@ -817,8 +817,9 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
         #send_message_discord(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
 
 def send_message_discord(msg):
+    discordUrl = print_file_info("discordWebhookUrl.txt")
     try:
-        urls = "https://discord.com/api/webhooks/1323981759087644707/5S4YyhgSBVwuHDZey2jVegZvJbaomKX2RXanvIL1t7QsSkTrADvL1zO9peVr8fbgc-QV"
+        urls = discordUrl
         webhook = DiscordWebhook(url=urls, content=msg)
         response = webhook.execute()
     except:
@@ -858,6 +859,10 @@ def generate_alphabet_list():
             ''.join(letters) for letters in itertools.product('abcdefghijklmnopqrstuvwxyz', repeat=length)
         )
     return result
+
+
+
+
 
 from os import sys
 matches = get_match_of_the_day(S)
@@ -906,12 +911,19 @@ except:
     print("You must put arguments beetween 1 and 5")
     quit()
 
+print(current_list)
+
 print("Match of to analyze " , current_list)
 idx = (int(sys.argv[1])) * 10
 for match in current_list:
     m = match.split("#####")
     print(m[0],m[1])
-    if len(m[0]) > 0 and len(m[1]) > 0 and doesMatchHaveOdds(S,m[0],m[1]) == True:
+    x = doesMatchHaveOdds(S,m[0],m[1])
+    if x == False:
+        time.sleep(30)
+        x = doesMatchHaveOdds(S,m[0],m[1])
+
+    if len(m[0]) > 0 and len(m[1]) > 0 and x == True:
         team_vs_team(m[0],m[1],idx)
         time.sleep(60)
     idx+=1

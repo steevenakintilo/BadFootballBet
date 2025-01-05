@@ -179,7 +179,7 @@ def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
     first = True
     team = team.lower()
     change = False
-    nbOfGameToAnalyze = 20
+    #nbOfGameToAnalyze = 20
     #print(lastXmatchSplit)
     
     for i in range(len(lastXmatchSplit)):
@@ -239,7 +239,7 @@ def doesMatchHaveOdds(S,team1,team2):
         S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+prono&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         S.driver.execute_script("document.body.style.zoom='50%'")
         links = S.driver.find_elements(By.TAG_NAME, "a")
-
+        time.sleep(5)
         all_links = [link.get_attribute("href") for link in links]
         linkToGo = ""
         for link in all_links:
@@ -247,6 +247,8 @@ def doesMatchHaveOdds(S,team1,team2):
                 if "sportytrader.com" in link:
                     linkToGo = link
                     break
+        if linkToGo == "":
+            return False
 
         S.driver.get(linkToGo)
         S.driver.execute_script("document.body.style.zoom='30%'")
@@ -257,13 +259,14 @@ def doesMatchHaveOdds(S,team1,team2):
         #print("La cooteee " , odds)
         return True
     except:
-        #import traceback
-        #traceback.print_exc()
+        # import traceback
+        # traceback.print_exc()
+        # print(team1,team2)
         return False
 
 def get_odds(S,team1,team2,result,FirstResultOdd=False):
     try:
-        S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+prono&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+        S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         S.driver.execute_script("document.body.style.zoom='50%'")
         links = S.driver.find_elements(By.TAG_NAME, "a")
 
@@ -281,9 +284,25 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         if FirstResultOdd == True:
             tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
         
+        t1Name = ""
+        t2Name = ""
+        team1P = "/html/body/div[1]/div[2]/div[4]/section/main/div[2]/div[1]/div[2]/div[1]/span"
+        team2P = "/html/body/div[1]/div[2]/div[4]/section/main/div[2]/div[1]/div[2]/div[3]/span"
+        
+        element = WebDriverWait(S.driver,5).until(
+        EC.presence_of_element_located((By.XPATH, team1P)))
+        t1Name = element.text
+
+        element = WebDriverWait(S.driver,5).until(
+        EC.presence_of_element_located((By.XPATH, team2P)))
+        t2Name = element.text
+        #print(t1Name)
+        #print(t2Name)
+        
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, tableCote)))
         odds = element.text.split("\n")
+        #print(odds)
         if result == "W":
             odds = odds[0]
             return odds
