@@ -4,7 +4,7 @@ from discord_webhook import DiscordWebhook
 import itertools
 
 S = Scraper()
-Z = SZcraper()
+Z = SZcraper(False)
 data = teamData()
 
 now = datetime.now()
@@ -244,65 +244,6 @@ def last_X_Games_Result(stats,listOfResult,url=""):
         stats.nb_of_goal_scored_per_match_home = round(float(stats.nb_of_goal_scored_home/stats.nb_of_game_home),1)
         stats.nb_of_goal_conceded_per_match_home = round(float(stats.nb_of_goal_conceded_home/stats.nb_of_game_home),1)
     return
-
-def print_all_data(stats):
-    print(f"Team Name: {stats.name}")
-    print(f"Team url: {stats.team_url}")
-    print(f"Position in the League: {stats.pos_on_the_league}")
-    print(f"League of the Team: {stats.league_of_the_team}")
-    print(f"Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_list}")
-    print(f"Last X Game Win Draw or Loose: {stats.last_x_game_win_draw_or_loose}")
-    print(f"Last X Game League or Not: {stats.last_x_game_list_league_or_not}")
-    print(f"Wins in Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_win}")
-    print(f"Last X Game Win League or Not: {stats.last_x_game_win_league_or_not}")
-    print(f"Draws in Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_draw}")
-    print(f"Last X Game Draw League or Not: {stats.last_x_game_draw_league_or_not}")
-    print(f"Losses in Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_loose}")
-    print(f"Last X Game Loose League or Not: {stats.last_x_game_loose_league_or_not}")
-    print(f"Scores of Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_list_score}")
-    print(f"Scores in Wins: {stats.last_x_game_win_score}")
-    print(f"Scores in Draws: {stats.last_x_game_draw_score}")
-    print(f"Scores in Losses: {stats.last_x_game_loose_score}")
-    print(f"Number of Wins: {stats.nb_of_win}")
-    print(f"Number of Losses: {stats.nb_of_loose}")
-    print(f"Number of Draws: {stats.nb_of_draw}")
-    print(f"Total Number of Games Played: {stats.nb_of_game}")
-    print(f"Win Rate: {stats.win_rate_percent}%")
-    print(f"Loss Rate: {stats.loose_rate_percent}%")
-    print(f"Draw Rate: {stats.draw_rate_percent}%")
-    print(f"Goals Scored: {stats.nb_of_goal_scored}")
-    print(f"Goals Conceded: {stats.nb_of_goal_conceded}")
-    print(f"Goals Scored per Match: {stats.nb_of_goal_scored_per_match}")
-    print(f"Goals Conceded per Match: {stats.nb_of_goal_conceded_per_match}")
-    print(f"Last X Game Away List: {stats.last_x_game_away_list}")
-    print(f"Last X Game Win Draw or Loose Away: {stats.last_x_game_win_draw_or_loose_away}")
-    print(f"Last X Game Away Score: {stats.last_x_game_away_score}")
-    print(f"Number of Wins Away: {stats.nb_of_win_away}")
-    print(f"Number of Losses Away: {stats.nb_of_loose_away}")
-    print(f"Number of Draws Away: {stats.nb_of_draw_away}")
-    print(f"Total Number of Away Games Played: {stats.nb_of_game_away}")
-    print(f"Win Rate Away: {stats.win_rate_percent_away}%")
-    print(f"Loss Rate Away: {stats.loose_rate_percent_away}%")
-    print(f"Draw Rate Away: {stats.draw_rate_percent_away}%")
-    print(f"Goals Scored Away: {stats.nb_of_goal_scored_away}")
-    print(f"Goals Conceded Away: {stats.nb_of_goal_conceded_away}")
-    print(f"Goals Scored per Match Away: {stats.nb_of_goal_scored_per_match_away}")
-    print(f"Goals Conceded per Match Away: {stats.nb_of_goal_conceded_per_match_away}")
-    print(f"Last X Game Home List: {stats.last_x_game_home_list}")
-    print(f"Last X Game Win Draw or Loose Home: {stats.last_x_game_win_draw_or_loose_home}")
-    print(f"Last X Game Home List: {stats.last_x_game_home_score}")
-    print(f"Number of Wins Home: {stats.nb_of_win_home}")
-    print(f"Number of Losses Home: {stats.nb_of_loose_home}")
-    print(f"Number of Draws Home: {stats.nb_of_draw_home}")
-    print(f"Total Number of Home Games Played: {stats.nb_of_game_home}")
-    print(f"Win Rate Home: {stats.win_rate_percent_home}%")
-    print(f"Loss Rate Home: {stats.loose_rate_percent_home}%")
-    print(f"Draw Rate Home: {stats.draw_rate_percent_home}%")
-    print(f"Goals Scored Home: {stats.nb_of_goal_scored_home}")
-    print(f"Goals Conceded Home: {stats.nb_of_goal_conceded_home}")
-    print(f"Goals Scored per Match Home: {stats.nb_of_goal_scored_per_match_home}")
-    print(f"Goals Conceded per Match Home: {stats.nb_of_goal_conceded_per_match_home}")
-    
 
 def convert_nb_to_100(nb,len_all_nb):
     return int((nb*100)/len_all_nb) + 30
@@ -853,6 +794,7 @@ def generate_alphabet_list():
 
 from os import sys
 
+time.sleep(50 * int(sys.argv[1]))
 reset_file("result.txt")
 reset_file("percent.txt")
 reset_file("match.txt")
@@ -860,7 +802,7 @@ reset_file("odds.txt")
 
 reset_file("ckk.txt")
 matches = get_match_of_the_day(S)
-if len(matches) < 4:
+if len(matches) < 6:
     print("not enough matches")
     quit()
 
@@ -909,10 +851,10 @@ for match in current_list:
     print(m[0],m[1])
     x = doesMatchHaveOdds(S,m[0],m[1])
     if x == False:
-        time.sleep(20)
+        time.sleep(120)
         z = doesMatchHaveOdds(Z,m[0],m[1])
         if z == False:
-            time.sleep(5)
+            time.sleep(150)
             x = doesMatchHaveOdds(Z,str(current_day_number) + " " + months[current_month - 1] + " " + str(current_year) + " "+ m[0],m[1],True)
 
     if len(m[0]) > 0 and len(m[1]) > 0 and x == True:
