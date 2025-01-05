@@ -88,6 +88,4 @@ This program was made for fun therefore the calculus are not 100% right and it w
 Don't use this program to bet money you could loose money.
 Afterall the calculus are made with real time stats to make the result as close as possible.
 
-The bot is Still under construction...
-
 CR7 IS THE GOAT
