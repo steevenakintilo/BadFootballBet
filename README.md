@@ -12,6 +12,9 @@ Link to download pip: https://pip.pypa.io/en/stable/installation/
 
 Link to download google chrome: https://www.google.com/intl/fr_fr/chrome/ 
 
+For Auto Mode Only 
+
+How to do a discord webhook? https://www.svix.com/resources/guides/how-to-make-webhook-discord/
 
 Download all the modules required for the bot to work using this command:
 
@@ -46,9 +49,8 @@ If you choose 2 it will ask you the same things as choice 1 but for one team onl
 If you choose 3 it will just quit the program
 
 # Auto Mode
-Before using this mode you must have a discord channel with a weebhook how to do a weenhook:https://www.svix.com/resources/guides/how-to-make-webhook-discord/
-After that but the webhook url into discordWebhookUrl.txt files
-If you want to analyze all the game available of the next day just run
+Before using it make sure to put your webhook url into discordWebhookUrl.txt file
+If you want to analyze all the games available of the next day just run
 
 ```bash
     python autoFoot.py 1
@@ -72,7 +74,7 @@ If you want to analyze all the game available of the next day just run
 
 It will analyze automaticaly all the game available of the day and will send all the result (Match,Winner,Percent and Odds) to your discord channel
 
-Then If you want all the data on the .txt files just run printData.py and will store all the data into result.txt,percent.txt,odds.txt and match.txt files 
+Then If you want all the data on the .txt files just run printData.py and it will store all the data into result.txt,percent.txt,odds.txt and match.txt files 
 
 ## Result
 
