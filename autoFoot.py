@@ -796,9 +796,9 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
         else:
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
             #send_message_discord(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
-            odds = get_odds(S,team1,team2,"W")
+            odds = get_odds(S,team1,team2,"D")
             if len(odds) > 2 and "." not in odds:
-                odds = get_odds(S,team1,team2,"W",True)
+                odds = get_odds(S,team1,team2,"D",True)
             if len(odds) > 2 and "." not in odds:
                 odds = -999
             if odds == - 999:
@@ -859,6 +859,10 @@ def generate_alphabet_list():
         )
     return result
 
+
+
+
+
 from os import sys
 matches = get_match_of_the_day(S)
 
@@ -906,12 +910,19 @@ except:
     print("You must put arguments beetween 1 and 5")
     quit()
 
+print(current_list)
+
 print("Match of to analyze " , current_list)
 idx = (int(sys.argv[1])) * 10
 for match in current_list:
     m = match.split("#####")
     print(m[0],m[1])
-    if len(m[0]) > 0 and len(m[1]) > 0 and doesMatchHaveOdds(S,m[0],m[1]) == True:
+    x = doesMatchHaveOdds(S,m[0],m[1])
+    if x == False:
+        time.sleep(30)
+        x = doesMatchHaveOdds(S,m[0],m[1])
+
+    if len(m[0]) > 0 and len(m[1]) > 0 and x == True:
         team_vs_team(m[0],m[1],idx)
         time.sleep(60)
     idx+=1
