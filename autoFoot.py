@@ -6,6 +6,12 @@ import itertools
 S = Scraper()
 data = teamData()
 
+now = datetime.now()
+months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
+current_day_number = now.day
+current_year = now.year  # Year (e.g., 2025)
+current_month = now.month
+
 def last_X_Games_Result(stats,listOfResult,url=""):
     if len(listOfResult) == 0:
         return -1
@@ -860,10 +866,6 @@ def generate_alphabet_list():
         )
     return result
 
-
-
-
-
 from os import sys
 
 reset_file("result.txt")
@@ -911,16 +913,16 @@ except:
     quit()
 
 print(current_list)
-
 print("Match of to analyze " , current_list)
 idx = (int(sys.argv[1])) * 10
+
 for match in current_list:
     m = match.split("#####")
     print(m[0],m[1])
     x = doesMatchHaveOdds(S,m[0],m[1])
     if x == False:
-        time.sleep(120)
-        x = doesMatchHaveOdds(S,m[0],m[1],True)
+        time.sleep(20)
+        x = doesMatchHaveOdds(S,str(current_day_number) + " " + months[current_month - 1] + " " + str(current_year) + " "+ m[0],m[1],True)
 
     if len(m[0]) > 0 and len(m[1]) > 0 and x == True:
         team_vs_team(m[0],m[1],idx)
