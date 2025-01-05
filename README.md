@@ -2,6 +2,7 @@
 # BadFootballBet
 
 All the info used for this project come from this website: https://www.footmercato.net/
+And this website for the odds: https://www.sportytrader.com/
 
 ## Requirements
 To make the code work you will need to have Python and Pip installed in your computer
