@@ -179,7 +179,6 @@ def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
     first = True
     team = team.lower()
     change = False
-    #nbOfGameToAnalyze = 20
     #print(lastXmatchSplit)
     
     for i in range(len(lastXmatchSplit)):
@@ -227,16 +226,18 @@ def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
             #print("dendex " , index)
             index+=1
     if len(listOfResult) == 0:
-        print(f"Sorry but {team} has played 0 match this season can't compare or get that stat of it")
         return []
     if len(listOfResult) > 20:
         listOfResult = listOfResult[0:20]
     return listOfResult
     
 
-def doesMatchHaveOdds(S,team1,team2):
+def doesMatchHaveOdds(S,team1,team2,otherSearch=False):
     try:
-        S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+prono&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+        if otherSearch == True:
+            S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+        else:
+            S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+prono&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         S.driver.execute_script("document.body.style.zoom='50%'")
         links = S.driver.find_elements(By.TAG_NAME, "a")
         time.sleep(5)
@@ -264,8 +265,19 @@ def doesMatchHaveOdds(S,team1,team2):
         # print(team1,team2)
         return False
 
+def check_split(str1,str2):
+    try:
+        str1 = str1.split("-")
+        for s in str1:
+            if s in str2:
+                return True
+    except:
+        return False
+
 def get_odds(S,team1,team2,result,FirstResultOdd=False):
     try:
+        team1=team1.lower()
+        team2=team2.lower()
         S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         S.driver.execute_script("document.body.style.zoom='50%'")
         links = S.driver.find_elements(By.TAG_NAME, "a")
@@ -291,13 +303,22 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, team1P)))
-        t1Name = element.text
+        t1Name = element.text.lower()
 
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, team2P)))
-        t2Name = element.text
+        t2Name = element.text.lower()
         #print(t1Name)
         #print(t2Name)
+        reverse=False
+
+        if t2Name in team1 or team1 in t2Name or team1 == t2Name or check_split(team1,t2Name) == True:
+            reverse = True
+            print("reeeveeeerseeeeee " , team1 , team2)
+          
+        if t1Name in team2 or team2 in t1Name or team2 == t1Name or check_split(team2,t1Name) == True:
+            reverse = True
+            print("reeeveeeerseeeeee " , team1 , team2)
         
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, tableCote)))
@@ -305,12 +326,16 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         #print(odds)
         if result == "W":
             odds = odds[0]
+            if reverse == True:
+                odds = odds[2]
             return odds
         if result == "D":
             odds = odds[1]
             return odds
         if result == "L":
             odds = odds[2]
+            if reverse == True:
+                odds = odds[0]
             return odds
         #print("La cooteee " , odds)
         return "-999"

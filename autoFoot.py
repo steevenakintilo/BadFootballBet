@@ -837,13 +837,13 @@ def team_vs_team(team1,team2,idxx):
         print(f"{team1} vs {team2}")
 
         score_of_team1 = (get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False))
-        print("+"*200)
+        #print("+"*200)
         score_of_team2 = abs(get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False))
 
         if calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2) > 80 or calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2) > 80:
             time.sleep(300)
             score_of_team1 = (get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False))
-            print("+"*200)
+            #print("+"*200)
             score_of_team2 = abs(get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False))
             print_result_info(team1,score_of_team1,team2,score_of_team2,idxx)
         else:
@@ -921,7 +921,7 @@ for match in current_list:
     x = doesMatchHaveOdds(S,m[0],m[1])
     if x == False:
         time.sleep(30)
-        x = doesMatchHaveOdds(S,m[0],m[1])
+        x = doesMatchHaveOdds(S,m[0],m[1],True)
 
     if len(m[0]) > 0 and len(m[1]) > 0 and x == True:
         team_vs_team(m[0],m[1],idx)
