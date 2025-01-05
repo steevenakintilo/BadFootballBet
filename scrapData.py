@@ -49,6 +49,18 @@ class Scraper:
     driver.set_page_load_timeout(15)
     
 
+class SZcraper:
+    
+    wait_time = 5
+    options = webdriver.ChromeOptions()
+    options.add_argument('--log-level=1')
+    options.add_argument("--log-level=3")  # Suppress all logging levels
+    #options.add_argument('--blink-settings=imagesEnabled=false')
+    options.add_argument("--disable-gpu")  # Disable GPU (helpful in headless mode)
+    options.add_argument("--disable-dev-shm-usage")  # Prevent shared memory issues
+    driver = webdriver.Chrome(options=options)
+    driver.set_page_load_timeout(15)
+
 def accept_cookie(S):
     if print_file_info("ckk.txt") == "1":
         return
@@ -288,6 +300,7 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         team2=team2.lower()
         S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         S.driver.execute_script("document.body.style.zoom='50%'")
+        time.sleep(15)
         links = S.driver.find_elements(By.TAG_NAME, "a")
 
         all_links = [link.get_attribute("href") for link in links]
@@ -300,7 +313,7 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
 
         S.driver.get(linkToGo)
         S.driver.execute_script("document.body.style.zoom='30%'")
-        time.sleep(10)
+        time.sleep(15)
         tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[2]"
         if FirstResultOdd == True:
             tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
@@ -353,8 +366,8 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         #print("La cooteee " , odds)
         return "-999"
     except:
-        #import traceback
-        #traceback.print_exc()
+        import traceback
+        traceback.print_exc()
         return "-999"
         
 def Position_Of_A_Team_On_Its_League(S,team):

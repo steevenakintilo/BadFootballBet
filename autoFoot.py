@@ -4,6 +4,7 @@ from discord_webhook import DiscordWebhook
 import itertools
 
 S = Scraper()
+Z = SZcraper()
 data = teamData()
 
 now = datetime.now()
@@ -734,8 +735,8 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             #send_message_discord(f"{team2} will loose against {team1}")
             #send_message_discord(f"{team2} {p2} will loose against {team1} {p1}")
             odds = get_odds(S,team1,team2,"W")
-            if len(odds) > 2 and "." not in odds:
-                odds = get_odds(S,team1,team2,"W",True)
+            if len(odds) > 2 and "." not in odds or odds == "-999":
+                odds = get_odds(Z,team1,team2,"W",True)
             
             if len(odds) > 2 and "." not in odds:
                 odds = "-999"            
@@ -750,8 +751,8 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             print(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
             #send_message_discord(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
             odds = get_odds(S,team1,team2,"D")
-            if len(odds) > 2 and "." not in odds:
-                odds = get_odds(S,team1,team2,"D",True)
+            if len(odds) > 2 and "." not in odds or odds == "-999":
+                odds = get_odds(Z,team1,team2,"D",True)
             
             if len(odds) > 2 and "." not in odds:
                 odds = "-999"
@@ -773,8 +774,8 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
         if score_of_team1 * 1.25 < score_of_team2:
             print(f"{team1} will loose against {team2}")
             #send_message_discord(f"{team1} will loose against {team2}")
-            odds = get_odds(S,team1,team2,"L")
-            if len(odds) > 2 and "." not in odds:
+            odds = get_odds(Z,team1,team2,"L")
+            if len(odds) > 2 and "." not in odds or odds == "-999":
                 odds = get_odds(S,team1,team2,"L",True)
             
             if len(odds) > 2 and "." not in odds:
@@ -790,8 +791,8 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
             #send_message_discord(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
             odds = get_odds(S,team1,team2,"D")
-            if len(odds) > 2 and "." not in odds:
-                odds = get_odds(S,team1,team2,"D",True)
+            if len(odds) > 2 and "." not in odds or odds == "-999":
+                odds = get_odds(Z,team1,team2,"D",True)
             if len(odds) > 2 and "." not in odds:
                 odds = "-999"
             
@@ -909,7 +910,10 @@ for match in current_list:
     x = doesMatchHaveOdds(S,m[0],m[1])
     if x == False:
         time.sleep(20)
-        x = doesMatchHaveOdds(S,str(current_day_number) + " " + months[current_month - 1] + " " + str(current_year) + " "+ m[0],m[1],True)
+        z = doesMatchHaveOdds(Z,m[0],m[1])
+        if z == False:
+            time.sleep(5)
+            x = doesMatchHaveOdds(Z,str(current_day_number) + " " + months[current_month - 1] + " " + str(current_year) + " "+ m[0],m[1],True)
 
     if len(m[0]) > 0 and len(m[1]) > 0 and x == True:
         team_vs_team(m[0],m[1],idx)
