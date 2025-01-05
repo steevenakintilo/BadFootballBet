@@ -179,7 +179,7 @@ def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
     first = True
     team = team.lower()
     change = False
-    nbOfGameToAnalyze = 20
+    #nbOfGameToAnalyze = 20
     #print(lastXmatchSplit)
     
     for i in range(len(lastXmatchSplit)):
