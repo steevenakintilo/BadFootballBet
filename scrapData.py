@@ -39,8 +39,8 @@ class Scraper:
     options = webdriver.ChromeOptions()
     options.add_argument('--log-level=1')
     options.add_argument("--log-level=3")  # Suppress all logging levels
-    if len(str(print_pkl_info())) > 20:
-        options.add_argument('headless')
+    #if len(str(print_pkl_info())) > 20:
+    #    options.add_argument('headless')
     
     #options.add_argument('--blink-settings=imagesEnabled=false')
     options.add_argument("--disable-gpu")  # Disable GPU (helpful in headless mode)
@@ -258,7 +258,7 @@ def doesMatchHaveOdds(S,team1,team2,otherSearch=False):
         S.driver.execute_script("document.body.style.zoom='30%'")
 
         return True
-        
+
         if otherSearch == True:
             time.sleep(15)
         tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
@@ -300,6 +300,7 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
 
         S.driver.get(linkToGo)
         S.driver.execute_script("document.body.style.zoom='30%'")
+        time.sleep(10)
         tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[2]"
         if FirstResultOdd == True:
             tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
@@ -328,22 +329,26 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
             reverse = True
             print("reeeveeeerseeeeee " , team1 , team2)
         
+        if team1 in team2 or team2 in team1:
+            print("both team have a commun name " , team1,team2)
+            reverse = False
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, tableCote)))
         odds = element.text.split("\n")
         #print(odds)
+        odds1,odds2,odds3 = odds[0],odds[1],odds[2]
         if result == "W":
-            odds = odds[0]
+            odds = odds1
             if reverse == True:
-                odds = odds[2]
+                odds = odds3
             return odds
         if result == "D":
-            odds = odds[1]
+            odds = odds2
             return odds
         if result == "L":
-            odds = odds[2]
+            odds = odds3
             if reverse == True:
-                odds = odds[0]
+                odds = odds1
             return odds
         #print("La cooteee " , odds)
         return "-999"
