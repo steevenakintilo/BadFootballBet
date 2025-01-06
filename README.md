@@ -33,7 +33,7 @@ To start the bot just do
 This bot have 2 modes: 
 - "Stat of team" that will get the recent stats of a team depending on it's 20 last games.
 - "Team vs Team" this mode will try to calculate the score of a Team A and a Team B based on it's last X recent games and will at the end tell the result between Team A and Team B Loose,Draw or Win.
-  To get the best score possible the bot will give a default score of a team based on the power of it's league (for exemple a Premier League will get the best the best score because it's the best league in the world) and it's position on the league then it will look into the last X games of the team and will also look into the last X games of each oppenents and will calculate a score based on several factor like: win, loose, home game, away game or if the team beaten was stronger...  then at the end it will get a final score and will reapeat the process for team B.
+  To get the best score possible the bot will give a default score of a team based on the power of it's league (for exemple a Premier League team will get the best score because it's the best league in the world) and it's position on the league then it will look into the last X games of the team and will also look into the last X games of each oppenents and will calculate a score based on several factor like: win, loose, home game, away game or if the team beaten was stronger...  then at the end it will get a final score and will reapeat the process for team B.
   Depending on the score of both team it will either display loose draw or win.
 
 ## How to use it ?
