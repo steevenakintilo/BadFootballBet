@@ -884,15 +884,8 @@ if idx == 0:
 for match in current_list:
     m = match.split("#####")
     print(m[0],m[1])
-    x = doesMatchHaveOdds(S,m[0],m[1])
-    if x == False:
-        time.sleep(120)
-        z = doesMatchHaveOdds(Z,m[0],m[1])
-        if z == False:
-            time.sleep(150)
-            x = doesMatchHaveOdds(Z,str(current_day_number) + " " + months[current_month - 1] + " " + str(current_year) + " "+ m[0],m[1],True)
-
-    if len(m[0]) > 0 and len(m[1]) > 0 and x == True:
+    time.sleep(10)
+    if len(m[0]) > 0 and len(m[1]) > 0:
         team_vs_team(m[0],m[1],idx)
         time.sleep(60)
     idx+=1
