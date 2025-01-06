@@ -307,7 +307,7 @@ def get_score_based_on_the_league(team):
             return 100
         if score_based_on_league_and_league_place < 100:
             return 100
-        return score_based_on_league_and_league_place
+        return score_based_on_league_and_league_place + 10000
     except:
         #import traceback
         #traceback.print_exc()
@@ -399,12 +399,18 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 5 - oppenentGoal * 25
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+
                 if statsT.last_x_game_win_draw_or_loose[index] == "L":
                     #print("kci  3")
                     diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * x2Points * (2.5 + little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,2))
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 5 - oppenentGoal * 25
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+
                 
             elif statsT.last_x_game_list_away_or_home[index] == "H":
                 if statsT.last_x_game_win_draw_or_loose[index] == "W":
@@ -420,13 +426,18 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 10 - oppenentGoal * 20
                     finalScore-= abs(diffScore + abs(resultGoal))
-                
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+
                 if statsT.last_x_game_win_draw_or_loose[index] == "L":
                     #print("kci  6")
                     diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * x2Points * (2.6 + little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,2))
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 10 - oppenentGoal * 20
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+
                 
         else:
             if statsT.last_x_game_list_away_or_home[index] == "A":
@@ -450,6 +461,9 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 25 - oppenentGoal * 5
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+
                 
             elif statsT.last_x_game_list_away_or_home[index] == "H":
                 if statsT.last_x_game_win_draw_or_loose[index] == "W":
@@ -472,7 +486,9 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 20 - oppenentGoal * 10
                     finalScore-= abs(diffScore + abs(resultGoal))
-                    
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+
                 
         
         #print("DIIF SCORE " , diffScore , " Final Score "  , finalScore , f" {team} VS {facedTeam} result: {statsT.last_x_game_win_draw_or_loose[index]} is oppenent weaker ? {teamScore < score_based_on_league_and_league_place}")
@@ -517,7 +533,7 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
     finalScore = 0
     teamGoal = 0
     oppenentGoal = 0
-    score_based_on_league_and_league_place = get_score_based_on_the_league(statsTeam.name)
+    score_based_on_league_and_league_place = get_score_based_on_the_league(statsTeam.name) 
     score = score_based_on_league_and_league_place
     if NoPrint == True:
         print(f"Country {data.country_of_the_team[data.pos_league_team]}")
@@ -570,6 +586,9 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 5 - oppenentGoal * 25
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+
                     #print(finalScore,little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,1),(score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place)
                     #print('ok")
                 if statsTeam.last_x_game_win_draw_or_loose[index] == "L":
@@ -578,6 +597,10 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 5 - oppenentGoal * 25
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+
+                    
                 
             elif statsTeam.last_x_game_list_away_or_home[index] == "H":
                 if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
@@ -593,6 +616,9 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 10 - oppenentGoal * 20
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+
                     #print('ok")
                     #print(finalScore,little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,1),(score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place)
                 if statsTeam.last_x_game_win_draw_or_loose[index] == "L":
@@ -601,7 +627,10 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 10 - oppenentGoal * 20
                     finalScore-= abs(diffScore + abs(resultGoal))
-                
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+
+                    
         else:
             if statsTeam.last_x_game_list_away_or_home[index] == "A":
                 if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
@@ -625,7 +654,9 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 25 - oppenentGoal * 5
                     finalScore-= abs(diffScore + abs(resultGoal))
-                
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+                    
             elif statsTeam.last_x_game_list_away_or_home[index] == "H":
                 if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
                     #print("ici  10")
@@ -648,6 +679,10 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 20 - oppenentGoal * 10
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+
+                  
         finalScore = int(finalScore)    
         #print("Score basique " , score_based_on_league_and_league_place)
 
@@ -692,14 +727,21 @@ def choose_a_team(nbnb):
 
     inputError = 0
     specialInput = False
-    for i in range(len(data.allTeam_[int(country_nb) - 1])):
-        if len(data.allTeam_[int(country_nb) - 1][0].strip()) > 1:
-            print(f"{i + 1}. {data.allTeam_[int(country_nb) - 1][i].strip()}")    
-            specialInput = True
-        elif len(data.allTeam_[int(country_nb) - 1][i].strip()) > 1:
-            print(f"{i}. {data.allTeam_[int(country_nb) - 1][i].strip()}")
-        else:
-            inputError+=1
+    league_team_based_on_position = get_team_of_a_league(S,int(country_nb) - 1)
+
+    for i in range(len(league_team_based_on_position)):
+        print(f"{i + 1}. {league_team_based_on_position[i]}")
+    
+    # IN CASE MY CODE IS BAD
+
+    # for i in range(len(data.allTeam_[int(country_nb) - 1])):
+    #     if len(data.allTeam_[int(country_nb) - 1][0].strip()) > 1:
+    #         print(f"{i + 1}. {data.allTeam_[int(country_nb) - 1][i].strip()}")    
+    #         specialInput = True
+    #     elif len(data.allTeam_[int(country_nb) - 1][i].strip()) > 1:
+    #         print(f"{i}. {data.allTeam_[int(country_nb) - 1][i].strip()}")
+    #     else:
+    #         inputError+=1
 
     team_nb = input(f"Choose your team (choose between 1 and {len(data.allTeam_[int(country_nb) - 1]) - inputError}): ")
     team_nb = int(team_nb)
@@ -729,9 +771,9 @@ elif int(chooose) == 1:
     team1 = choose_a_team(1).replace(" ","-")
     team2 = choose_a_team(2).replace(" ","-")
 
-    #nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
-    #check_data_entered_is_good(nbOfGameToAnalyze,20)
-    nbOfGameToAnalyze = 20
+    nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
+    check_data_entered_is_good(nbOfGameToAnalyze,20)
+    #nbOfGameToAnalyze = 2
     print(f"{team1} vs {team2}")
 
     score_of_team1 = (get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze)))

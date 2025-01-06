@@ -416,6 +416,28 @@ def checkTeamNameIsRight(S,teamName):
         print(teamName)
         return False
 
+
+def get_team_of_a_league(S,nb):
+    data = teamData()
+    S.driver.get(data.all_league_url[nb])
+    
+    time.sleep(1)
+    teams = []
+    for i in range(1,30):
+        try:
+            try:
+                element = WebDriverWait(S.driver,5).until(
+                EC.presence_of_element_located((By.XPATH, f"/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a")))
+            except:
+                return teams
+            teams.append(element.text.lower().replace(" ","-"))
+        except:
+            #import traceback
+            #traceback.print_exc()
+            return teams
+    
+    return teams
+    
 def list_of_team_league(S,url):
     S.driver.get(url)
     
