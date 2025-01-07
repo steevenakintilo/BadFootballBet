@@ -48,6 +48,24 @@ class Scraper:
     driver = webdriver.Chrome(options=options)
     driver.set_page_load_timeout(15)
     
+class SZcraper:
+    def __init__(self, headless=True):
+        self.wait_time = 5
+        self.options = webdriver.ChromeOptions()
+        self.options.add_argument('--log-level=1')
+        self.options.add_argument('--log-level=3')  # Suppress all logging levels
+        # self.options.add_argument('--blink-settings=imagesEnabled=false')
+
+        # Set headless mode based on the parameter
+        if headless:
+            self.options.add_argument('--headless')
+        
+        self.options.add_argument('--disable-gpu')  # Disable GPU (helpful in headless mode)
+        self.options.add_argument('--disable-dev-shm-usage')  # Prevent shared memory issues
+
+        # Initialize the WebDriver
+        self.driver = webdriver.Chrome(options=self.options)
+        self.driver.set_page_load_timeout(15)
 
 def accept_cookie(S):
     if print_file_info("ckk.txt") == "1":
@@ -131,9 +149,12 @@ def get_match_of_the_day(S):
     #S.driver.get(f"https://www.footmercato.net/live/")
 
     time.sleep(3)
+    page_text = S.driver.find_element(By.TAG_NAME, "body").text
+    skipMatches = page_text.split("Amicaux Club")
     list_of_matches = []
     striiing = ""
     error = 0
+    skip = False
     for j in range(3,20):
         for i in range(1,30):
             try:
@@ -141,7 +162,9 @@ def get_match_of_the_day(S):
                 element = WebDriverWait(S.driver,3).until(
                 EC.presence_of_element_located((By.XPATH, test)))
                 matches = element.text.replace(" ","-").split("\n")
-                if matches[0].lower() in allTeam and matches[1].lower() in allTeam:
+                if element.text in skipMatches[1]:
+                    skip = True
+                if matches[0].lower() in allTeam and matches[1].lower() in allTeam and skip != True:
                     list_of_matches.append(matches[0] + "#####" + matches[1])
                 error = 0
             except:
@@ -149,6 +172,7 @@ def get_match_of_the_day(S):
                 if error > 3:
                     return list_of_matches
                 break
+    
     return list_of_matches
 
 def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
@@ -237,7 +261,7 @@ def doesMatchHaveOdds(S,team1,team2,otherSearch=False):
         if otherSearch == True:
             S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         else:
-            S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+prono&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+            S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+cote&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         S.driver.execute_script("document.body.style.zoom='50%'")
         links = S.driver.find_elements(By.TAG_NAME, "a")
         time.sleep(5)
@@ -258,7 +282,7 @@ def doesMatchHaveOdds(S,team1,team2,otherSearch=False):
         S.driver.execute_script("document.body.style.zoom='30%'")
 
         return True
-        
+
         if otherSearch == True:
             time.sleep(15)
         tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
@@ -288,6 +312,7 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         team2=team2.lower()
         S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         S.driver.execute_script("document.body.style.zoom='50%'")
+        time.sleep(15)
         links = S.driver.find_elements(By.TAG_NAME, "a")
 
         all_links = [link.get_attribute("href") for link in links]
@@ -300,6 +325,7 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
 
         S.driver.get(linkToGo)
         S.driver.execute_script("document.body.style.zoom='30%'")
+        time.sleep(15)
         tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[2]"
         if FirstResultOdd == True:
             tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
@@ -328,28 +354,30 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
             reverse = True
             print("reeeveeeerseeeeee " , team1 , team2)
         
+        if team1 in team2 or team2 in team1:
+            print("both team have a commun name " , team1,team2)
+            reverse = False
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, tableCote)))
         odds = element.text.split("\n")
         #print(odds)
+        odds1,odds2,odds3 = odds[0],odds[1],odds[2]
         if result == "W":
-            odds = odds[0]
+            odds = odds1
             if reverse == True:
-                odds = odds[2]
+                odds = odds3
             return odds
         if result == "D":
-            odds = odds[1]
+            odds = odds2
             return odds
         if result == "L":
-            odds = odds[2]
+            odds = odds3
             if reverse == True:
-                odds = odds[0]
+                odds = odds1
             return odds
         #print("La cooteee " , odds)
         return "-999"
     except:
-        #import traceback
-        #traceback.print_exc()
         return "-999"
         
 def Position_Of_A_Team_On_Its_League(S,team):
@@ -388,6 +416,28 @@ def checkTeamNameIsRight(S,teamName):
         print(teamName)
         return False
 
+
+def get_team_of_a_league(S,nb):
+    data = teamData()
+    S.driver.get(data.all_league_url[nb])
+    
+    time.sleep(1)
+    teams = []
+    for i in range(1,30):
+        try:
+            try:
+                element = WebDriverWait(S.driver,5).until(
+                EC.presence_of_element_located((By.XPATH, f"/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a")))
+            except:
+                return teams
+            teams.append(element.text.lower().replace(" ","-"))
+        except:
+            #import traceback
+            #traceback.print_exc()
+            return teams
+    
+    return teams
+    
 def list_of_team_league(S,url):
     S.driver.get(url)
     

@@ -4,6 +4,7 @@ from discord_webhook import DiscordWebhook
 import itertools
 
 S = Scraper()
+Z = SZcraper(False)
 data = teamData()
 
 now = datetime.now()
@@ -244,65 +245,6 @@ def last_X_Games_Result(stats,listOfResult,url=""):
         stats.nb_of_goal_conceded_per_match_home = round(float(stats.nb_of_goal_conceded_home/stats.nb_of_game_home),1)
     return
 
-def print_all_data(stats):
-    print(f"Team Name: {stats.name}")
-    print(f"Team url: {stats.team_url}")
-    print(f"Position in the League: {stats.pos_on_the_league}")
-    print(f"League of the Team: {stats.league_of_the_team}")
-    print(f"Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_list}")
-    print(f"Last X Game Win Draw or Loose: {stats.last_x_game_win_draw_or_loose}")
-    print(f"Last X Game League or Not: {stats.last_x_game_list_league_or_not}")
-    print(f"Wins in Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_win}")
-    print(f"Last X Game Win League or Not: {stats.last_x_game_win_league_or_not}")
-    print(f"Draws in Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_draw}")
-    print(f"Last X Game Draw League or Not: {stats.last_x_game_draw_league_or_not}")
-    print(f"Losses in Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_loose}")
-    print(f"Last X Game Loose League or Not: {stats.last_x_game_loose_league_or_not}")
-    print(f"Scores of Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_list_score}")
-    print(f"Scores in Wins: {stats.last_x_game_win_score}")
-    print(f"Scores in Draws: {stats.last_x_game_draw_score}")
-    print(f"Scores in Losses: {stats.last_x_game_loose_score}")
-    print(f"Number of Wins: {stats.nb_of_win}")
-    print(f"Number of Losses: {stats.nb_of_loose}")
-    print(f"Number of Draws: {stats.nb_of_draw}")
-    print(f"Total Number of Games Played: {stats.nb_of_game}")
-    print(f"Win Rate: {stats.win_rate_percent}%")
-    print(f"Loss Rate: {stats.loose_rate_percent}%")
-    print(f"Draw Rate: {stats.draw_rate_percent}%")
-    print(f"Goals Scored: {stats.nb_of_goal_scored}")
-    print(f"Goals Conceded: {stats.nb_of_goal_conceded}")
-    print(f"Goals Scored per Match: {stats.nb_of_goal_scored_per_match}")
-    print(f"Goals Conceded per Match: {stats.nb_of_goal_conceded_per_match}")
-    print(f"Last X Game Away List: {stats.last_x_game_away_list}")
-    print(f"Last X Game Win Draw or Loose Away: {stats.last_x_game_win_draw_or_loose_away}")
-    print(f"Last X Game Away Score: {stats.last_x_game_away_score}")
-    print(f"Number of Wins Away: {stats.nb_of_win_away}")
-    print(f"Number of Losses Away: {stats.nb_of_loose_away}")
-    print(f"Number of Draws Away: {stats.nb_of_draw_away}")
-    print(f"Total Number of Away Games Played: {stats.nb_of_game_away}")
-    print(f"Win Rate Away: {stats.win_rate_percent_away}%")
-    print(f"Loss Rate Away: {stats.loose_rate_percent_away}%")
-    print(f"Draw Rate Away: {stats.draw_rate_percent_away}%")
-    print(f"Goals Scored Away: {stats.nb_of_goal_scored_away}")
-    print(f"Goals Conceded Away: {stats.nb_of_goal_conceded_away}")
-    print(f"Goals Scored per Match Away: {stats.nb_of_goal_scored_per_match_away}")
-    print(f"Goals Conceded per Match Away: {stats.nb_of_goal_conceded_per_match_away}")
-    print(f"Last X Game Home List: {stats.last_x_game_home_list}")
-    print(f"Last X Game Win Draw or Loose Home: {stats.last_x_game_win_draw_or_loose_home}")
-    print(f"Last X Game Home List: {stats.last_x_game_home_score}")
-    print(f"Number of Wins Home: {stats.nb_of_win_home}")
-    print(f"Number of Losses Home: {stats.nb_of_loose_home}")
-    print(f"Number of Draws Home: {stats.nb_of_draw_home}")
-    print(f"Total Number of Home Games Played: {stats.nb_of_game_home}")
-    print(f"Win Rate Home: {stats.win_rate_percent_home}%")
-    print(f"Loss Rate Home: {stats.loose_rate_percent_home}%")
-    print(f"Draw Rate Home: {stats.draw_rate_percent_home}%")
-    print(f"Goals Scored Home: {stats.nb_of_goal_scored_home}")
-    print(f"Goals Conceded Home: {stats.nb_of_goal_conceded_home}")
-    print(f"Goals Scored per Match Home: {stats.nb_of_goal_scored_per_match_home}")
-    print(f"Goals Conceded per Match Home: {stats.nb_of_goal_conceded_per_match_home}")
-    
-
 def convert_nb_to_100(nb,len_all_nb):
     return int((nb*100)/len_all_nb) + 30
 
@@ -316,7 +258,7 @@ def get_score_based_on_the_league(team):
             return 100
         if score_based_on_league_and_league_place < 100:
             return 100
-        return score_based_on_league_and_league_place
+        return score_based_on_league_and_league_place + 10000
     except:
         #import traceback
         #traceback.print_exc()
@@ -408,12 +350,18 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 5 - oppenentGoal * 25
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+        
                 if statsT.last_x_game_win_draw_or_loose[index] == "L":
                     #print("kci  3")
                     diffScore = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place) * 100 * x2Points * (2.5 + little_ratio_based_on_team_place_on_league(facedTeam,statsT.name,teamScore,score_based_on_league_and_league_place,2))
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 5 - oppenentGoal * 25
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+        
                 
             elif statsT.last_x_game_list_away_or_home[index] == "H":
                 if statsT.last_x_game_win_draw_or_loose[index] == "W":
@@ -429,6 +377,9 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 10 - oppenentGoal * 20
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+        
                 
                 if statsT.last_x_game_win_draw_or_loose[index] == "L":
                     #print("kci  6")
@@ -436,6 +387,9 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 10 - oppenentGoal * 20
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+        
                 
         else:
             if statsT.last_x_game_list_away_or_home[index] == "A":
@@ -459,6 +413,9 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 25 - oppenentGoal * 5
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+        
                 
             elif statsT.last_x_game_list_away_or_home[index] == "H":
                 if statsT.last_x_game_win_draw_or_loose[index] == "W":
@@ -481,7 +438,9 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 20 - oppenentGoal * 10
                     finalScore-= abs(diffScore + abs(resultGoal))
-                    
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+        
                 
         
         #print("DIIF SCORE " , diffScore , " Final Score "  , finalScore , f" {team} VS {facedTeam} result: {statsT.last_x_game_win_draw_or_loose[index]} is oppenent weaker ? {teamScore < score_based_on_league_and_league_place}")
@@ -577,6 +536,9 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 5 - oppenentGoal * 25
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+        
                     #print(finalScore,little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,1),(score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place)
                     #print('ok")
                 if statsTeam.last_x_game_win_draw_or_loose[index] == "L":
@@ -585,6 +547,9 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 5 - oppenentGoal * 25
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+        
                 
             elif statsTeam.last_x_game_list_away_or_home[index] == "H":
                 if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
@@ -600,6 +565,9 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 10 - oppenentGoal * 20
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+        
                     #print('ok")
                     #print(finalScore,little_ratio_based_on_team_place_on_league(facedTeam,statsTeam.name,teamScore,score_based_on_league_and_league_place,1),(score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place)
                 if statsTeam.last_x_game_win_draw_or_loose[index] == "L":
@@ -608,6 +576,9 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = abs(diffScore)
                     resultGoal = teamGoal * 10 - oppenentGoal * 20
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+        
                 
         else:
             if statsTeam.last_x_game_list_away_or_home[index] == "A":
@@ -632,6 +603,9 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 25 - oppenentGoal * 5
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+        
                 
             elif statsTeam.last_x_game_list_away_or_home[index] == "H":
                 if statsTeam.last_x_game_win_draw_or_loose[index] == "W":
@@ -655,6 +629,9 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 20 - oppenentGoal * 10
                     finalScore-= abs(diffScore + abs(resultGoal))
+                    if finalScore >= 0:
+                        finalScore = finalScore * -1
+        
         finalScore = int(finalScore)    
         #print("Score basique " , score_based_on_league_and_league_place)
 
@@ -734,8 +711,8 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             #send_message_discord(f"{team2} will loose against {team1}")
             #send_message_discord(f"{team2} {p2} will loose against {team1} {p1}")
             odds = get_odds(S,team1,team2,"W")
-            if len(odds) > 2 and "." not in odds:
-                odds = get_odds(S,team1,team2,"W",True)
+            if len(odds) > 2 and "." not in odds or odds == "-999":
+                odds = get_odds(Z,team1,team2,"W",True)
             
             if len(odds) > 2 and "." not in odds:
                 odds = "-999"            
@@ -750,8 +727,8 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             print(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
             #send_message_discord(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
             odds = get_odds(S,team1,team2,"D")
-            if len(odds) > 2 and "." not in odds:
-                odds = get_odds(S,team1,team2,"D",True)
+            if len(odds) > 2 and "." not in odds or odds == "-999":
+                odds = get_odds(Z,team1,team2,"D",True)
             
             if len(odds) > 2 and "." not in odds:
                 odds = "-999"
@@ -773,8 +750,8 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
         if score_of_team1 * 1.25 < score_of_team2:
             print(f"{team1} will loose against {team2}")
             #send_message_discord(f"{team1} will loose against {team2}")
-            odds = get_odds(S,team1,team2,"L")
-            if len(odds) > 2 and "." not in odds:
+            odds = get_odds(Z,team1,team2,"L")
+            if len(odds) > 2 and "." not in odds or odds == "-999":
                 odds = get_odds(S,team1,team2,"L",True)
             
             if len(odds) > 2 and "." not in odds:
@@ -790,8 +767,8 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
             #send_message_discord(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
             odds = get_odds(S,team1,team2,"D")
-            if len(odds) > 2 and "." not in odds:
-                odds = get_odds(S,team1,team2,"D",True)
+            if len(odds) > 2 and "." not in odds or odds == "-999":
+                odds = get_odds(Z,team1,team2,"D",True)
             if len(odds) > 2 and "." not in odds:
                 odds = "-999"
             
@@ -826,10 +803,21 @@ def team_vs_team(team1,team2,idxx):
         #send_message_discord(f"{team1} vs {team2}")
         print(f"{team1} vs {team2}")
 
-        score_of_team1 = (get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False))
-        #print("+"*200)
-        score_of_team2 = abs(get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False))
+        # score_of_team1 = abs(get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False))
+        # #print("+"*200)
+        # score_of_team2 = abs(get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False))
 
+        x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False)
+        print("+"*200)
+        y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False)
+        score_of_team1 = abs(x)
+        if x > 0 and y < 0 :
+            score_of_team1 += abs(y) * 2
+        print("+"*200)
+        score_of_team2 = abs(y)
+        if x < 0 and y > 0:
+            score_of_team2 += abs(x) * 2
+        
         if calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2) > 80 or calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2) > 80:
             time.sleep(300)
             score_of_team1 = (get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False))
@@ -852,6 +840,7 @@ def generate_alphabet_list():
 
 from os import sys
 
+time.sleep(50 * int(sys.argv[1]))
 reset_file("result.txt")
 reset_file("percent.txt")
 reset_file("match.txt")
@@ -900,15 +889,14 @@ print(current_list)
 print("Match of to analyze " , current_list)
 idx = (int(sys.argv[1])) * 10
 
+if idx == 0:
+    send_message_discord("New Day New Match but Cristiano Ronaldo is still the goat")
+
 for match in current_list:
     m = match.split("#####")
     print(m[0],m[1])
-    x = doesMatchHaveOdds(S,m[0],m[1])
-    if x == False:
-        time.sleep(20)
-        x = doesMatchHaveOdds(S,str(current_day_number) + " " + months[current_month - 1] + " " + str(current_year) + " "+ m[0],m[1],True)
-
-    if len(m[0]) > 0 and len(m[1]) > 0 and x == True:
+    time.sleep(10)
+    if len(m[0]) > 0 and len(m[1]) > 0:
         team_vs_team(m[0],m[1],idx)
         time.sleep(60)
     idx+=1
