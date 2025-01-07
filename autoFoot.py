@@ -803,10 +803,21 @@ def team_vs_team(team1,team2,idxx):
         #send_message_discord(f"{team1} vs {team2}")
         print(f"{team1} vs {team2}")
 
-        score_of_team1 = (get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False))
-        #print("+"*200)
-        score_of_team2 = abs(get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False))
+        # score_of_team1 = abs(get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False))
+        # #print("+"*200)
+        # score_of_team2 = abs(get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False))
 
+        x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False)
+        print("+"*200)
+        y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False)
+        score_of_team1 = abs(x)
+        if x > 0 and y < 0 :
+            score_of_team1 += abs(y) * 2
+        print("+"*200)
+        score_of_team2 = abs(y)
+        if x < 0 and y > 0:
+            score_of_team2 += abs(x) * 2
+        
         if calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2) > 80 or calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2) > 80:
             time.sleep(300)
             score_of_team1 = (get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False))

@@ -728,9 +728,9 @@ def choose_a_team(nbnb):
     inputError = 0
     specialInput = False
     league_team_based_on_position = get_team_of_a_league(S,int(country_nb) - 1)
-
     for i in range(len(league_team_based_on_position)):
-        print(f"{i + 1}. {league_team_based_on_position[i]}")
+        if len(league_team_based_on_position) > 1:
+            print(f"{i + 1}. {league_team_based_on_position[i]}")
     
     # IN CASE MY CODE IS BAD
 
@@ -743,13 +743,17 @@ def choose_a_team(nbnb):
     #     else:
     #         inputError+=1
 
-    team_nb = input(f"Choose your team (choose between 1 and {len(data.allTeam_[int(country_nb) - 1]) - inputError}): ")
+    team_nb = input(f"Choose your team (choose between 1 and {len(league_team_based_on_position)}): ")
     team_nb = int(team_nb)
-    if specialInput == True:
-        team_nb-=1
-    check_data_entered_is_good(team_nb , len(data.allTeam_[int(country_nb) - 1]) - inputError)
-    
-    return data.allTeam_[int(country_nb) - 1][int(team_nb)].strip()
+
+    # IN CASE MY CODE IS BAD
+
+    # if specialInput == True:
+    #     team_nb-=1
+    #check_data_entered_is_good(team_nb , len(data.allTeam_[int(country_nb) - 1]) - inputError)
+    check_data_entered_is_good(team_nb,len(league_team_based_on_position))
+    return league_team_based_on_position[team_nb - 1]
+    #return data.allTeam_[int(country_nb) - 1][int(team_nb) - 1].strip()
 
 def calc_pourcent_of_win(nb1,nb2):
     try:
@@ -773,13 +777,19 @@ elif int(chooose) == 1:
 
     nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
     check_data_entered_is_good(nbOfGameToAnalyze,20)
-    #nbOfGameToAnalyze = 2
+    #nbOfGameToAnalyze = 20
     print(f"{team1} vs {team2}")
 
-    score_of_team1 = (get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze)))
+    x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze))
+    y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze))
+    score_of_team1 = abs(x)
+    if x > 0 and y < 0 :
+        score_of_team1 += abs(y) * 2
     print("+"*200)
-    score_of_team2 = abs(get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze)))
-
+    score_of_team2 = abs(y)
+    if x < 0 and y > 0:
+        score_of_team2 += abs(x) * 2
+    
 
     print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
 
