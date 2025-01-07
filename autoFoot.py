@@ -889,7 +889,7 @@ print(current_list)
 print("Match of to analyze " , current_list)
 idx = (int(sys.argv[1])) * 10
 
-if idx == 0:
+if idx == 1:
     send_message_discord("New Day New Match but Cristiano Ronaldo is still the goat")
 
 for match in current_list:

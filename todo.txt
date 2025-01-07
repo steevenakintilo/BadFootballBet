@@ -1,5 +1,1 @@
-Fix Problem when some team get too much point for no reason
-
-Making sure every team on the list exist
-
-Maybe some unknown problem
+Nothing to add for the moment...
