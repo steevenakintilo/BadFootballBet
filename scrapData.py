@@ -422,6 +422,7 @@ def get_team_of_a_league(S,nb):
     S.driver.get(data.all_league_url[nb])
     
     time.sleep(1)
+    accept_cookie(S)
     teams = []
     for i in range(1,30):
         try:
