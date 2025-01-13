@@ -22,11 +22,14 @@ odds = print_file_info("odds.txt").split("\n")
 odds = sorted(odds)
 percent = print_file_info("percent.txt").split("\n")
 percent = sorted(percent)
+name = print_file_info("league.txt").split("\n")
+name = sorted(name)
 
 reset_file("result.txt")
 reset_file("percent.txt")
 reset_file("match.txt")
 reset_file("odds.txt")
+reset_file("league.txt")
 
 for m in matches:
     if len(m) > 1 and " " in m:
@@ -51,6 +54,13 @@ for m in percent:
         m = m.split(" ",1)
         print(m[1])
         write_into_file("percent.txt",m[1]+"\n")
+
+for m in name:
+    if len(m) > 1 and " " in m:
+        m = m.split(" ",1)
+        print(m[1])
+        write_into_file("league.txt",m[1]+"\n")
+
 
 
 # print(matches)

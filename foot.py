@@ -219,7 +219,7 @@ def last_X_Games_Result(stats,listOfResult,url=""):
     stats.loose_rate_percent = int((loose/totalOfGame) * 100)
     stats.nb_of_goal_scored_per_match = round(float(stats.nb_of_goal_scored/stats.nb_of_game),1)
     stats.nb_of_goal_conceded_per_match = round(float(stats.nb_of_goal_conceded/stats.nb_of_game),1)
-    
+    stats.score = get_score_based_on_the_league(stats.name)
     if stats.nb_of_game_away > 0:
         stats.win_rate_percent_away = int((stats.nb_of_win_away/stats.nb_of_game_away) * 100)
         stats.loose_rate_percent_away = int((stats.nb_of_loose_away/stats.nb_of_game_away) * 100)
@@ -238,6 +238,7 @@ def last_X_Games_Result(stats,listOfResult,url=""):
 def print_all_data(stats):
     print(f"Team Name: {stats.name}")
     print(f"Team url: {stats.team_url}")
+    print(f"Team default score {stats.score}")
     print(f"Position in the League: {stats.pos_on_the_league}")
     print(f"League of the Team: {stats.league_of_the_team}")
     print(f"Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_list}")
@@ -609,6 +610,7 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
                     diffScore = 1 - abs(diffScore)
                     resultGoal = teamGoal * 10 - oppenentGoal * 20
                     finalScore+= abs(diffScore + abs(resultGoal))
+
                     #print('ok")
                 if statsTeam.last_x_game_win_draw_or_loose[index] == "D":
                     #print("ici  5")
@@ -697,15 +699,12 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
         print(f"Score final de  {team} : {score}")
     return score
     
-
-
 def is_num(nb):
     try:
         int(nb)
         return True
     except:
         return False
-
 
 def check_data_entered_is_good(country_nb,leen):
     if is_num(country_nb) == False:

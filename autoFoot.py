@@ -248,6 +248,13 @@ def last_X_Games_Result(stats,listOfResult,url=""):
 def convert_nb_to_100(nb,len_all_nb):
     return int((nb*100)/len_all_nb) + 30
 
+def get_team_league(team):
+    try:
+        data.pos_league_team = pos_league_team(team)
+        league_of_the_team = data.all_league_name[data.pos_league_team]
+        return league_of_the_team
+    except:
+        return ("ok")
 def get_score_based_on_the_league(team):
     try:
         pos_on_the_league = Position_Of_A_Team_On_Its_League(S,team)
@@ -705,12 +712,15 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
     print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
     p1 = str(calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2))
     p2 = str(calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2))
+    league_team_1 = get_team_league(team1)
+    write_into_file("league.txt",alphaElem + " " + league_team_1 + "\n")
     if score_of_team1 > score_of_team2:
         if score_of_team2 * 1.25 < score_of_team1:
             print(f"{team2} will loose against {team1}")
             #send_message_discord(f"{team2} will loose against {team1}")
             #send_message_discord(f"{team2} {p2} will loose against {team1} {p1}")
             odds = get_odds(S,team1,team2,"W")
+
             if len(odds) > 2 and "." not in odds or odds == "-999":
                 odds = get_odds(Z,team1,team2,"W",True)
             
@@ -845,6 +855,7 @@ reset_file("result.txt")
 reset_file("percent.txt")
 reset_file("match.txt")
 reset_file("odds.txt")
+reset_file("league.txt")
 
 reset_file("ckk.txt")
 matches = get_match_of_the_day(S)
@@ -886,7 +897,7 @@ except:
     quit()
 
 print(current_list)
-print("Match of to analyze " , current_list)
+print("Match of the day to analyze " , current_list)
 idx = (int(sys.argv[1])) * 10
 
 if idx == 1:
