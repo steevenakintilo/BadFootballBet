@@ -859,6 +859,7 @@ reset_file("league.txt")
 
 reset_file("ckk.txt")
 matches = get_match_of_the_day(S)
+
 if len(matches) < 4:
     print("not enough matches")
     quit()
