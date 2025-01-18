@@ -155,8 +155,8 @@ def get_match_of_the_day(S):
     striiing = ""
     error = 0
     skip = False
-    for j in range(3,20):
-        for i in range(1,30):
+    for j in range(3,60):
+        for i in range(1,60):
             try:
                 test = f"/html/body/div[3]/div[3]/div/div[1]/div[{j}]/div[2]/div[{i}]/div/a/span[1]"
                 element = WebDriverWait(S.driver,3).until(
@@ -169,7 +169,7 @@ def get_match_of_the_day(S):
                 error = 0
             except:
                 error+=1
-                if error > 3:
+                if error > 5:
                     return list_of_matches
                 break
     
@@ -313,6 +313,27 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         S.driver.execute_script("document.body.style.zoom='50%'")
         time.sleep(15)
+
+        try:
+            btnID = "bnp_btn_accept"
+            btnXPATH = "/html/body/div[2]/div[1]/div[2]/div[2]/div[2]/button[1]"
+            element = WebDriverWait(S.driver,5).until(
+            EC.presence_of_element_located((By.XPATH, btnXPATH)))
+            element.click()
+            time.sleep(2)
+        except:
+            pass
+
+        try:
+            btnID = "bnp_btn_accept"
+            btnXPATH = "/html/body/div[2]/div[1]/div[2]/div[2]/div[2]/button[1]"
+            element = WebDriverWait(S.driver,5).until(
+            EC.presence_of_element_located((By.ID, btnID)))
+            element.click()
+            time.sleep(2)
+        except:
+            pass
+        
         links = S.driver.find_elements(By.TAG_NAME, "a")
 
         all_links = [link.get_attribute("href") for link in links]
