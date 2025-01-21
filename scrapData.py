@@ -407,8 +407,8 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         #print("La cooteee " , odds)
         return "-999"
     except:
-        import traceback
-        traceback.print_exc()
+        # import traceback
+        # traceback.print_exc()
         
         return "-999"
         
