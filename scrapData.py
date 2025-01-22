@@ -259,30 +259,34 @@ def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
 
 def has_Team_Played_since_september(S,team,posTeam):
     
-    all_url = print_file_info("teamUrl.txt").split("\n")
-    S.driver.get(f"{all_url[posTeam]}calendrier/#tabPlayed")
-    tabResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div/div[2]/div[1]/div[1]/div"
+    try:
+        all_url = print_file_info("teamUrl.txt").split("\n")
+        S.driver.get(f"{all_url[posTeam]}calendrier/#tabPlayed")
+        tabResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div/div[2]/div[1]/div[1]/div"
 
-    element = WebDriverWait(S.driver,15).until(
-    EC.presence_of_element_located((By.XPATH, tabResultXpath)))
-
-    year = int(element.text.split(" ")[1])
-    month = element.text.split(" ")[0]
-    good_month = ["septembre","octobre","novembre","décembre"]
-    time.sleep(5)
-    if year >= int(date.today().year) or (year == 2024 and month.lower() in good_month):
-        print(f"Last gamed played by {team}: " , element.text)
-        return True
-    if month.lower() not in good_month:
+        try:
+            element = WebDriverWait(S.driver,15).until(
+            EC.presence_of_element_located((By.XPATH, tabResultXpath)))
+        except:
+            return False
+        year = int(element.text.split(" ")[1])
+        month = element.text.split(" ")[0]
+        good_month = ["septembre","octobre","novembre","décembre"]
+        time.sleep(5)
+        if year >= int(date.today().year) or (year == 2024 and month.lower() in good_month):
+            print(f"Last gamed played by {team}: " , element.text)
+            return True
+        if month.lower() not in good_month:
+            print(f"Last gamed played by {team}: " , element.text)
+            print("Team didnt played recently skiiping this game")    
+            return False
+        
         print(f"Last gamed played by {team}: " , element.text)
         print("Team didnt played recently skiiping this game")    
-        return False
-    
-    print(f"Last gamed played by {team}: " , element.text)
-    print("Team didnt played recently skiiping this game")    
 
-    return False
-    
+        return False
+    except:
+        return True    
 
 
 def doesMatchHaveOdds(S,team1,team2,otherSearch=False):
