@@ -710,6 +710,9 @@ def calc_pourcent_of_win(nb1,nb2):
 def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
     alphaElem = str(idxx)
     print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
+    score_of_team1 = abs(score_of_team1)
+    score_of_team2 = abs(score_of_team2)
+    
     p1 = str(calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2))
     p2 = str(calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2))
     league_team_1 = get_team_league(team1)
@@ -848,6 +851,7 @@ def generate_alphabet_list():
         )
     return result
 
+
 from os import sys
 
 time.sleep(50 * int(sys.argv[1]))
@@ -901,6 +905,8 @@ print(current_list)
 print("Match of the day to analyze " , current_list)
 idx = (int(sys.argv[1])) * 10
 
+allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
+
 if idx == 1:
     send_message_discord("New Day New Match but Cristiano Ronaldo is still the goat")
 
@@ -908,7 +914,9 @@ for match in current_list:
     m = match.split("#####")
     print(m[0],m[1])
     time.sleep(10)
-    if len(m[0]) > 0 and len(m[1]) > 0:
+    team_pos1 , team_pos2 = allTeamTxt.index(m[0].lower()),allTeamTxt.index(m[1].lower())
+    played1 , played2 = has_Team_Played_since_september(S,m[0],team_pos1),has_Team_Played_since_september(S,m[1],team_pos2)
+    if len(m[0]) > 0 and len(m[1]) > 0 and played1 == True and played2 == True:
         team_vs_team(m[0],m[1],idx)
         time.sleep(60)
     idx+=1
