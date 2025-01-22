@@ -278,6 +278,11 @@ def has_Team_Played_since_september(S,team,posTeam):
         print("Team didnt played recently skiiping this game")    
         return False
     
+    print(f"Last gamed played by {team}: " , element.text)
+    print("Team didnt played recently skiiping this game")    
+
+    return False
+    
 
 
 def doesMatchHaveOdds(S,team1,team2,otherSearch=False):
