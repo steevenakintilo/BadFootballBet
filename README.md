@@ -50,7 +50,7 @@ If you choose 3 it will just quit the program
 
 # Auto Mode
 Before using it make sure to put your webhook url into discordWebhookUrl.txt file
-If you want to analyze all the games available of the next day just run
+If you want to analyze all the games available of the next day just run 
 
 ```bash
     python autoFoot.py 1
@@ -71,7 +71,7 @@ If you want to analyze all the games available of the next day just run
 ```bash
     python autoFoot.py 5
 ```
-
+Run each command on a different window/terminal prompt
 It will analyze automaticaly all the game available of the day and will send all the result (Match,Winner,Percent and Odds) to your discord channel
 
 Then If you want all the data on the .txt files just run printData.py and it will store all the data into result.txt,percent.txt,odds.txt and match.txt files 
