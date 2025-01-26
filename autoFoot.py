@@ -708,7 +708,6 @@ def calc_pourcent_of_win(nb1,nb2):
 
 
 def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
-    alphaElem = str(idxx)
     print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
     score_of_team1 = abs(score_of_team1)
     score_of_team2 = abs(score_of_team2)
@@ -716,7 +715,8 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
     p1 = str(calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2))
     p2 = str(calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2))
     league_team_1 = get_team_league(team1)
-    write_into_file("league.txt",alphaElem + " " + league_team_1 + "\n")
+    print("iiiiddddxxxxx " , idxx)
+    write_into_file(f"txtFiles/league{idxx}.txt", league_team_1 + "\n")
     if score_of_team1 > score_of_team2:
         if score_of_team2 * 1.25 < score_of_team1:
             print(f"{team2} will loose against {team1}")
@@ -731,10 +731,10 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
                 odds = "-999"            
             
             send_message_discord(f"{team1} {p1} WIN VS {team2} {p2} ODDS {odds}")
-            write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
-            write_into_file("result.txt",alphaElem + " " + team1 + "\n")
-            write_into_file("odds.txt",alphaElem + " " + odds + "\n")
-            write_into_file("percent.txt",alphaElem + " " + p1+ "-" + p2 + "\n")
+            write_into_file(f"txtFiles/match{idxx}.txt",  team1 + " " + team2 + "\n")
+            write_into_file(f"txtFiles/result{idxx}.txt", team1 + "\n")
+            write_into_file(f"txtFiles/odds{idxx}.txt", odds + "\n")
+            write_into_file(f"txtFiles/percent{idxx}.txt", p1+ "-" + p2 + "\n")
 
         else:
             print(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
@@ -749,10 +749,10 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             odds = str(odds)
 
             send_message_discord(f"{team1} {p1} DRAW VS {team2} {p2} ODDS {odds}")
-            write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
-            write_into_file("result.txt",alphaElem + " " + team1 + " DRAW" + "\n")
-            write_into_file("odds.txt",alphaElem + " " + odds + "\n")
-            write_into_file("percent.txt",alphaElem + " " + p1+ "-" + p2 + "\n")
+            write_into_file(f"txtFiles/match{idxx}.txt",  team1 + " " + team2 + "\n")
+            write_into_file(f"txtFiles/result{idxx}.txt", team1 + " DRAW" + "\n")
+            write_into_file(f"txtFiles/odds{idxx}.txt", odds + "\n")
+            write_into_file(f"txtFiles/percent{idxx}.txt", p1+ "-" + p2 + "\n")
 
 
         print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
@@ -772,10 +772,10 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             
             
             send_message_discord(f"{team2} {p2} WIN VS {team1} {p1} ODDS {odds}")
-            write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
-            write_into_file("result.txt",alphaElem + " " + team2 + "\n")
-            write_into_file("odds.txt",alphaElem + " " + odds + "\n")
-            write_into_file("percent.txt",alphaElem + " " + p2+ "-" + p1 + "\n")
+            write_into_file(f"txtFiles/match{idxx}.txt",  team1 + " " + team2 + "\n")
+            write_into_file(f"txtFiles/result{idxx}.txt", team2 + "\n")
+            write_into_file(f"txtFiles/odds{idxx}.txt", odds + "\n")
+            write_into_file(f"txtFiles/percent{idxx}.txt", p2+ "-" + p1 + "\n")
         else:
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
             #send_message_discord(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
@@ -786,10 +786,10 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
                 odds = "-999"
             
             send_message_discord(f"{team2} {p2} DRAW VS {team1} {p1} ODDS {odds}")
-            write_into_file("match.txt", alphaElem + " " + team1 + " " + team2 + "\n")
-            write_into_file("result.txt",alphaElem + " " + team2 + " DRAW" + "\n")
-            write_into_file("odds.txt",alphaElem + " " + odds + "\n")
-            write_into_file("percent.txt",alphaElem + " " + p2+ "-" + p1 + "\n")
+            write_into_file(f"txtFiles/match{idxx}.txt",  team1 + " " + team2 + "\n")
+            write_into_file(f"txtFiles/result{idxx}.txt", team2 + " DRAW" + "\n")
+            write_into_file(f"txtFiles/odds{idxx}.txt", odds + "\n")
+            write_into_file(f"txtFiles/percent{idxx}.txt", p2+ "-" + p1 + "\n")
         
         print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
         print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
@@ -855,11 +855,18 @@ def generate_alphabet_list():
 from os import sys
 
 time.sleep(50 * int(sys.argv[1]))
+
 reset_file("result.txt")
 reset_file("percent.txt")
 reset_file("match.txt")
 reset_file("odds.txt")
 reset_file("league.txt")
+
+reset_file(f"txtFiles/result{int(sys.argv[1])}.txt")
+reset_file(f"txtFiles/percent{int(sys.argv[1])}.txt")
+reset_file(f"txtFiles/match{int(sys.argv[1])}.txt")
+reset_file(f"txtFiles/odds{int(sys.argv[1])}.txt")
+reset_file(f"txtFiles/league{int(sys.argv[1])}.txt")
 
 reset_file("ckk.txt")
 matches = get_match_of_the_day(S)
@@ -903,11 +910,10 @@ except:
 
 print(current_list)
 print("Match of the day to analyze " , current_list)
-idx = (int(sys.argv[1])) * 10
 
 allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
 
-if idx == 1:
+if int(sys.argv[1]) == 1:
     send_message_discord("New Day New Match but Cristiano Ronaldo is still the goat")
 
 for match in current_list:
@@ -917,6 +923,6 @@ for match in current_list:
     team_pos1 , team_pos2 = allTeamTxt.index(m[0].lower()),allTeamTxt.index(m[1].lower())
     played1 , played2 = has_Team_Played_since_september(S,m[0],team_pos1),has_Team_Played_since_september(S,m[1],team_pos2)
     if len(m[0]) > 0 and len(m[1]) > 0 and played1 == True and played2 == True:
-        team_vs_team(m[0],m[1],idx)
+        team_vs_team(m[0],m[1],int(sys.argv[1]))
         time.sleep(60)
-    idx+=1
+    
