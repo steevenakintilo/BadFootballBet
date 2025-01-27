@@ -19,13 +19,12 @@ reset_file("match.txt")
 reset_file("odds.txt")
 reset_file("league.txt")
 
-for i in range(1,5):
+for i in range(1,6):
     matches = print_file_info(f"txtFiles/match{i}.txt").split("\n")
     results = print_file_info(f"txtFiles/result{i}.txt").split("\n")
     odds = print_file_info(f"txtFiles/odds{i}.txt").split("\n")
     percent = print_file_info(f"txtFiles/percent{i}.txt").split("\n")
     name = print_file_info(f"txtFiles/league{i}.txt").split("\n")
-
     for m in matches:
         print(m)
         write_into_file("match.txt", m + "\n")
