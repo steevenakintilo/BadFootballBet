@@ -1046,8 +1046,8 @@ class teamData:
         "Croatia", "Austria", "Sweden", "Norway", "Serbia", "Ukraine", "Russia", 
         "Brazil", "Argentina", "Uruguay", "USA", "Saudi Arabia", "China", "Egypt", 
         "Morocco", "Algeria", "Albania", "Israel", "Armenia", "Greece", "Qatar", "Bolivia", 
-        "Mexico", "Japan", "South Korea", "France2ndDivision", 
-        "England2ndDivision", "Germany2ndDivision", "Spain2ndDivision", "Italy2ndDivision","Roumanie"
+        "Mexico", "Japan", "South Korea", "France"
+        , "England", "Germany", "Spain", "Italy","Roumanie"
     ]
 
 class TeamStat:

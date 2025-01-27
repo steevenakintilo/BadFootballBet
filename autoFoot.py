@@ -255,6 +255,15 @@ def get_team_league(team):
         return league_of_the_team
     except:
         return ("ok")
+
+def get_team_country(team):
+    try:
+        data.pos_league_team = pos_league_team(team)
+        country_of_the_team = data.country_of_the_team[data.pos_league_team]
+        return country_of_the_team
+    except:
+        return ("ok")
+
 def get_score_based_on_the_league(team):
     try:
         pos_on_the_league = Position_Of_A_Team_On_Its_League(S,team)
@@ -715,8 +724,26 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
     p1 = str(calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2))
     p2 = str(calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2))
     league_team_1 = get_team_league(team1)
+    league_team_2 = get_team_league(team2)
+    
+    country_team_1 = get_team_country(team1)
+    country_team_2 = get_team_country(team2)
+    
     print("iiiiddddxxxxx " , idxx)
-    write_into_file(f"txtFiles/league{idxx}.txt", league_team_1 + "\n")
+    
+    whereIsTheMatch = ""
+    if league_team_1 == league_team_2:
+        whereIsTheMatch = league_team_1
+    
+    elif league_team_1 != league_team_2 and country_team_1 == country_team_2:
+        whereIsTheMatch = country_team_1 + " cup"
+    
+    elif league_team_1 != league_team_2 and country_team_1 != country_team_2:
+        whereIsTheMatch = "Europe Competition"
+    else:
+        whereIsTheMatch = league_team_1
+
+    write_into_file(f"txtFiles/league{idxx}.txt", whereIsTheMatch + "\n")
     if score_of_team1 > score_of_team2:
         if score_of_team2 * 1.25 < score_of_team1:
             print(f"{team2} will loose against {team1}")
@@ -730,7 +757,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             if len(odds) > 2 and "." not in odds:
                 odds = "-999"            
             
-            send_message_discord(f"{team1} {p1} WIN VS {team2} {p2} ODDS {odds}")
+            send_message_discord(f"{team1} {p1} WIN VS {team2} {p2} ODDS {odds} LEAGUE {whereIsTheMatch}")
             write_into_file(f"txtFiles/match{idxx}.txt",  team1 + " " + team2 + "\n")
             write_into_file(f"txtFiles/result{idxx}.txt", team1 + "\n")
             write_into_file(f"txtFiles/odds{idxx}.txt", odds + "\n")
@@ -748,7 +775,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             
             odds = str(odds)
 
-            send_message_discord(f"{team1} {p1} DRAW VS {team2} {p2} ODDS {odds}")
+            send_message_discord(f"{team1} {p1} DRAW VS {team2} {p2} ODDS {odds} LEAGUE {whereIsTheMatch}")
             write_into_file(f"txtFiles/match{idxx}.txt",  team1 + " " + team2 + "\n")
             write_into_file(f"txtFiles/result{idxx}.txt", team1 + " DRAW" + "\n")
             write_into_file(f"txtFiles/odds{idxx}.txt", odds + "\n")
@@ -771,7 +798,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
                 odds = "-999"
             
             
-            send_message_discord(f"{team2} {p2} WIN VS {team1} {p1} ODDS {odds}")
+            send_message_discord(f"{team2} {p2} WIN VS {team1} {p1} ODDS {odds} LEAGUE {whereIsTheMatch}")
             write_into_file(f"txtFiles/match{idxx}.txt",  team1 + " " + team2 + "\n")
             write_into_file(f"txtFiles/result{idxx}.txt", team2 + "\n")
             write_into_file(f"txtFiles/odds{idxx}.txt", odds + "\n")
@@ -785,7 +812,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             if len(odds) > 2 and "." not in odds:
                 odds = "-999"
             
-            send_message_discord(f"{team2} {p2} DRAW VS {team1} {p1} ODDS {odds}")
+            send_message_discord(f"{team2} {p2} DRAW VS {team1} {p1} ODDS {odds} LEAGUE {whereIsTheMatch}")
             write_into_file(f"txtFiles/match{idxx}.txt",  team1 + " " + team2 + "\n")
             write_into_file(f"txtFiles/result{idxx}.txt", team2 + " DRAW" + "\n")
             write_into_file(f"txtFiles/odds{idxx}.txt", odds + "\n")
@@ -850,6 +877,7 @@ def generate_alphabet_list():
             ''.join(letters) for letters in itertools.product('abcdefghijklmnopqrstuvwxyz', repeat=length)
         )
     return result
+
 
 
 from os import sys

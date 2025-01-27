@@ -550,11 +550,14 @@ def write_into_file(path, x):
     with open(path, "ab") as f:
         f.write(str(x).encode("utf-8"))
 
-def reset_file(path):  
-    f = open(path, "w")
-    f.write("")    
-    f.close            
-
+def reset_file(path): 
+    try: 
+        f = open(path, "w")
+        f.write("")    
+        f.close            
+    except:
+        pass
+    
 def print_file_info(path):
     f = open(path, 'r',encoding="utf-8")
     content = f.read()
