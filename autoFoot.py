@@ -729,6 +729,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
     country_team_1 = get_team_country(team1)
     country_team_2 = get_team_country(team2)
     
+    
     print("iiiiddddxxxxx " , idxx)
     
     whereIsTheMatch = ""
@@ -737,9 +738,14 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
     
     elif league_team_1 != league_team_2 and country_team_1 == country_team_2:
         whereIsTheMatch = country_team_1 + " cup"
-    
-    elif league_team_1 != league_team_2 and country_team_1 != country_team_2:
+    elif league_team_1 != league_team_2 and country_team_1 != country_team_2 and country_team_1 in data.european_country and country_team_2 in data.european_country:
         whereIsTheMatch = "Europe Competition"
+    elif league_team_1 != league_team_2 and country_team_1 != country_team_2 and country_team_1 in data.african_country and country_team_2 in data.african_country:
+        whereIsTheMatch = "Africa Competition"
+    elif league_team_1 != league_team_2 and country_team_1 != country_team_2 and country_team_1 in data.asian_country and country_team_2 in data.asian_country:
+        whereIsTheMatch = "Asia Competition"
+    elif league_team_1 != league_team_2 and country_team_1 != country_team_2 and country_team_1 in data.american_country and country_team_2 in data.american_country:
+        whereIsTheMatch = "America Competition"
     else:
         whereIsTheMatch = league_team_1
 

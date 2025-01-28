@@ -1050,6 +1050,33 @@ class teamData:
         , "England", "Germany", "Spain", "Italy","Roumanie"
     ]
 
+    country_of_the_team = [
+        "England", "Spain", "Italy", "Germany", "France", "Portugal", 
+        "Netherlands", "Turkey", "Belgium", "Switzerland", "Scotland", "Czech Republic", 
+        "Croatia", "Austria", "Sweden", "Norway", "Serbia", "Ukraine", "Russia", 
+        "Brazil", "Argentina", "Uruguay", "USA", "Saudi Arabia", "China", "Egypt", 
+        "Morocco", "Algeria", "Albania", "Israel", "Armenia", "Greece", "Qatar", "Bolivia", 
+        "Mexico", "Japan", "South Korea", "France"
+        , "England", "Germany", "Spain", "Italy","Roumanie"
+    ]
+    european_country = [
+        "England", "Spain", "Italy", "Germany", "France", "Portugal", 
+        "Netherlands", "Turkey", "Belgium", "Switzerland", "Scotland", "Czech Republic", 
+        "Croatia", "Austria", "Sweden", "Norway", "Serbia", "Ukraine", "Russia", 
+        "Albania", "Israel", "Armenia", "Greece","Roumanie"
+    ]
+    asian_country = [
+        "Saudi Arabia", "China","Qatar","Japan", "South Korea"
+    ]
+    american_country = [
+        "Brazil", "Argentina", "Uruguay", "USA","Bolivia"
+    ]
+
+    african_country = [
+        "Egypt", "Morocco", "Algeria"
+    ]
+    
+
 class TeamStat:
     name = ""
     point = 0
