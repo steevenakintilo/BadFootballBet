@@ -379,17 +379,17 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
 
         S.driver.get(linkToGo)
         S.driver.execute_script("document.body.style.zoom='30%'")
-        time.sleep(15)
-        tableCote = "/html/body/div[1]/div[3]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
-        tableCote2 = "/html/body/div[1]/div[3]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[3]"
+        time.sleep(3)
+        tableCote = "/html/body/div[1]/div[3]/div[3]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
+        tableCote2 = "/html/body/div[1]/div[3]/div[3]/section/main/section[2]/div[1]/div/table/tbody/tr[2]"
 
         if FirstResultOdd == True:
             tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
         
         t1Name = ""
         t2Name = ""
-        team1P = "/html/body/div[1]/div[3]/div[4]/section/main/div[2]/div[1]/div[2]/div[1]"
-        team2P = "/html/body/div[1]/div[3]/div[4]/section/main/div[2]/div[1]/div[2]/div[3]"
+        team1P = "/html/body/div[1]/div[3]/div[3]/section/main/div[2]/div[1]/div[2]/div[1]/span"
+        team2P = "/html/body/div[1]/div[3]/div[3]/section/main/div[2]/div[1]/div[2]/div[3]/span"
         
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, team1P)))
@@ -402,14 +402,14 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
 
         if t2Name in team1 or team1 in t2Name or team1 == t2Name or check_split(team1,t2Name) == True:
             reverse = True
-            print("reeeveeeerseeeeee " , team1 , team2)
+            #print("reeeveeeerseeeeee " , team1 , team2)
           
         if t1Name in team2 or team2 in t1Name or team2 == t1Name or check_split(team2,t1Name) == True:
             reverse = True
-            print("reeeveeeerseeeeee " , team1 , team2)
+            #print("reeeveeeerseeeeee " , team1 , team2)
         
         if team1 in team2 or team2 in team1:
-            print("both team have a commun name " , team1,team2)
+            #print("both team have a commun name " , team1,team2)
             reverse = False
         
         try:
@@ -422,7 +422,7 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
             except:
                 return "-999"
         odds = element.text.split("\n")
-        #print(odds)
+        #print(f"t1 {t1Name} t2 {t2Name} {odds}")
         odds1,odds2,odds3 = odds[0],odds[1],odds[2]
         if result == "W":
             odds = odds1
@@ -440,9 +440,6 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         #print("La cooteee " , odds)
         return "-999"
     except:
-        # import traceback
-        # traceback.print_exc()
-        
         return "-999"
         
 def Position_Of_A_Team_On_Its_League(S,team):
