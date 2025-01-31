@@ -340,13 +340,22 @@ def check_split(str1,str2):
         return False
 
 def get_odds(S,team1,team2,result,FirstResultOdd=False):
+    now = datetime.now()
+    months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
+    current_day_number = now.day
+    current_year = now.year  # Year (e.g., 2025)
+    current_month = now.month
+
     try:
         team1=team1.lower()
         team2=team2.lower()
-        S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+        if FirstResultOdd == False:
+            S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+        else:
+            S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic{str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         S.driver.execute_script("document.body.style.zoom='50%'")
         time.sleep(15)
-
+        
         try:
             btnID = "bnp_btn_accept"
             btnXPATH = "/html/body/div[2]/div[1]/div[2]/div[2]/div[2]/button[1]"

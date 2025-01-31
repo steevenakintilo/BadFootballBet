@@ -7,12 +7,6 @@ S = Scraper()
 Z = SZcraper(True)
 data = teamData()
 
-now = datetime.now()
-months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
-current_day_number = now.day
-current_year = now.year  # Year (e.g., 2025)
-current_month = now.month
-
 def last_X_Games_Result(stats,listOfResult,url=""):
     if len(listOfResult) == 0:
         return -1
@@ -889,6 +883,7 @@ def generate_alphabet_list():
             ''.join(letters) for letters in itertools.product('abcdefghijklmnopqrstuvwxyz', repeat=length)
         )
     return result
+
 
 from os import sys
 
