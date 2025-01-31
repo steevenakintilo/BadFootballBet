@@ -4,7 +4,7 @@ from discord_webhook import DiscordWebhook
 import itertools
 
 S = Scraper()
-Z = SZcraper(False)
+Z = SZcraper(True)
 data = teamData()
 
 now = datetime.now()
@@ -243,6 +243,7 @@ def last_X_Games_Result(stats,listOfResult,url=""):
         stats.draw_rate_percent_home = int((stats.nb_of_draw_home/stats.nb_of_game_home) * 100)
         stats.nb_of_goal_scored_per_match_home = round(float(stats.nb_of_goal_scored_home/stats.nb_of_game_home),1)
         stats.nb_of_goal_conceded_per_match_home = round(float(stats.nb_of_goal_conceded_home/stats.nb_of_game_home),1)
+    
     return
 
 def convert_nb_to_100(nb,len_all_nb):
@@ -884,12 +885,13 @@ def generate_alphabet_list():
         )
     return result
 
-
-
 from os import sys
 
-time.sleep(50 * int(sys.argv[1]))
-
+try:
+    time.sleep(50 * int(sys.argv[1]))
+except:
+    print("You need to put argument after the autofoot like this: python autoFoot.py 1")
+    quit()
 reset_file("result.txt")
 reset_file("percent.txt")
 reset_file("match.txt")

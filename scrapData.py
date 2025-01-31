@@ -380,18 +380,15 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         S.driver.get(linkToGo)
         S.driver.execute_script("document.body.style.zoom='30%'")
         time.sleep(3)
-        tableCote = "/html/body/div[1]/div[3]/div[3]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
-        tableCote2 = "/html/body/div[1]/div[3]/div[3]/section/main/section[2]/div[1]/div/table/tbody/tr[2]"
-
-        if FirstResultOdd == True:
-            tableCote = "/html/body/div[1]/div[2]/div[4]/section/main/section[2]/div[1]/div/table/tbody/tr[1]"
+        tableCote2 = "/html/body/div[1]/div[3]/div[4]/section/main/div[1]/section[1]"
+        tc = "/html/body/div[1]/div[3]/div[4]/section/main/section[2]/div[1]/div/table/tbody"
         
         t1Name = ""
         t2Name = ""
-        team1P = "/html/body/div[1]/div[3]/div[3]/section/main/div[2]/div[1]/div[2]/div[1]/span"
-        team2P = "/html/body/div[1]/div[3]/div[3]/section/main/div[2]/div[1]/div[2]/div[3]/span"
+        team1P = "/html/body/div[1]/div[3]/div[4]/section/main/div[2]/div[1]/div[2]/div[1]"
+        team2P = "/html/body/div[1]/div[3]/div[4]/section/main/div[2]/div[1]/div[2]/div[3]"
         
-        element = WebDriverWait(S.driver,5).until(
+        element = WebDriverWait(S.driver,25).until(
         EC.presence_of_element_located((By.XPATH, team1P)))
         t1Name = element.text.lower()
 
@@ -413,15 +410,18 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
             reverse = False
         
         try:
-            element = WebDriverWait(S.driver,5).until(
-            EC.presence_of_element_located((By.XPATH, tableCote)))
+            fullTableCote = WebDriverWait(S.driver,5).until(
+            EC.presence_of_element_located((By.XPATH, tc)))
         except:
             try:
-                element = WebDriverWait(S.driver,5).until(
+                fullTableCote = WebDriverWait(S.driver,5).until(
                 EC.presence_of_element_located((By.XPATH, tableCote2)))
             except:
+                # import traceback
+                # traceback.print_exc()
+                # print("flop 1")
                 return "-999"
-        odds = element.text.split("\n")
+        odds = fullTableCote.text.split("\n")
         #print(f"t1 {t1Name} t2 {t2Name} {odds}")
         odds1,odds2,odds3 = odds[0],odds[1],odds[2]
         if result == "W":
@@ -440,6 +440,9 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         #print("La cooteee " , odds)
         return "-999"
     except:
+        # import traceback
+        # traceback.print_exc()
+        # print("flop 2")
         return "-999"
         
 def Position_Of_A_Team_On_Its_League(S,team):
