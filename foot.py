@@ -304,6 +304,8 @@ def get_score_based_on_the_league(team):
         data.pos_league_team = pos_league_team(team)
         league_of_the_team = data.all_league_name[data.pos_league_team]
         score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - pos_on_the_league - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
+        if pos_on_the_league == -999:
+            score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - int(data.nb_of_team_on_all_league[data.pos_league_team]/2) - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
         if pos_league_team(team) == -1:
             return 100
         if score_based_on_league_and_league_place < 100:
@@ -534,7 +536,8 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
     finalScore = 0
     teamGoal = 0
     oppenentGoal = 0
-    score_based_on_league_and_league_place = get_score_based_on_the_league(statsTeam.name) 
+    score_based_on_league_and_league_place = get_score_based_on_the_league(statsTeam.name)
+    #score_based_on_league_and_league_place = 150000
     score = score_based_on_league_and_league_place
     if NoPrint == True:
         print(f"Country {data.country_of_the_team[data.pos_league_team]}")
@@ -716,6 +719,36 @@ def check_data_entered_is_good(country_nb,leen):
         exit()
 
 
+def same_name_team_check(league_team_based_on_position,country_nb):
+    country_nb = int(country_nb)
+    new_list = []
+    if country_nb == 13:
+        for team in league_team_based_on_position:
+            if team.lower() == "rapid":
+                print("ok")
+                new_list.append("Rapid_AUSTRIA")
+            else:
+                new_list.append(team)
+        return new_list
+    elif country_nb == 33:
+        for team in league_team_based_on_position:
+            if team.lower() == "ahli":
+                print("ok")
+                new_list.append("Ahli_QATAR")
+            else:
+                new_list.append(team)
+        return new_list
+    elif country_nb == 21:
+        for team in league_team_based_on_position:
+            if team.lower() == "racing":
+                print("ok")
+                new_list.append("Racing_ARGENTINA")
+            else:
+                new_list.append(team)
+        return new_list
+    else:
+        return league_team_based_on_position
+
 def choose_a_team(nbnb):
     for i in range(len(data.country_of_the_team)):
         print(f"{i+1}. {data.country_of_the_team[i]}")
@@ -726,33 +759,39 @@ def choose_a_team(nbnb):
 
     inputError = 0
     specialInput = False
-    league_team_based_on_position = get_team_of_a_league(S,int(country_nb) - 1)
-    for i in range(len(league_team_based_on_position)):
-        if len(league_team_based_on_position) > 1:
-            print(f"{i + 1}. {league_team_based_on_position[i]}")
-    
-    # IN CASE MY CODE IS BAD
+    #league_team_based_on_position = get_team_of_a_league(S,int(country_nb) - 1)
+    league_team_based_on_position = same_name_team_check(get_team_of_a_league(S,int(country_nb) - 1),country_nb)
+    if len(league_team_based_on_position) > 0:
+        for i in range(len(league_team_based_on_position)):
+            if len(league_team_based_on_position) > 1:
+                print(f"{i + 1}. {league_team_based_on_position[i]}")
 
-    # for i in range(len(data.allTeam_[int(country_nb) - 1])):
-    #     if len(data.allTeam_[int(country_nb) - 1][0].strip()) > 1:
-    #         print(f"{i + 1}. {data.allTeam_[int(country_nb) - 1][i].strip()}")    
-    #         specialInput = True
-    #     elif len(data.allTeam_[int(country_nb) - 1][i].strip()) > 1:
-    #         print(f"{i}. {data.allTeam_[int(country_nb) - 1][i].strip()}")
-    #     else:
-    #         inputError+=1
+    else:    
+        #IN CASE MY CODE IS BAD
+
+        for i in range(len(data.allTeam_[int(country_nb) - 1])):
+            if len(data.allTeam_[int(country_nb) - 1][0].strip()) > 1:
+                print(f"{i + 1}. {data.allTeam_[int(country_nb) - 1][i].strip()}")    
+                specialInput = True
+            elif len(data.allTeam_[int(country_nb) - 1][i].strip()) > 1:
+                print(f"{i}. {data.allTeam_[int(country_nb) - 1][i].strip()}")
+            else:
+                inputError+=1
 
     team_nb = input(f"Choose your team (choose between 1 and {len(league_team_based_on_position)}): ")
     team_nb = int(team_nb)
 
     # IN CASE MY CODE IS BAD
 
-    # if specialInput == True:
-    #     team_nb-=1
-    #check_data_entered_is_good(team_nb , len(data.allTeam_[int(country_nb) - 1]) - inputError)
-    check_data_entered_is_good(team_nb,len(league_team_based_on_position))
-    return league_team_based_on_position[team_nb - 1]
-    #return data.allTeam_[int(country_nb) - 1][int(team_nb) - 1].strip()
+    if len(league_team_based_on_position) == 0:
+        if specialInput == True:
+            team_nb-=1
+        check_data_entered_is_good(team_nb , len(data.allTeam_[int(country_nb) - 1]) - inputError)
+        return data.allTeam_[int(country_nb) - 1][int(team_nb) - 1].strip()
+    else:
+        check_data_entered_is_good(team_nb,len(league_team_based_on_position))
+        return league_team_based_on_position[team_nb - 1]
+    
 
 def calc_pourcent_of_win(nb1,nb2):
     try:

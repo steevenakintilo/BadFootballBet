@@ -217,7 +217,7 @@ Rudeš
 Slaven
 Sturm
 Austria
-Rapid
+Rapid_AUSTRIA
 WAC
 Salzbourg
 BW-Linz
@@ -297,7 +297,7 @@ Atlético-GO
 Cuiabá
 Vélez
 Talleres
-Racing
+Racing_ARGENTINA
 Huracán
 River
 Boca
@@ -525,7 +525,7 @@ Wakrah
 Qatar
 Gharafa
 Markhiya
-Ahli
+Ahli_QATAR
 Rayyan
 Umm-Salal
 Shamal
@@ -675,7 +675,7 @@ Daejeon
 Daegu
 Incheon-Utd
 Jeju-Utd
-Suwon
+Suwon-Coree
 Suwon
 Gangwon
 Lorient

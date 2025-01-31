@@ -271,6 +271,10 @@ def get_score_based_on_the_league(team):
         data.pos_league_team = pos_league_team(team)
         league_of_the_team = data.all_league_name[data.pos_league_team]
         score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - pos_on_the_league - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
+        score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - pos_on_the_league - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
+
+        if pos_on_the_league == -999:
+            score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - int(data.nb_of_team_on_all_league[data.pos_league_team]/2) - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
         if pos_league_team(team) == -1:
             return 100
         if score_based_on_league_and_league_place < 100:
@@ -281,6 +285,7 @@ def get_score_based_on_the_league(team):
         #traceback.print_exc()
             
         return 100
+
 
 def little_ratio_based_on_team_place_on_league(team,team2,teamScore,score_based_on_league_and_league_place,type=2):
     try:

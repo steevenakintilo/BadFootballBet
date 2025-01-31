@@ -258,7 +258,7 @@ class teamData:
     austrianTeam = """
     Sturm
     Austria
-    Rapid
+    Rapid_AUSTRIA
     WAC
     Salzbourg
     BW Linz
@@ -371,7 +371,7 @@ class teamData:
     argentinianTeam = """
     Vélez
     Talleres
-    Racing
+    Racing_ARGENTINA
     Huracán
     River
     Boca
