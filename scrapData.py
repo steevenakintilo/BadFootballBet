@@ -142,8 +142,14 @@ def get_match_of_the_day(S):
     accept_cookie(S)
     allTeam = print_file_info("allteam.txt").lower().split("\n")
 
+    try:
+        dayNb = int(print_file_info("dayNb.txt"))
+    except:
+        dayNb = 1
+    if dayNb < 0:
+        dayNb = 0
     current_date = datetime.now()
-    next_day = current_date + timedelta(days=1)
+    next_day = current_date + timedelta(days=dayNb)
     formatted_next_day = next_day.strftime("%Y-%m-%d")
 
     S.driver.get(f"https://www.footmercato.net/live/{formatted_next_day}")
