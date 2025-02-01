@@ -4,7 +4,7 @@ from discord_webhook import DiscordWebhook
 import itertools
 
 S = Scraper()
-Z = SZcraper(True)
+Z = SZcraper(False)
 data = teamData()
 
 def last_X_Games_Result(stats,listOfResult,url=""):
