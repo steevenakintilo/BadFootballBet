@@ -360,9 +360,9 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
                 S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
             except:
                 time.sleep(10)
-                S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic{str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")        
+                S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic {str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")        
         else:
-            S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic{str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+            S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic {str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         S.driver.execute_script("document.body.style.zoom='50%'")
         time.sleep(15)
         
@@ -392,7 +392,7 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         linkToGo = ""
         for link in all_links:
             if link:  # Check if the href is not None
-                if ".sportytrader." in link:
+                if ".sportytrader." in link and "us/picks" not in link:
                     linkToGo = link
                     break
 
@@ -496,6 +496,7 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
                 return odds
         
 
+        #print("lnk to go " , linkToGo)
         try:
             fullTableCote = WebDriverWait(S.driver,5).until(
             EC.presence_of_element_located((By.XPATH, tc)))
@@ -508,14 +509,14 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
                     fullTableCote = WebDriverWait(S.driver,5).until(
                     EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[2]/div[3]/section/main/section[2]/div[1]/div/table")))
                 except:
-                    import traceback
-                    traceback.print_exc()
+                    # import traceback
+                    # traceback.print_exc()
                     # print(f"flop 1 {team1} vs {team2}")
-                    # if FirstResultOdd == False:
+                    # # if FirstResultOdd == False:
                     #     print(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
                     # else:
                     #     print(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic{str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
-                    # print("SportyTrader Link " , linkToGo)
+                    #print("SportyTrader Link " , linkToGo)
                     return "-999"
         odds = fullTableCote.text.split("\n")
         #print(f"t1 {t1Name} t2 {t2Name} {odds}")
@@ -536,13 +537,13 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         #print("La cooteee " , odds)
         return "-999"
     except:
-        import traceback
-        traceback.print_exc()
+        # import traceback
+        # traceback.print_exc()
         # print(f"flop 2 {team1} vs {team2}")
-        # if FirstResultOdd == False:
-        #     print(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
-        # else:
-        #     print(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic{str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+        # # if FirstResultOdd == False:
+        # #     print(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+        # # else:
+        # #     print(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic{str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         # print("SportyTrader Link " , linkToGo)
     
         return "-999"
