@@ -14,6 +14,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from os import system
 import time
+
+from datetime import datetime, timedelta
 import os.path
 from datetime import datetime, timedelta
 from datetime import date
@@ -165,7 +167,7 @@ def get_match_of_the_day(S):
     for j in range(3,60):
         for i in range(1,60):
             try:
-                test = f"/html/body/div[3]/div[3]/div/div[1]/div[{j}]/div[2]/div[{i}]/div/a/span[1]"
+                test = f"/html/body/div[4]/div[3]/div/div[1]/div[{j}]/div[2]/div[{i}]/div"
                 element = WebDriverWait(S.driver,3).until(
                 EC.presence_of_element_located((By.XPATH, test)))
                 matches = element.text.replace(" ","-").split("\n")
@@ -197,7 +199,7 @@ def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
     
     calendarXpath = "/html/body/div[3]/div[4]/div/div/nav/ul/li[4]/a"
 
-    tabResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div"
+    tabResultXpath = "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div"
 
     element = WebDriverWait(S.driver,15).until(
     EC.presence_of_element_located((By.XPATH, tabResultXpath)))
@@ -268,8 +270,7 @@ def has_Team_Played_since_september(S,team,posTeam):
     try:
         all_url = print_file_info("teamUrl.txt").split("\n")
         S.driver.get(f"{all_url[posTeam]}calendrier/#tabPlayed")
-        tabResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div/div[2]/div[1]/div[1]/div"
-
+        tabResultXpath = "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[2]/div[1]/div[1]/div"
         try:
             element = WebDriverWait(S.driver,15).until(
             EC.presence_of_element_located((By.XPATH, tabResultXpath)))
@@ -293,6 +294,18 @@ def has_Team_Played_since_september(S,team,posTeam):
         return False
     except:
         return True    
+
+def add_days_to_date(days_to_add):
+    # Get the current date
+    date_obj = datetime.today()
+    
+    # Add the specified number of days
+    new_date_obj = date_obj + timedelta(days=days_to_add)
+    
+    # Convert back to string in the same format
+    new_date_str = new_date_obj.strftime("%d/%m/%Y")
+    
+    return new_date_str
 
 
 def doesMatchHaveOdds(S,team1,team2,otherSearch=False):
@@ -345,7 +358,7 @@ def check_split(str1,str2):
     except:
         return False
 
-def get_odds(S,team1,team2,result,FirstResultOdd=False):
+def get_odds(S,team1,team2,result,FirstResultOdd=False,TestDate=""):
     now = datetime.now()
     months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
     current_day_number = now.day
@@ -357,12 +370,12 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         team2=team2.lower()
         if FirstResultOdd == False:
             try:
-                S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+                S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
             except:
                 time.sleep(10)
-                S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic {str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")        
+                S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+cote {str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")        
         else:
-            S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic {str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+            S.driver.get(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+cote {str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         S.driver.execute_script("document.body.style.zoom='50%'")
         time.sleep(15)
         
@@ -392,78 +405,23 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         linkToGo = ""
         for link in all_links:
             if link:  # Check if the href is not None
-                if ".sportytrader." in link and "us/picks" not in link:
+                if ".sportytrader." in link and "us/picks" not in link and "com/pronostics/football/" not in link:
                     linkToGo = link
                     break
 
         S.driver.get(linkToGo)
         S.driver.execute_script("document.body.style.zoom='30%'")
-        time.sleep(3)
-        tableCote2 = "/html/body/div[1]/div[3]/div[4]/section/main/div[1]/section[1]"
-        tc = "/html/body/div[1]/div[3]/div[4]/section/main/section[2]/div[1]/div/table/tbody"
-        
-        t1Name = ""
-        t2Name = ""
-        team1P = "/html/body/div[1]/div[3]/div[4]/section/main/div[2]/div[1]/div[2]/div[1]"
-        team2P = "/html/body/div[1]/div[3]/div[4]/section/main/div[2]/div[1]/div[2]/div[3]"
-
-        specialPage = "/html/body/div[1]/div[3]/div[4]/section/main/div/div[2]/div/div[2]/div[1]/bet-1x2-large/button"
-        team1PP = "/html/body/div[1]/div[3]/div[4]/section/main/div/div[2]/div/div[1]/div/div[2]/div[1]/span"
-        team2PP = "/html/body/div[1]/div[3]/div[4]/section/main/div/div[2]/div/div[1]/div/div[2]/div[3]/span"
-        isPageSpecial = False
+        page_text = S.driver.find_element("tag name", "body").text
+        daTe = add_days_to_date(int(print_file_info("dayNb.txt")))
+        if len(TestDate) > 3:
+            daTe = "01/02/2025"
+        t1Name = page_text.split(daTe)[0].split("\n")[-2].lower()
         try:
-            element = WebDriverWait(S.driver,5).until(
-            EC.presence_of_element_located((By.XPATH, specialPage)))
-            t1Name = element.text.lower()
-            isPageSpecial = True
+            t2Name = page_text.split(daTe)[1].split("\n")[2].lower()
         except:
-            pass
+            t2Name = team2
 
-        if specialPage == True:
-            element = WebDriverWait(S.driver,10).until(
-            EC.presence_of_element_located((By.XPATH, team1PP)))
-            t1Name = element.text.lower()
-
-            element = WebDriverWait(S.driver,5).until(
-            EC.presence_of_element_located((By.XPATH, team2PP)))
-            t2Name = element.text.lower()
-            reverse=False
-
-        else:
-            try:
-                element = WebDriverWait(S.driver,10).until(
-                EC.presence_of_element_located((By.XPATH, team1P)))
-                t1Name = element.text.lower()
-
-                element = WebDriverWait(S.driver,5).until(
-                EC.presence_of_element_located((By.XPATH, team2P)))
-                t2Name = element.text.lower()
-                reverse=False
-            except:
-                try:
-                    team1P = "/html/body/div[1]/div[2]/div[3]/section/main/div[2]/div[1]/div[2]/div[1]/span"
-                    team2P = "/html/body/div[1]/div[2]/div[3]/section/main/div[2]/div[1]/div[2]/div[3]/span"
-                    element = WebDriverWait(S.driver,10).until(
-                    EC.presence_of_element_located((By.XPATH, team1P)))
-                    t1Name = element.text.lower()
-
-                    element = WebDriverWait(S.driver,5).until(
-                    EC.presence_of_element_located((By.XPATH, team2P)))
-                    t2Name = element.text.lower()
-                    reverse=False
-                except:
-                    team1P = "/html/body/div[1]/div[3]/div[4]/section/main/div/div[2]/div/div[1]/div/div[2]/div[1]/span"
-                    team2P = "/html/body/div[1]/div[3]/div[4]/section/main/div/div[2]/div/div[1]/div/div[2]/div[3]/span"
-                    element = WebDriverWait(S.driver,10).until(
-                    EC.presence_of_element_located((By.XPATH, team1P)))
-                    t1Name = element.text.lower()
-
-                    element = WebDriverWait(S.driver,5).until(
-                    EC.presence_of_element_located((By.XPATH, team2P)))
-                    t2Name = element.text.lower()
-                    reverse=False
-         
-
+        reverse = False
         if t2Name in team1 or team1 in t2Name or team1 == t2Name or check_split(team1,t2Name) == True:
             reverse = True
             #print("reeeveeeerseeeeee " , team1 , team2)
@@ -475,51 +433,28 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         if team1 in team2 or team2 in team1:
             #print("both team have a commun name " , team1,team2)
             reverse = False
-        if isPageSpecial == True:
-            fullTableCoteSpecial = WebDriverWait(S.driver,5).until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[3]/div[4]/section/main/div/div[2]/div/div[2]/div[1]/bet-1x2-large/button/div")))
-            odds = fullTableCoteSpecial.text.split("\n")
-            #print(f"t1 {t1Name} t2 {t2Name} {odds}")
-            odds1,odds2,odds3 = odds[1],odds[3],odds[5]
-            if result == "W":
-                odds = odds1
-                if reverse == True:
-                    odds = odds3
-                return odds
-            if result == "D":
-                odds = odds2
-                return odds
-            if result == "L":
-                odds = odds3
-                if reverse == True:
-                    odds = odds1
-                return odds
         
-
-        #print("lnk to go " , linkToGo)
-        try:
-            fullTableCote = WebDriverWait(S.driver,5).until(
-            EC.presence_of_element_located((By.XPATH, tc)))
-        except:
+        t1Name=t1Name.lower()
+        t2Name=t2Name.lower()
+        page_text = S.driver.find_element("tag name", "body").text.replace("\n"," ")
+        #write_into_file("toto.txt",S.driver.find_element("tag name", "body").text)
+        if "BOOKMAKER 1 X 2 BONUS" in page_text:
+            pt = page_text.split("BOOKMAKER 1 X 2 BONUS")[1].split(" ")
+            odds = pt[1] + "\n" + pt[2] + "\n" + pt[3] + "\n"
+        elif "BOOKMAKER 1 N 2 BONUS" in page_text:
+            pt = page_text.split("BOOKMAKER 1 N 2 BONUS")[1].split(" ")
+            odds = pt[1] + "\n" + pt[2] + "\n" + pt[3] + "\n"
+        else:
             try:
-                fullTableCote = WebDriverWait(S.driver,5).until(
-                EC.presence_of_element_located((By.XPATH, tableCote2)))
+                pt = page_text.split(t2Name)[1].split(" ")
+                odds = pt[1] + "\n" + pt[2] + "\n" + pt[3] + "\n"    
             except:
-                try:
-                    fullTableCote = WebDriverWait(S.driver,5).until(
-                    EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[2]/div[3]/section/main/section[2]/div[1]/div/table")))
-                except:
-                    # import traceback
-                    # traceback.print_exc()
-                    # print(f"flop 1 {team1} vs {team2}")
-                    # # if FirstResultOdd == False:
-                    #     print(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
-                    # else:
-                    #     print(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic{str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
-                    #print("SportyTrader Link " , linkToGo)
-                    return "-999"
-        odds = fullTableCote.text.split("\n")
-        #print(f"t1 {t1Name} t2 {t2Name} {odds}")
+                pt = S.driver.find_element("tag name", "body").text.split(daTe)[1].split("\n")
+                odds = pt[4] + "\n" + pt[6] + "\n" + pt[8] + "\n"        
+
+        odds = odds.split("\n")
+        #print("oooodddddssssss " , odds)
+        
         odds1,odds2,odds3 = odds[0],odds[1],odds[2]
         if result == "W":
             odds = odds1
@@ -537,15 +472,17 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False):
         #print("La cooteee " , odds)
         return "-999"
     except:
-        # import traceback
-        # traceback.print_exc()
-        # print(f"flop 2 {team1} vs {team2}")
-        # # if FirstResultOdd == False:
-        # #     print(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
-        # # else:
-        # #     print(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic{str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
-        # print("SportyTrader Link " , linkToGo)
-    
+        # if FirstResultOdd == True:
+        #     import traceback
+        #     traceback.print_exc()
+
+        #     print(f"flop 2 {team1} vs {team2}")
+        #     if FirstResultOdd == False:
+        #         print(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+        #     else:
+        #         print(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic{str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
+        #     print("SportyTrader Link " , linkToGo)
+        
         return "-999"
         
 def Position_Of_A_Team_On_Its_League(S,team):
@@ -561,7 +498,7 @@ def Position_Of_A_Team_On_Its_League(S,team):
     for i in range(1,40):
         try:
             element = WebDriverWait(S.driver,2).until(
-            EC.presence_of_element_located((By.XPATH, f"/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a/span")))
+            EC.presence_of_element_located((By.XPATH, f"/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{i}]/td[2]")))
             if team == element.text.lower().replace(" ","-"):
                 return i
         except:
@@ -569,21 +506,6 @@ def Position_Of_A_Team_On_Its_League(S,team):
 
     return -999
     
-
-def checkTeamNameIsRight(S,teamName):
-    try:
-        S.driver.get(f"https://www.footmercato.net/club/{teamName}/calendrier")
-
-        acceptBtnXpath = "/html/body/div[1]/div/div/div/div/div/div[2]/button[1]"
-
-        element = WebDriverWait(S.driver,0.01).until(
-        EC.presence_of_element_located((By.XPATH, acceptBtnXpath)))
-
-        return True
-    except:
-        print(teamName)
-        return False
-
 
 def get_team_of_a_league(S,nb):
     data = teamData()
@@ -596,7 +518,8 @@ def get_team_of_a_league(S,nb):
         try:
             try:
                 element = WebDriverWait(S.driver,5).until(
-                EC.presence_of_element_located((By.XPATH, f"/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a")))
+                EC.presence_of_element_located((By.XPATH, f"/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a")))
+                                                        
             except:
                 return teams
             teams.append(element.text.lower().replace(" ","-"))

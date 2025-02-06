@@ -755,7 +755,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             print(f"{team2} will loose against {team1}")
             #send_message_discord(f"{team2} will loose against {team1}")
             #send_message_discord(f"{team2} {p2} will loose against {team1} {p1}")
-            odds = get_odds(S,team1,team2,"W")
+            odds = get_odds(S,team1,team2,"W",True)
 
             if len(odds) > 2 and "." not in odds or odds == "-999":
                 odds = get_odds(Z,team1,team2,"W",True)
@@ -772,7 +772,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
         else:
             print(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
             #send_message_discord(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
-            odds = get_odds(S,team1,team2,"D")
+            odds = get_odds(S,team1,team2,"D",True)
             if len(odds) > 2 and "." not in odds or odds == "-999":
                 odds = get_odds(Z,team1,team2,"D",True)
             
@@ -796,9 +796,9 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
         if score_of_team1 * 1.25 < score_of_team2:
             print(f"{team1} will loose against {team2}")
             #send_message_discord(f"{team1} will loose against {team2}")
-            odds = get_odds(Z,team1,team2,"L")
+            odds = get_odds(S,team1,team2,"L",True)
             if len(odds) > 2 and "." not in odds or odds == "-999":
-                odds = get_odds(S,team1,team2,"L",True)
+                odds = get_odds(Z,team1,team2,"L",True)
             
             if len(odds) > 2 and "." not in odds:
                 odds = "-999"
@@ -812,7 +812,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
         else:
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
             #send_message_discord(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
-            odds = get_odds(S,team1,team2,"D")
+            odds = get_odds(S,team1,team2,"D",True)
             if len(odds) > 2 and "." not in odds or odds == "-999":
                 odds = get_odds(Z,team1,team2,"D",True)
             if len(odds) > 2 and "." not in odds:
@@ -883,6 +883,7 @@ def generate_alphabet_list():
             ''.join(letters) for letters in itertools.product('abcdefghijklmnopqrstuvwxyz', repeat=length)
         )
     return result
+
 
 
 from os import sys
