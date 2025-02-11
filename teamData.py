@@ -1046,19 +1046,10 @@ class teamData:
         "Croatia", "Austria", "Sweden", "Norway", "Serbia", "Ukraine", "Russia", 
         "Brazil", "Argentina", "Uruguay", "USA", "Saudi Arabia", "China", "Egypt", 
         "Morocco", "Algeria", "Albania", "Israel", "Armenia", "Greece", "Qatar", "Bolivia", 
-        "Mexico", "Japan", "South Korea", "France"
-        , "England", "Germany", "Spain", "Italy","Roumanie"
+        "Mexico", "Japan", "South Korea", "France2ndDivision"
+        , "England2ndDivision", "Germany2ndDivision", "Spain2ndDivision", "Italy2ndDivision","Roumanie"
     ]
 
-    country_of_the_team = [
-        "England", "Spain", "Italy", "Germany", "France", "Portugal", 
-        "Netherlands", "Turkey", "Belgium", "Switzerland", "Scotland", "Czech Republic", 
-        "Croatia", "Austria", "Sweden", "Norway", "Serbia", "Ukraine", "Russia", 
-        "Brazil", "Argentina", "Uruguay", "USA", "Saudi Arabia", "China", "Egypt", 
-        "Morocco", "Algeria", "Albania", "Israel", "Armenia", "Greece", "Qatar", "Bolivia", 
-        "Mexico", "Japan", "South Korea", "France"
-        , "England", "Germany", "Spain", "Italy","Roumanie"
-    ]
     european_country = [
         "England", "Spain", "Italy", "Germany", "France", "Portugal", 
         "Netherlands", "Turkey", "Belgium", "Switzerland", "Scotland", "Czech Republic", 
