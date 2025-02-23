@@ -722,7 +722,7 @@ def check_data_entered_is_good(country_nb,leen):
 def same_name_team_check(league_team_based_on_position,country_nb):
     country_nb = int(country_nb)
     new_list = []
-    if country_nb == 13:
+    if country_nb == 14:
         for team in league_team_based_on_position:
             if team.lower() == "rapid":
                 print("ok")
