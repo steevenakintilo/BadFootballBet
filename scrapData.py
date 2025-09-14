@@ -42,6 +42,7 @@ class Scraper:
     options = webdriver.ChromeOptions()
     options.add_argument('--log-level=1')
     options.add_argument("--log-level=3")  # Suppress all logging levels
+    
     if len(str(print_pkl_info())) > 20:
         options.add_argument('headless')
     
@@ -70,9 +71,11 @@ class SZcraper:
         self.driver = webdriver.Chrome(options=self.options)
         self.driver.set_page_load_timeout(15)
 
-def accept_cookie(S):
-    if print_file_info("ckk.txt") == "1":
-        return
+def accept_cookie(S,stop=False):
+
+    #time.sleep(1000)
+    # if print_file_info("ckk.txt") == "1":
+    #     return
     try:
         try:
             ck = print_pkl_info()
@@ -87,18 +90,23 @@ def accept_cookie(S):
         else:
             reset_file("ckk.txt")
             acceptBtnXpath = "/html/body/div[1]/div/div/div/div/div/div[2]/button[1]"
-
+            acceptBtnID = "didomi-notice-agree-button"
             element = WebDriverWait(S.driver,3).until(
-            EC.presence_of_element_located((By.XPATH, acceptBtnXpath)))
+            EC.presence_of_element_located((By.ID, acceptBtnID)))
 
             element.click()
             pickle.dump(S.driver.get_cookies(), open(f"cookies{0}.pkl", "wb"))
             write_into_file("ckk.txt",1)
 
     except:
-        #import traceback
-        #traceback.print_exc()    
-        pass    
+        # if stop == True:
+        #     print("too much error bye")
+        #     exit() 
+        # print("coockie flop")
+        # reset_file("ckk.txt")   
+        # accept_cookie(S,True)
+        pass  
+  
 
 def is_num(nb):
     try:
@@ -141,48 +149,53 @@ def get_url_of_a_team(posTeam):
         return("")
 
 def get_match_of_the_day(S):
-    accept_cookie(S)
-    allTeam = print_file_info("allteam.txt").lower().split("\n")
-
     try:
-        dayNb = int(print_file_info("dayNb.txt"))
+        accept_cookie(S)
+        allTeam = print_file_info("allteam.txt").lower().split("\n")
+
+        try:
+            dayNb = int(print_file_info("dayNb.txt"))
+        except:
+            dayNb = 1
+        if dayNb < 0:
+            dayNb = 0
+        current_date = datetime.now()
+        next_day = current_date + timedelta(days=dayNb)
+        formatted_next_day = next_day.strftime("%Y-%m-%d")
+
+        S.driver.get(f"https://www.footmercato.net/live/{formatted_next_day}")
+        #S.driver.get(f"https://www.footmercato.net/live/")
+
+        time.sleep(3)
+        page_text = S.driver.find_element(By.TAG_NAME, "body").text
+        skipMatches = page_text.split("Amicaux Club")
+        list_of_matches = []
+        striiing = ""
+        error = 0
+        skip = False
+        for j in range(3,60):
+            for i in range(1,60):
+                try:
+                    test = f"/html/body/div[4]/div[3]/div/div[1]/div[{j}]/div[2]/div[{i}]/div"
+                    element = WebDriverWait(S.driver,3).until(
+                    EC.presence_of_element_located((By.XPATH, test)))
+                    matches = element.text.replace(" ","-").split("\n")
+                    if element.text in skipMatches[1]:
+                        skip = True
+                    if matches[0].lower() in allTeam and matches[1].lower() in allTeam and skip != True:
+                        list_of_matches.append(matches[0] + "#####" + matches[1])
+                    error = 0
+                except:
+                    error+=1
+                    if error > 5:
+                        return list_of_matches
+                    break
+        
+        return list_of_matches
     except:
-        dayNb = 1
-    if dayNb < 0:
-        dayNb = 0
-    current_date = datetime.now()
-    next_day = current_date + timedelta(days=dayNb)
-    formatted_next_day = next_day.strftime("%Y-%m-%d")
-
-    S.driver.get(f"https://www.footmercato.net/live/{formatted_next_day}")
-    #S.driver.get(f"https://www.footmercato.net/live/")
-
-    time.sleep(3)
-    page_text = S.driver.find_element(By.TAG_NAME, "body").text
-    skipMatches = page_text.split("Amicaux Club")
-    list_of_matches = []
-    striiing = ""
-    error = 0
-    skip = False
-    for j in range(3,60):
-        for i in range(1,60):
-            try:
-                test = f"/html/body/div[4]/div[3]/div/div[1]/div[{j}]/div[2]/div[{i}]/div"
-                element = WebDriverWait(S.driver,3).until(
-                EC.presence_of_element_located((By.XPATH, test)))
-                matches = element.text.replace(" ","-").split("\n")
-                if element.text in skipMatches[1]:
-                    skip = True
-                if matches[0].lower() in allTeam and matches[1].lower() in allTeam and skip != True:
-                    list_of_matches.append(matches[0] + "#####" + matches[1])
-                error = 0
-            except:
-                error+=1
-                if error > 5:
-                    return list_of_matches
-                break
-    
-    return list_of_matches
+        import traceback
+        traceback.print_exc()
+        print("cacaca")
 
 def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
     
@@ -521,11 +534,10 @@ def get_team_of_a_league(S,nb):
                 EC.presence_of_element_located((By.XPATH, f"/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a")))
                                                         
             except:
+                
                 return teams
             teams.append(element.text.lower().replace(" ","-"))
         except:
-            #import traceback
-            #traceback.print_exc()
             return teams
     
     return teams
@@ -562,6 +574,41 @@ def list_of_team_league(S,url):
             #traceback.print_exc()
             return
 
+def add_new_team(S,url):
+    S.driver.get(url)
+    
+    time.sleep(3)
+    accept_cookie(S)
+
+    write_into_file("teamUrl.txt"," "+"\n")
+    write_into_file("allteam.txt"," "+"\n")
+    print(" ")
+    team_url_data = print_file_info("teamUrl.txt").lower().split("\n")
+    all_team_url_data = print_file_info("allteam.txt").lower().split("\n")
+    
+    for i in range(1,30):
+        try:
+            try:
+                element = WebDriverWait(S.driver,5).until(
+                EC.presence_of_element_located((By.XPATH, f"/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a")))
+            except:
+                return
+            if element.text.replace(" ","-").lower() not in all_team_url_data:
+                print(element.text)
+                write_into_file("allteam.txt",element.text.replace(" ","-")+"\n")
+                element.click()
+
+                current_url = S.driver.current_url
+                #print(current_url)
+                if current_url.lower() not in all_team_url_data:
+                    write_into_file("teamUrl.txt",current_url+"\n")
+                
+                S.driver.back()
+                time.sleep(3)
+        except:
+            #import traceback
+            #traceback.print_exc()
+            return
 
 def pos_league_team(team):
     data = teamData()

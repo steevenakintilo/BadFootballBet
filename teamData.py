@@ -8,16 +8,16 @@ class teamData:
     Nice
     Lens
     Auxerre
-    Reims
     Toulouse
     Brest
     Rennes
     Nantes
     Strasbourg
     Angers
-    ASSE
     Le Havre
-    Montpellier
+    lorient
+    metz
+    paris fc
     """.lower().split("\n")
 
     englishTeam = """
@@ -36,11 +36,11 @@ class teamData:
     Man United
     West Ham
     Everton
-    Leicester
     Crystal Palace
-    Ipswich
     Wolverhampton
-    Southampton
+    burnley
+    leeds
+    sunderland
     """.lower().split("\n")
 
     spanishTeam = """
@@ -57,13 +57,13 @@ class teamData:
     Betis
     Vallecano
     Séville
-    Las Palmas
     Getafe
     Alavés
-    Leganes
     Espanyol
     Valence
-    Valladolid
+    elche
+    levante
+    oviedo
     """.lower().split("\n")
 
     italianTeam = """
@@ -76,7 +76,6 @@ class teamData:
     Milan
     Bologne
     Udinese
-    Empoli
     Rome
     Torino
     Parme
@@ -85,8 +84,9 @@ class teamData:
     Lecce
     Côme
     Hellas
-    Monza
-    Venise
+    cremonese
+    pise
+    sassuolo
     """.lower().split("\n")
 
     germanTeam = """
@@ -106,8 +106,8 @@ class teamData:
     Hoffenheim
     Sankt Pauli
     Heidenheim
-    Kiel
-    Bochum
+    cologne
+    hambourg
     """.lower().split("\n")
 
     portugalTeam = """
@@ -124,11 +124,11 @@ class teamData:
     Estoril
     Gil Vicente
     Estrela
-    Boavista
     AVS
     Nacional
-    Farense
     Arouca
+    alverca
+    tondela
     """.lower().split("\n")
 
     netherlandTeam = """
@@ -143,13 +143,13 @@ class teamData:
     Fortuna
     Heerenveen
     NEC
-    Willem II
     Zwolle
     Groningen
     Heracles
     Sparta
-    Waalwijk
-    Almere
+    excelsior
+    telstar
+    volendam
     """.lower().split("\n")
 
     belgiumTeam = """
@@ -165,10 +165,10 @@ class teamData:
     Charleroi
     Dender
     Louvain
-    Saint-Trond
-    Courtrai
     Cercle Bruges
-    Beerschot
+    la louvière
+    saint trond
+    zw
     """.lower().split("\n")
 
     turkishTeam = """
@@ -182,15 +182,15 @@ class teamData:
     Konyaspor
     Rize
     Gaziantep FK
-    Sivasspor
     Antalyaspor
     Trabzon
     Kasımpaşa
     Kayseri
     Alanya
-    Bodrum
-    Hatay
-    Demirspor
+    fatih
+    gençlerbirliği
+    kocaelispor
+    trabzon
     """.lower().split("\n")
 
     swissTeam = """
@@ -203,7 +203,7 @@ class teamData:
     Sion
     Saint-Gall
     Young Boys
-    Yverdon
+    thoune
     Winterthour
     GC Zurich
     """.lower().split("\n")
@@ -265,7 +265,7 @@ class teamData:
     LASK
     Hartberg
     WSG Tirol
-    Aus Klagenfurt
+    ried
     GAK
     Altach
     """.lower().split("\n")
@@ -338,12 +338,12 @@ class teamData:
     Rubin
     Akron
     Krylya
-    Dynamo Makh.
     Nizhny Novg.
-    Khimki
-    Fakel
     Akhmat
     Gazovik
+    baltika
+    dinamo makh.
+    sochi
     """.lower().split("\n")
     brazilianTeam = """
     Botafogo
@@ -362,10 +362,10 @@ class teamData:
     Grêmio
     Juventude
     Bragantino
-    Athletico PR
-    Criciúma
-    Atlético GO
-    Cuiabá
+    ceará
+    mirassol
+    santos
+    sport
     """.lower().split("\n")
 
     argentinianTeam = """
@@ -376,18 +376,13 @@ class teamData:
     River
     Boca
     Independiente
-    Atl. Tucumán
     Unión
     Platense
-    Independiente2
     Estudiantes
-    Instituto
     Lanús
-    Godoy Cruz
     Belgrano
     Riestra
     Tigre
-    GELP
     Rosario
     Def y Justicia
     Córdoba SdE
@@ -397,6 +392,10 @@ class teamData:
     Sarmiento
     Banfield
     Barracas
+    aldosivi
+    newell's
+    tigre
+    unión
     """.lower().split("\n")
 
     uruguayanTeam = """
@@ -481,8 +480,8 @@ class teamData:
     HamKam
     Tromsø
     Haugesund
-    Lillestrøm
-    Odd
+    bryne
+    vålerenga
     """.lower().split("\n")
     
     saudiTeam = """
@@ -497,13 +496,13 @@ class teamData:
     Fayha
     Damac
     Khaleej
-    Raed
-    Wehda
     Riyadh
     Okhdood
-    Abha
-    Tai
     Hazem
+    al kholood
+    al qadsiah
+    najma
+    neom
     """.lower().split("\n")
 
 
@@ -537,14 +536,14 @@ class teamData:
     Berkane
     HUSA
     UTS
-    JS Soualem
     Maghreb Fès
-    MC Oujda
-    Chabab Moham.
-    Tétouan
     IR Tanger
-    Khouribga
     El Jadida
+    codm
+    dcheïra
+    kawkab
+    rca zemamra
+    yacoub
     """.lower().split("\n")
 
     algerianTeam = """
@@ -558,12 +557,12 @@ class teamData:
     ES Sétif
     Paradou
     MC Oran
-    NC Magra
     USM Alger
-    US Biskra
     Kabylie
-    RC Arbaâ
-    HBCL
+    akbou
+    ben aknoun
+    es mostaganem
+    rouisset
     """.lower().split("\n")
 
     chineseTeam = """
@@ -571,18 +570,18 @@ class teamData:
     Shenhua
     Rongcheng
     Guoan
-    Shandong
-    Tianjin JMT
     Zhejiang
     Henan
-    Changchun
     West Coast
     Three Towns
     Hainiu
-    Cangzhou
     Peng City
-    Meizhou
-    Nantong
+    hakka
+    jinmen tiger
+    taishan
+    yatai
+    yingbo
+    yukun
     """.lower().split("\n")
 
     armenianTeam = """
@@ -622,12 +621,12 @@ class teamData:
     Wakrah
     Qatar
     Gharafa
-    Markhiya
     Ahli_QATAR
     Rayyan
     Umm Salal
     Shamal
     Sailiya
+    shahaniya
     """.lower().split("\n")
 
     bolivianTeam = """
@@ -645,15 +644,12 @@ class teamData:
     Universitario
     San Antonio BB
     Guabirá
-    Royal Pari
-    Santa Cruz
+    abb
+    real oruro
     """.lower().split("\n")
 
     englishTeam2 = """
     Sheff Utd
-    Leeds
-    Burnley
-    Sunderland
     Blackburn
     Middlesbrough
     Watford
@@ -668,23 +664,24 @@ class teamData:
     Preston
     Stoke
     QPR
-    Luton
     Oxford
-    Cardiff
     Portsmouth
-    Plymouth
     Hull
+    birmingham
+    charlton
+    ipswich
+    leicester
+    southampton
+    wrexham
     """.lower().split("\n")
 
     germanTeam2 = """
     Elversberg
-    Cologne
     Paderborn
     Düsseldorf
     Hanovre
     Kaiserslautern
     Karlsruhe
-    Hambourg
     Magdebourg
     Darmstadt
     Hertha
@@ -692,19 +689,18 @@ class teamData:
     Nuremberg
     Schalke 04
     Münster
-    Ulm
     Brunswick
-    Ratisbonne
+    bielefeld
+    bochum
+    dresde
+    kiel
     """.lower().split("\n")
 
     spanishTeam2 = """
     Almería
     Santander
     Mirandés
-    Oviedo
-    Elche
     Grenade
-    Levante
     Gijon
     Huesca
     Castellón
@@ -715,38 +711,40 @@ class teamData:
     Córdoba
     Burgos
     Cadix
-    La Coruña
-    Eldense
-    Racing Ferrol
-    Carthagène
-    Tenerife
+    ceuta
+    cultural
+    deportivo
+    fc andorra
+    las palmas
+    leganes
+    real soc b
+    valladolid
     """.lower().split("\n")
 
     italianTeam2 = """
-    Sassuolo
-    Pise
     Spezia
-    Cremonese
     Cesena
     Juve Stabia
     Bari
     Catanzaro
     Palermo
     Modena
-    Brescia
     Carrarese
     Mantova
     Reggiana
     Sampdoria
-    Salernitana
-    Cosenza
     Frosinone
     Südtirol
-    Cittadella
+    avellino
+    calcio padova
+    empoli
+    monza
+    pescara
+    venise
+    virtus entella
     """.lower().split("\n")
 
     mexicanTeam = """
-    América
     Atlas
     San Luis
     Cruz Azul
@@ -764,6 +762,7 @@ class teamData:
     Tigres
     Tijuana
     Toluca
+    club américa
     """.lower().split("\n")
 
     japaneseTeam = """
@@ -796,17 +795,13 @@ class teamData:
     Daejeon
     Daegu
     Incheon Utd
-    Jeju Utd
     Suwon
-    Suwon FC
+    jeju
     Gangwon
     """.lower().split("\n")
 
     frenchTeam2 = """
-    Lorient
-    Paris FC
     Dunkerque
-    Metz
     Annecy
     Laval
     Guingamp
@@ -818,9 +813,12 @@ class teamData:
     Troyes
     Red Star
     Clermont
-    Caen
-    Ajaccio
-    Martigues
+    asse
+    boulogne
+    le mans
+    montpellier
+    nancy
+    reims
     """.lower().split("\n")
 
     romanianTeam = """
@@ -829,7 +827,6 @@ class teamData:
     Steaua
     U Craiova
     Cluj
-    Sepsi
     Rapid
     Petrolul 52
     Hermannstadt
@@ -837,9 +834,10 @@ class teamData:
     Farul
     Arad
     Slobozia
-    Iaşi
     Botoşani
-    Buzău
+    argeș
+    csikszereda
+    metaloglobus
     """.lower().split("\n")
 
     allTeam_ = [englishTeam,spanishTeam,italianTeam,germanTeam,frenchTeam,portugalTeam,netherlandTeam,turkishTeam,belgiumTeam,swissTeam,
@@ -1006,9 +1004,9 @@ class teamData:
                       "https://www.footmercato.net/club/club-internacional-de-futbol-miami/classement",
                       "https://www.footmercato.net/club/al-nassr-fc/classement",
                       "https://www.footmercato.net/club/shanghai-sipg-fc/classement",
-                      "https://www.footmercato.net/club/cr-belouizdad/classement",
-                      "https://www.footmercato.net/club/wydad-athletic-club/classement",
                       "https://www.footmercato.net/club/al-ahly-sc/classement",
+                      "https://www.footmercato.net/club/wydad-athletic-club/classement",
+                      "https://www.footmercato.net/club/cr-belouizdad/classement",
                       "https://www.footmercato.net/club/kf-tirana/classement",
                       "https://www.footmercato.net/club/maccabi-tel-aviv-fc/classement",
                       "https://www.footmercato.net/club/fc-urartu/classement",            
@@ -1021,8 +1019,8 @@ class teamData:
                       "https://www.footmercato.net/club/pau-fc/classement",
                       "https://www.footmercato.net/club/queens-park-rangers-fc/classement",
                       "https://www.footmercato.net/club/sv-darmstadt-1898/classement",
-                      "https://www.footmercato.net/club/real-oviedo/classement",
-                      "https://www.footmercato.net/club/us-cremonese/classement",
+                      "https://www.footmercato.net/club/granada-cf/classement",
+                      "https://www.footmercato.net/club/us-citta-di-palerme/classement",
                       "https://www.footmercato.net/club/fc-universitatea-cluj-1/classement",
                     ]
     

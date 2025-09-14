@@ -487,6 +487,10 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
         #print("cacacaca " , statsTeam.name)
         #print("team not in the data default score is 1")
         return 1
+    
+    if statsTeam.pos_on_the_league == -999:
+        return - 1
+    
     statsTeam.pos_on_the_league = Position_Of_A_Team_On_Its_League(S,statsTeam.name)
     data.pos_league_team = pos_league_team(statsTeam.name)
     statsTeam.league_of_the_team = data.all_league_name[data.pos_league_team]
