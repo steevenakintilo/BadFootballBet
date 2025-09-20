@@ -146,7 +146,7 @@ https://www.footmercato.net/selection/Lituanie/calendrier
 https://www.footmercato.net/selection/Hong-Kong/calendrier
 https://www.footmercato.net/selection/Ethiopie/calendrier
 https://www.footmercato.net/selection/Îles-Salomon/calendrier
-https://www.footmercato.net/selection/saint-kitts-et-nevis/
+https://www.footmercato.net/selection/saint-kitts-et-nevis/calendrier
 https://www.footmercato.net/selection/Nouvelle-Calédonie/calendrier
 https://www.footmercato.net/selection/Guyana/calendrier
 https://www.footmercato.net/selection/Fidji/calendrier
@@ -180,7 +180,7 @@ https://www.footmercato.net/selection/maurice/calendrier
 https://www.footmercato.net/selection/Cambodge/calendrier
 https://www.footmercato.net/selection/Bélize/calendrier
 https://www.footmercato.net/selection/Dominique/calendrier
-https://www.footmercato.net/selection/brunei/
+https://www.footmercato.net/selection/brunei/calendrier
 https://www.footmercato.net/selection/Bangladesh/calendrier
 https://www.footmercato.net/selection/Laos/calendrier
 https://www.footmercato.net/selection/Bhoutan/calendrier
@@ -204,7 +204,7 @@ https://www.footmercato.net/selection/Seychelles/calendrier
 https://www.footmercato.net/selection/Liechtenstein/calendrier
 https://www.footmercato.net/selection/Bahamas/calendrier
 https://www.footmercato.net/selection/turks-et-caicos/calendrier
-https://www.footmercato.net/selection/iles-vierges-americaines/
+https://www.footmercato.net/selection/iles-vierges-americaines/calendrier
 https://www.footmercato.net/selection/Îles-Vierges-britanniques/calendrier
 https://www.footmercato.net/selection/Anguilla/calendrier
 https://www.footmercato.net/selection/Saint-Marin/calendrier
