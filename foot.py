@@ -1,9 +1,10 @@
+from posixpath import split
 from scrapData import * 
 from teamData import *
 S = Scraper()
 data = teamData()
 
-def last_X_Games_Result(stats,listOfResult,url=""):
+def last_X_Games_Result(stats,listOfResult,url="",national=False):
     if len(listOfResult) == 0:
         return -1
     team =  stats.name
@@ -219,7 +220,8 @@ def last_X_Games_Result(stats,listOfResult,url=""):
     stats.loose_rate_percent = int((loose/totalOfGame) * 100)
     stats.nb_of_goal_scored_per_match = round(float(stats.nb_of_goal_scored/stats.nb_of_game),1)
     stats.nb_of_goal_conceded_per_match = round(float(stats.nb_of_goal_conceded/stats.nb_of_game),1)
-    stats.score = get_score_based_on_the_league(stats.name)
+    
+    stats.score = get_score_based_on_the_league(stats.name,national)
     if stats.nb_of_game_away > 0:
         stats.win_rate_percent_away = int((stats.nb_of_win_away/stats.nb_of_game_away) * 100)
         stats.loose_rate_percent_away = int((stats.nb_of_loose_away/stats.nb_of_game_away) * 100)
@@ -235,12 +237,15 @@ def last_X_Games_Result(stats,listOfResult,url=""):
         stats.nb_of_goal_conceded_per_match_home = round(float(stats.nb_of_goal_conceded_home/stats.nb_of_game_home),1)
     return
 
-def print_all_data(stats):
+def print_all_data(stats,national=False):
     print(f"Team Name: {stats.name}")
     print(f"Team url: {stats.team_url}")
     print(f"Team default score {stats.score}")
-    print(f"Position in the League: {stats.pos_on_the_league}")
-    print(f"League of the Team: {stats.league_of_the_team}")
+    if national == False:
+        print(f"Position in the League: {stats.pos_on_the_league}")
+        print(f"League of the Team: {stats.league_of_the_team}")
+    else:
+        print("Current country ranking: " , stats.pos_on_the_league + 1 , "/210")
     print(f"Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_list}")
     print(f"Last X Game Win Draw or Loose: {stats.last_x_game_win_draw_or_loose}")
     print(f"Last X Game League or Not: {stats.last_x_game_list_league_or_not}")
@@ -298,29 +303,47 @@ def print_all_data(stats):
 def convert_nb_to_100(nb,len_all_nb):
     return int((nb*100)/len_all_nb) + 30
 
-def get_score_based_on_the_league(team):
+def get_score_based_on_the_league(team,national=False):
+    national_team = print_file_info("nationalTeam.txt").lower()
+    if team.lower() in national_team:
+        national = True
     try:
-        pos_on_the_league = Position_Of_A_Team_On_Its_League(S,team)
-        data.pos_league_team = pos_league_team(team)
-        league_of_the_team = data.all_league_name[data.pos_league_team]
-        score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - pos_on_the_league - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
-        if pos_on_the_league == -999:
-            score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - int(data.nb_of_team_on_all_league[data.pos_league_team]/2) - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
-        if pos_league_team(team) == -1:
-            return 100
-        if score_based_on_league_and_league_place < 100:
-            return 100
-        return score_based_on_league_and_league_place + 10000
-    except:
-        #import traceback
-        #traceback.print_exc()
-            
+        if national == False:
+            pos_on_the_league = Position_Of_A_Team_On_Its_League(S,team,national)
+            data.pos_league_team = pos_league_team(team)
+            league_of_the_team = data.all_league_name[data.pos_league_team]
+            score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - pos_on_the_league - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
+            if pos_on_the_league == -999:
+                score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - int(data.nb_of_team_on_all_league[data.pos_league_team]/2) - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
+            if pos_league_team(team) == -1:
+                return 100
+            if score_based_on_league_and_league_place < 100:
+                return 100
+            return score_based_on_league_and_league_place + 10000
+        else:
+            # score_based_on_league_and_league_place = 
+            # int(data.default_score_based_on_the_league[data.pos_league_team] * 
+            #     convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - pos_on_the_league - 1, 
+            #                       data.nb_of_team_on_all_league[data.pos_league_team]))
+
+            national_team_list = print_file_info("nationalTeam.txt").lower().split("\n")
+            pos_of_team_on_the_list = national_team_list.index(team) + 1
+            score_based_on_ranking = 10 * 210 + pos_of_team_on_the_list
+            score_based_on_league_and_league_place = int(score_based_on_ranking * convert_nb_to_100(210 - pos_of_team_on_the_list - 1,210))
+            # print(score_based_on_ranking)
+            # print(convert_nb_to_100(210 - pos_of_team_on_the_list - 1,210))
+            # print(score_based_on_league_and_league_place)
+            if score_based_on_league_and_league_place < 100:
+                return 100
+            return score_based_on_league_and_league_place + 10000
+
+    except:   
         return 100
 
 def little_ratio_based_on_team_place_on_league(team,team2,teamScore,score_based_on_league_and_league_place,type=2):
     try:
-        pos_on_the_league = Position_Of_A_Team_On_Its_League(S,team)
-        pos_on_the_league2 = Position_Of_A_Team_On_Its_League(S,team2)
+        # pos_on_the_league = Position_Of_A_Team_On_Its_League(S,team)
+        # pos_on_the_league2 = Position_Of_A_Team_On_Its_League(S,team2)
         data.pos_league_team = pos_league_team(team)
         d2 = pos_league_team(team2)
         z = ((teamScore-score_based_on_league_and_league_place)/teamScore)
@@ -345,22 +368,35 @@ def little_ratio_based_on_team_place_on_league(team,team2,teamScore,score_based_
     except:
         return 0
 
-def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):    
+def get_the_score_of_a_team(team,nbOfGameToAnalyze=20,national=False):    
     score = 0
     statsT = TeamStat()
     statsT.name = team
-
-    if statsT.name not in data.allTeam:
-        print("team not in the data default score is 1")
-        return 1
-        #return score_based_on_league_and_league_place + 100
+    national_team_list = print_file_info("nationalTeam.txt").lower().split("\n")
+    national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
     
+    if national == False:
+        if statsT.name not in data.allTeam:
+            print("ici 1")
+            print("team not in the data default score is 1")
+            return 1
+            #return score_based_on_league_and_league_place + 100
+    else:
+        if statsT.name.lower() not in national_team_list:
+            print("ici 2")
+            print("team not in the data default score is 1")
+            return 1
+            
 
-    score_based_on_league_and_league_place = get_score_based_on_the_league(statsT.name)
+    score_based_on_league_and_league_place = get_score_based_on_the_league(statsT.name,national)
     allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
-    team_pos = allTeamTxt.index(statsT.name.lower())
+    if national == False:
+        team_pos = allTeamTxt.index(statsT.name.lower())
+    else:
+        team_pos = 0
     try:
-        x = last_X_Games_Result(statsT,Get_Last_X_Games_Result(S,statsT.name,team_pos,nbOfGameToAnalyze))
+        x = last_X_Games_Result(statsT,Get_Last_X_Games_Result(S,statsT.name,team_pos,nbOfGameToAnalyze,True),national)
+        
         if x == -1:
             print("Team didnt play a game this year or a bug happend so the score is 1")
             return 1
@@ -382,7 +418,7 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):
         #print("ok " , teams , index , 20)
         #print("caca " , statsT.last_x_game_list_league_or_not[index] , statsT.last_x_game_list_league_or_not)
         facedTeam = teams.split("_")[0]
-        teamScore = get_score_based_on_the_league(facedTeam)
+        teamScore = get_score_based_on_the_league(facedTeam,national)
         #print("timtim " , teamScore , facedTeam , score_based_on_league_and_league_place)
         teamGoal = int(statsT.last_x_game_list_score[index].split("_")[1])
         oppenentGoal = int(statsT.last_x_game_list_score[index].split("_")[0])
@@ -507,7 +543,7 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):
         return score_based_on_league_and_league_place + finalScore , statsT.win_rate_percent
 
     
-def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
+def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,National=False,coutry_rank=0):
     if NoPrint == True:
         print("Program could take long time to run depending on how many games to analyze you put :)")
     if NoPrint == False:
@@ -517,21 +553,38 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
     statsTeam = TeamStat()
     statsTeam.name = team
     statsTeam.name = statsTeam.name.lower()
-
-    if statsTeam.name not in data.allTeam:
-        print("cacacaca " , statsTeam.name)
-        print("team not in the data default score is 1")
-        return 1
-    statsTeam.pos_on_the_league = Position_Of_A_Team_On_Its_League(S,statsTeam.name)
-    if statsTeam.pos_on_the_league == -999:
-        return - 1
     
-    data.pos_league_team = pos_league_team(statsTeam.name)
-    statsTeam.league_of_the_team = data.all_league_name[data.pos_league_team]
-    allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
-    team_pos = allTeamTxt.index(statsTeam.name.lower())
-    urlOfTeam = get_url_of_a_team(team_pos)
-    last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos,nbOfGameToAnalyze),urlOfTeam)
+    national_team_list = print_file_info("nationalTeamAlphabeticOrder.txt").lower().split("\n")
+    national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
+    
+    if National == False:
+        if statsTeam.name not in data.allTeam:
+            print("ici 3")
+            print("team not in the data default score is 1")
+            return 1
+        
+        print("toto 2")
+        statsTeam.pos_on_the_league = Position_Of_A_Team_On_Its_League(S,statsTeam.name,National)
+        if statsTeam.pos_on_the_league == -999:
+            return - 1
+    else:
+        statsTeam.pos_on_the_league = coutry_rank
+        if statsTeam.name.lower() not in national_team_list:
+            print("ici 4")
+            print("team not in the data default score is 1")
+            return 1
+    
+    if National == False:
+        data.pos_league_team = pos_league_team(statsTeam.name)
+        statsTeam.league_of_the_team = data.all_league_name[data.pos_league_team]
+        allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
+        team_pos = allTeamTxt.index(statsTeam.name.lower())
+        urlOfTeam = get_url_of_a_team(team_pos)
+        last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos,nbOfGameToAnalyze),urlOfTeam)
+    else:
+        urlOfTeam = national_team_list_url[national_team_list.index(statsTeam.name)]
+        last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,0,nbOfGameToAnalyze,True),urlOfTeam,True)
+
     if NoPrint == False:
         print_all_data(statsTeam)
         return
@@ -539,13 +592,17 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
     finalScore = 0
     teamGoal = 0
     oppenentGoal = 0
-    score_based_on_league_and_league_place = get_score_based_on_the_league(statsTeam.name)
+    score_based_on_league_and_league_place = get_score_based_on_the_league(statsTeam.name,National)
     #score_based_on_league_and_league_place = 150000
     score = score_based_on_league_and_league_place
     if NoPrint == True:
-        print(f"Country {data.country_of_the_team[data.pos_league_team]}")
-        print(f"Default score of {team}:  {score} (based on it position on the league and the league the team play in)")
-        print(f"Position of team on the {data.all_league_name[data.pos_league_team]}: {statsTeam.pos_on_the_league}")
+        if National == False:
+            print(f"Country {data.country_of_the_team[data.pos_league_team]}")
+            print(f"Default score of {team}:  {score} (based on it position on the league and the league the team play in)")
+            print(f"Position of team on the {data.all_league_name[data.pos_league_team]}: {statsTeam.pos_on_the_league}")
+        else:
+            print(team)
+            print("Current country ranking: " , coutry_rank + 1 , "/ 210")
         print(f"Last {len(statsTeam.last_x_game_list)} games of the team:")
         print(statsTeam.last_x_game_list)
         print("The score: ")
@@ -560,16 +617,24 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
             isLastFive = True
             x2Points = 2.5
         facedTeam = teams.split("_")[0]
-        if facedTeam not in data.allTeam:
-            print(f"skiipping {facedTeam} team not in the list of team")
-            index+=1
-            continue
+        if National == False:
+            if facedTeam not in data.allTeam:
+                print(f"skiipping {facedTeam} team not in the list of team")
+                index+=1
+                continue
+        else:
+            if facedTeam.lower() not in national_team_list:
+                print(f"skiipping {facedTeam} team not in the list of team")
+                index+=1
+                continue
+        
         #print("faceeeeee " , facedTeam)
         win_rate_nb = 0
         try:
-            x_team_score , win_rate_nb = get_the_score_of_a_team(facedTeam)
+            x_team_score , win_rate_nb = get_the_score_of_a_team(facedTeam,nbOfGameToAnalyze,National)
         except:
-            x_team_score = get_score_based_on_the_league(facedTeam)
+            
+            x_team_score = get_score_based_on_the_league(facedTeam,National)
         #print("Scooore of my team " , score_based_on_league_and_league_place , " Oppenent score " , x_team_score)
         #print("----Next----")
         teamScore = x_team_score
@@ -803,26 +868,17 @@ def calc_pourcent_of_win(nb1,nb2):
         return 1
 
 
-reset_file("ckk.txt")
-chooose = input(f"1. Team VS Team \n2. Stat of a team \n3. Exit\n:")
-check_data_entered_is_good(chooose,3)
+def team_vs_team(team1,team2,nbOfGameToAnalyze,national=False):
+    national_team_list = print_file_info("nationalTeam.txt").split("\n")
+    national_team_list_in_alphabetic_order = print_file_info("nationalTeamAlphabeticOrder.txt").split("\n")
 
-if int(chooose) == 2:
-    team1 = choose_a_team(1).replace(" ","-")
-    get_the_score_of_the_main_team(team1,20,False)
-
-elif int(chooose) == 1:
+    if national == True:
+        x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),True,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
+        y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),True,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
+    else:
+        x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False,national,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
+        y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False,national,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
     
-    team1 = choose_a_team(1).replace(" ","-")
-    team2 = choose_a_team(2).replace(" ","-")
-
-    nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
-    check_data_entered_is_good(nbOfGameToAnalyze,20)
-    #nbOfGameToAnalyze = 20
-    print(f"{team1} vs {team2}")
-
-    x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze))
-    y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze))
     score_of_team1 = abs(x)
     if x > 0 and y < 0 :
         score_of_team1 += abs(y) * 2
@@ -849,7 +905,69 @@ elif int(chooose) == 1:
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
         print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
         print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
+
+reset_file("ckk.txt")
+choose = input(f"1. National Team \n2. League team \n3. Exit\n:")
+check_data_entered_is_good(choose,3)
+
+if int(choose) == 1:
+    print("national gang")
+
+    national_team_list = print_file_info("nationalTeam.txt").split("\n")
+    national_team_list_in_alphabetic_order = print_file_info("nationalTeamAlphabeticOrder.txt").split("\n")
     
+    chooose = input(f"1. Team VS Team \n2. Stat of a team \n3. Exit\n:")
+    check_data_entered_is_good(chooose,3)
+
+    if int(chooose) == 2:
+        for i in range(len(national_team_list_in_alphabetic_order)):
+            print(f"{i + 1} {national_team_list_in_alphabetic_order[i]}")
+        
+        team_nb = int(input(f"Choose your team (choose between 1 and {len(national_team_list_in_alphabetic_order)}): ")) - 1
+        
+        team1 = national_team_list_in_alphabetic_order[team_nb] 
+        get_the_score_of_the_main_team(team1,20,False,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
+
+    if int(chooose) == 1:
+        for i in range(len(national_team_list_in_alphabetic_order)):
+            print(f"{i + 1} {national_team_list_in_alphabetic_order[i]}")
+        
+        team_nb = int(input(f"Choose your team (choose between 1 and {len(national_team_list_in_alphabetic_order)}): ")) - 1
+
+        
+        team1 = national_team_list_in_alphabetic_order[team_nb] 
+        #get_the_score_of_the_main_team(team1,20,False,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
+        
+        for i in range(len(national_team_list_in_alphabetic_order)):
+            print(f"{i + 1} {national_team_list_in_alphabetic_order[i]}")
+        
+        team_nb = int(input(f"Choose your team (choose between 1 and {len(national_team_list_in_alphabetic_order)}): ")) - 1
+
+        team2 = national_team_list_in_alphabetic_order[team_nb]
+        nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
+        team_vs_team(team1,team2,nbOfGameToAnalyze,True)
+    
+elif int(choose) == 2:
+    chooose = input(f"1. Team VS Team \n2. Stat of a team \n3. Exit\n:")
+    check_data_entered_is_good(chooose,3)
+
+    if int(chooose) == 2:
+        team1 = choose_a_team(1).replace(" ","-")
+        get_the_score_of_the_main_team(team1,20,False)
+
+    elif int(chooose) == 1:
+        team1 = choose_a_team(1).replace(" ","-")
+        team2 = choose_a_team(2).replace(" ","-")
+
+        nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
+        check_data_entered_is_good(nbOfGameToAnalyze,20)
+        #nbOfGameToAnalyze = 20
+        print(f"{team1} vs {team2}")
+        team_vs_team(team1,team2,nbOfGameToAnalyze)
+        
+    else:
+        print("Good Bye")
+        quit()
 else:
-    print("Good Bye")
+    print("Good bye")
     quit()

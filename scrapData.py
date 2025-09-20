@@ -43,8 +43,8 @@ class Scraper:
     options.add_argument('--log-level=1')
     options.add_argument("--log-level=3")  # Suppress all logging levels
     
-    if len(str(print_pkl_info())) > 20:
-        options.add_argument('headless')
+    # if len(str(print_pkl_info())) > 20:
+    #     options.add_argument('headless')
     
     #options.add_argument('--blink-settings=imagesEnabled=false')
     options.add_argument("--disable-gpu")  # Disable GPU (helpful in headless mode)
@@ -81,6 +81,8 @@ def accept_cookie(S,stop=False):
             ck = print_pkl_info()
         except:
             ck = ""
+        
+        ck = ""
         if len(str(ck)) > 20:
             cookies = pickle.load(open(f"cookies{0}.pkl","rb"))
             for cookie in cookies:
@@ -197,17 +199,23 @@ def get_match_of_the_day(S):
         traceback.print_exc()
         print("cacaca")
 
-def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
+def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20,National=False):
     
     years = ["2024","2025","2026"]
     all_url = print_file_info("teamUrl.txt").split("\n")
     #S.driver.get(all_url[posTeam])
 
-    #accept_cookie(S)
+    if National == True:
+        accept_cookie(S)
 
     #time.sleep(5)
-
-    S.driver.get(f"{all_url[posTeam]}calendrier/#tabPlayed")
+    national_team_list = print_file_info("nationalTeam.txt").lower().split("\n")
+    national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
+    
+    if National == False:
+        S.driver.get(f"{all_url[posTeam]}calendrier/#tabPlayed")
+    else:
+        S.driver.get(f"{national_team_list_url[national_team_list.index(team)]}/#tabPlayed")
     lastResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/nav/a[2]"
     
     calendarXpath = "/html/body/div[3]/div[4]/div/div/nav/ul/li[4]/a"
@@ -225,7 +233,6 @@ def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20):
     first = True
     team = team.lower()
     change = False
-    #print(lastXmatchSplit)
     
     for i in range(len(lastXmatchSplit)):
         if "2022" in lastXmatchSplit[i] or "2023" in lastXmatchSplit[i] or "2024" in lastXmatchSplit[i] or "2025" in lastXmatchSplit[i] or "2026" in lastXmatchSplit[i] or "terminé" in lastXmatchSplit[i].lower() or isSlash(lastXmatchSplit[i].lower()) == True:
@@ -498,8 +505,10 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False,TestDate=""):
         
         return "-999"
         
-def Position_Of_A_Team_On_Its_League(S,team):
+def Position_Of_A_Team_On_Its_League(S,team,national=False):
     data = teamData()
+    if national:
+        return 0
     x = pos_league_team(team)
     try:
        S.driver.get(data.all_league_url[x])
@@ -619,6 +628,40 @@ def pos_league_team(team):
                 return i
     return -1
 
+
+def get_national_team_list(S):
+    acceptButtonXPATH = "/html/body/div[4]/div[2]/div[2]/div[2]/div[2]/button[1]"
+    S.driver.get("https://www.sofascore.com/football/rankings/fifa")
+    element = WebDriverWait(S.driver,5).until(
+    EC.presence_of_element_located((By.XPATH, acceptButtonXPATH)))
+    element.click()
+    national_team_list = []
+    try:
+        for i in range(4,250):
+            teamName = f"/html/body/div[1]/main/div/div/div[1]/div[3]/div[1]/div/div[2]/div[{str(i)}]/div/a/div/div[2]/bdi"
+            element = WebDriverWait(S.driver,5).until(
+            EC.presence_of_element_located((By.XPATH, teamName)))
+            print(element.text.replace(" ","-"))
+            national_team_list.append(element.text)
+            S.driver.execute_script("arguments[0].scrollIntoView();", element)
+            time.sleep(2)
+        return national_team_list
+    except:
+        return national_team_list
+
+def get_url_of_national_team(S,team):
+    try:
+        S.driver.get(f"https://www.footmercato.net/selection/{team}/calendrier")
+        checkTeamExist = "/html/body/div[4]/div[3]/div/div[2]/div[1]/div/h1/div[1]"
+        try:
+            element = WebDriverWait(S.driver,5).until(
+            EC.presence_of_element_located((By.XPATH, checkTeamExist)))
+            return True , f"https://www.footmercato.net/selection/{team}/calendrier"
+        except:
+            return False , ""
+    except:
+            return False , ""            
+
 def write_into_file(path, x):
     with open(path, "ab") as f:
         f.write(str(x).encode("utf-8"))
@@ -630,7 +673,7 @@ def reset_file(path):
         f.close            
     except:
         pass
-    
+
 def print_file_info(path):
     f = open(path, 'r',encoding="utf-8")
     content = f.read()
