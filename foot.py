@@ -377,13 +377,13 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20,national=False):
     
     if national == False:
         if statsT.name not in data.allTeam:
-            print("ici 1")
+            #print("ici 1")
             print("team not in the data default score is 1")
             return 1
             #return score_based_on_league_and_league_place + 100
     else:
         if statsT.name.lower() not in national_team_list:
-            print("ici 2")
+            #print("ici 2")
             print("team not in the data default score is 1")
             return 1
             
@@ -559,21 +559,19 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
     
     if National == False:
         if statsTeam.name not in data.allTeam:
-            print("ici 3")
+            #print("ici 3")
             print("team not in the data default score is 1")
             return 1
         
-        print("toto 2")
         statsTeam.pos_on_the_league = Position_Of_A_Team_On_Its_League(S,statsTeam.name,National)
         if statsTeam.pos_on_the_league == -999:
             return - 1
     else:
         statsTeam.pos_on_the_league = coutry_rank
         if statsTeam.name.lower() not in national_team_list:
-            print("ici 4")
+            #print("ici 4")
             print("team not in the data default score is 1")
             return 1
-    
     if National == False:
         data.pos_league_team = pos_league_team(statsTeam.name)
         statsTeam.league_of_the_team = data.all_league_name[data.pos_league_team]
@@ -584,10 +582,9 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
     else:
         urlOfTeam = national_team_list_url[national_team_list.index(statsTeam.name)]
         last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,0,nbOfGameToAnalyze,True),urlOfTeam,True)
-
-    if NoPrint == False:
+    if NoPrint:
         print_all_data(statsTeam)
-        return
+        
     diffScore = 0
     finalScore = 0
     teamGoal = 0
@@ -609,6 +606,7 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
         print(statsTeam.last_x_game_list_score)
         print("The outcome: ")
         print(statsTeam.last_x_game_win_draw_or_loose)
+    
     for teams in statsTeam.last_x_game_list:
         isLastFive = False
         x2Points = 1
@@ -876,8 +874,8 @@ def team_vs_team(team1,team2,nbOfGameToAnalyze,national=False):
         x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),True,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
         y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),True,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
     else:
-        x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False,national,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
-        y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False,national,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
+        x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False)
+        y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False)
     
     score_of_team1 = abs(x)
     if x > 0 and y < 0 :

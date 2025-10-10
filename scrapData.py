@@ -76,6 +76,7 @@ def accept_cookie(S,stop=False):
     #time.sleep(1000)
     # if print_file_info("ckk.txt") == "1":
     #     return
+    time.sleep(1)
     try:
         try:
             ck = print_pkl_info()
@@ -101,6 +102,7 @@ def accept_cookie(S,stop=False):
             write_into_file("ckk.txt",1)
 
     except:
+        import traceback
         # if stop == True:
         #     print("too much error bye")
         #     exit() 
@@ -152,9 +154,8 @@ def get_url_of_a_team(posTeam):
 
 def get_match_of_the_day(S):
     try:
-        accept_cookie(S)
         allTeam = print_file_info("allteam.txt").lower().split("\n")
-
+        allTeamNational = print_file_info("nationalTeam.txt").lower().split("\n")
         try:
             dayNb = int(print_file_info("dayNb.txt"))
         except:
@@ -166,38 +167,46 @@ def get_match_of_the_day(S):
         formatted_next_day = next_day.strftime("%Y-%m-%d")
 
         S.driver.get(f"https://www.footmercato.net/live/{formatted_next_day}")
+        time.sleep(5)
+        accept_cookie(S)
         #S.driver.get(f"https://www.footmercato.net/live/")
 
-        time.sleep(3)
         page_text = S.driver.find_element(By.TAG_NAME, "body").text
+        #print(page_text)
+        #print("-"*200)
         skipMatches = page_text.split("Amicaux Club")
         list_of_matches = []
-        striiing = ""
         error = 0
         skip = False
         for j in range(3,60):
             for i in range(1,60):
                 try:
                     test = f"/html/body/div[4]/div[3]/div/div[1]/div[{j}]/div[2]/div[{i}]/div"
+                    #test = f"/html/body/div[4]/div[3]/div/div[1]/div[3]/div[2]/div[1]/div/a/span[1]"
                     element = WebDriverWait(S.driver,3).until(
                     EC.presence_of_element_located((By.XPATH, test)))
+                    #print(element.text ,  " a ")
                     matches = element.text.replace(" ","-").split("\n")
-                    if element.text in skipMatches[1]:
-                        skip = True
-                    if matches[0].lower() in allTeam and matches[1].lower() in allTeam and skip != True:
+                    if len(skipMatches) > 1:
+                        if element.text in skipMatches[1]:
+                            skip = True
+                    if ((matches[0].lower() in allTeam and matches[1].lower() in allTeam) or (matches[0].lower() in allTeamNational and matches[1].lower() in allTeamNational)) and skip != True:
                         list_of_matches.append(matches[0] + "#####" + matches[1])
+                    
                     error = 0
                 except:
+                    import traceback
+                    # traceback.print_exc()
+                    # print(j,i)
+                    
                     error+=1
                     if error > 5:
                         return list_of_matches
                     break
-        
         return list_of_matches
     except:
         import traceback
         traceback.print_exc()
-        print("cacaca")
 
 def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20,National=False):
     
@@ -503,6 +512,8 @@ def get_odds(S,team1,team2,result,FirstResultOdd=False,TestDate=""):
         #         print(f"https://www.bing.com/search?q={team1}+{team2}+sporty+trader+pronostic{str(current_day_number)}+{months[current_month - 1]}+{str(current_year)}+&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pq=ok&sc=8-2&sk=&cvid=D452EBD3F49940C8A8A329E281AD7C4F&ghsh=0&ghacc=0&ghpl=")
         #     print("SportyTrader Link " , linkToGo)
         
+        import traceback
+        traceback.print_exc()
         return "-999"
         
 def Position_Of_A_Team_On_Its_League(S,team,national=False):
@@ -513,7 +524,9 @@ def Position_Of_A_Team_On_Its_League(S,team,national=False):
     try:
        S.driver.get(data.all_league_url[x])
     except:
-       time.sleep(120)
+       time.sleep(100)
+       S.driver.refresh()
+       time.sleep(20)
        S.driver.get(data.all_league_url[x])
     team = team.lower()
     accept_cookie(S)

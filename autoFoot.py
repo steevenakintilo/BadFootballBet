@@ -1,13 +1,13 @@
 from scrapData import * 
 from teamData import *
 from discord_webhook import DiscordWebhook
+from gpt import GptScraper
 import itertools
 
 S = Scraper()
-Z = SZcraper(False)
 data = teamData()
 
-def last_X_Games_Result(stats,listOfResult,url=""):
+def last_X_Games_Result(stats,listOfResult,url="",national=False):
     if len(listOfResult) == 0:
         return -1
     team =  stats.name
@@ -223,7 +223,7 @@ def last_X_Games_Result(stats,listOfResult,url=""):
     stats.loose_rate_percent = int((loose/totalOfGame) * 100)
     stats.nb_of_goal_scored_per_match = round(float(stats.nb_of_goal_scored/stats.nb_of_game),1)
     stats.nb_of_goal_conceded_per_match = round(float(stats.nb_of_goal_conceded/stats.nb_of_game),1)
-    
+    stats.score = get_score_based_on_the_league(stats.name,national)
     if stats.nb_of_game_away > 0:
         stats.win_rate_percent_away = int((stats.nb_of_win_away/stats.nb_of_game_away) * 100)
         stats.loose_rate_percent_away = int((stats.nb_of_loose_away/stats.nb_of_game_away) * 100)
@@ -259,27 +259,42 @@ def get_team_country(team):
     except:
         return ("ok")
 
-def get_score_based_on_the_league(team):
+def get_score_based_on_the_league(team,national=False):
+    national_team = print_file_info("nationalTeam.txt").lower()
+    if team.lower() in national_team:
+        national = True
     try:
-        pos_on_the_league = Position_Of_A_Team_On_Its_League(S,team)
-        data.pos_league_team = pos_league_team(team)
-        league_of_the_team = data.all_league_name[data.pos_league_team]
-        score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - pos_on_the_league - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
-        score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - pos_on_the_league - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
+        if national == False:
+            pos_on_the_league = Position_Of_A_Team_On_Its_League(S,team,national)
+            data.pos_league_team = pos_league_team(team)
+            league_of_the_team = data.all_league_name[data.pos_league_team]
+            score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - pos_on_the_league - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
+            if pos_on_the_league == -999:
+                score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - int(data.nb_of_team_on_all_league[data.pos_league_team]/2) - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
+            if pos_league_team(team) == -1:
+                return 100
+            if score_based_on_league_and_league_place < 100:
+                return 100
+            return score_based_on_league_and_league_place + 10000
+        else:
+            # score_based_on_league_and_league_place = 
+            # int(data.default_score_based_on_the_league[data.pos_league_team] * 
+            #     convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - pos_on_the_league - 1, 
+            #                       data.nb_of_team_on_all_league[data.pos_league_team]))
 
-        if pos_on_the_league == -999:
-            score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - int(data.nb_of_team_on_all_league[data.pos_league_team]/2) - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
-        if pos_league_team(team) == -1:
-            return 100
-        if score_based_on_league_and_league_place < 100:
-            return 100
-        return score_based_on_league_and_league_place + 10000
-    except:
-        #import traceback
-        #traceback.print_exc()
-            
+            national_team_list = print_file_info("nationalTeam.txt").lower().split("\n")
+            pos_of_team_on_the_list = national_team_list.index(team) + 1
+            score_based_on_ranking = 10 * 210 + pos_of_team_on_the_list
+            score_based_on_league_and_league_place = int(score_based_on_ranking * convert_nb_to_100(210 - pos_of_team_on_the_list - 1,210))
+            # print(score_based_on_ranking)
+            # print(convert_nb_to_100(210 - pos_of_team_on_the_list - 1,210))
+            # print(score_based_on_league_and_league_place)
+            if score_based_on_league_and_league_place < 100:
+                return 100
+            return score_based_on_league_and_league_place + 10000
+
+    except:   
         return 100
-
 
 def little_ratio_based_on_team_place_on_league(team,team2,teamScore,score_based_on_league_and_league_place,type=2):
     try:
@@ -309,22 +324,32 @@ def little_ratio_based_on_team_place_on_league(team,team2,teamScore,score_based_
     except:
         return 0
 
-def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):    
+def get_the_score_of_a_team(team,nbOfGameToAnalyze=20,national=False):    
     score = 0
     statsT = TeamStat()
     statsT.name = team
 
-    if statsT.name not in data.allTeam:
-        #print("team not in the data default score is 1")
-        return 1
-        #return score_based_on_league_and_league_place + 100
+    national_team_list = print_file_info("nationalTeam.txt").lower().split("\n")
+    national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
     
+    if national == False:
+        if statsT.name not in data.allTeam:
+            return 1
+            #return score_based_on_league_and_league_place + 100
+    else:
+        if statsT.name.lower() not in national_team_list:
+            return 1
 
-    score_based_on_league_and_league_place = get_score_based_on_the_league(statsT.name)
+    score_based_on_league_and_league_place = get_score_based_on_the_league(statsT.name,national)
     allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
+    if national == False:
+        team_pos = allTeamTxt.index(statsT.name.lower())
+    else:
+        team_pos = 0
+    
     team_pos = allTeamTxt.index(statsT.name.lower())
     try:
-        x = last_X_Games_Result(statsT,Get_Last_X_Games_Result(S,statsT.name,team_pos,nbOfGameToAnalyze))
+        x = last_X_Games_Result(statsT,Get_Last_X_Games_Result(S,statsT.name,team_pos,nbOfGameToAnalyze),national)
         if x == -1:
             #print("Team didnt play a game this year or a bug happend so the score is 1")
             return 1
@@ -346,7 +371,7 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20):
         #print("ok " , teams , index , 20)
         #print("caca " , statsT.last_x_game_list_league_or_not[index] , statsT.last_x_game_list_league_or_not)
         facedTeam = teams.split("_")[0]
-        teamScore = get_score_based_on_the_league(facedTeam)
+        teamScore = get_score_based_on_the_league(facedTeam,national)
         #print("timtim " , teamScore , facedTeam , score_based_on_league_and_league_place)
         teamGoal = int(statsT.last_x_game_list_score[index].split("_")[1])
         oppenentGoal = int(statsT.last_x_game_list_score[index].split("_")[0])
@@ -481,28 +506,50 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
     index = 0
     statsTeam = TeamStat()
     statsTeam.name = team
+    team = team.lower()
     statsTeam.name = statsTeam.name.lower()
-
-    if statsTeam.name not in data.allTeam:
+    allTeamNational = print_file_info("nationalTeam.txt").lower().split("\n")
+    national_team_list = print_file_info("nationalTeamAlphabeticOrder.txt").lower().split("\n")
+    national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
+    national = False
+    
+    if statsTeam.name.lower() in allTeamNational:
+        national = True
+    if (statsTeam.name not in data.allTeam) and  (statsTeam.name.lower() not in allTeamNational):
         #print("cacacaca " , statsTeam.name)
         #print("team not in the data default score is 1")
         return 1
     
+    statsTeam.pos_on_the_league = Position_Of_A_Team_On_Its_League(S,statsTeam.name,national)
     if statsTeam.pos_on_the_league == -999:
         return - 1
     
-    statsTeam.pos_on_the_league = Position_Of_A_Team_On_Its_League(S,statsTeam.name)
-    data.pos_league_team = pos_league_team(statsTeam.name)
-    statsTeam.league_of_the_team = data.all_league_name[data.pos_league_team]
-    allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
-    team_pos = allTeamTxt.index(statsTeam.name.lower())
-    urlOfTeam = get_url_of_a_team(team_pos)
-    last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos,nbOfGameToAnalyze),urlOfTeam)
+    if national:
+        statsTeam.pos_on_the_league = allTeamNational.index(team)
+    # data.pos_league_team = pos_league_team(statsTeam.name)
+    # statsTeam.league_of_the_team = data.all_league_name[data.pos_league_team]
+    # allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
+    # team_pos = allTeamTxt.index(statsTeam.name.lower())
+    # urlOfTeam = get_url_of_a_team(team_pos)
+    # last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos,nbOfGameToAnalyze),urlOfTeam)
+    
+    if national == False:
+        data.pos_league_team = pos_league_team(statsTeam.name)
+        statsTeam.league_of_the_team = data.all_league_name[data.pos_league_team]
+        allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
+        team_pos = allTeamTxt.index(statsTeam.name.lower())
+        urlOfTeam = get_url_of_a_team(team_pos)
+        last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos,nbOfGameToAnalyze),urlOfTeam)
+    else:
+        urlOfTeam = national_team_list_url[national_team_list.index(statsTeam.name)]
+        last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,0,nbOfGameToAnalyze,True),urlOfTeam)
+
+    
     diffScore = 0
     finalScore = 0
     teamGoal = 0
     oppenentGoal = 0
-    score_based_on_league_and_league_place = get_score_based_on_the_league(statsTeam.name)
+    score_based_on_league_and_league_place = get_score_based_on_the_league(statsTeam.name,national)
     score = score_based_on_league_and_league_place
     #send_message_discord(f"Country {data.country_of_the_team[data.pos_league_team]}")
     if NoPrint == True:
@@ -515,6 +562,8 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
         print(statsTeam.last_x_game_list_score)
         print("The outcome: ")
         print(statsTeam.last_x_game_win_draw_or_loose)
+    
+    print(statsTeam.last_x_game_list)
     for teams in statsTeam.last_x_game_list:
         isLastFive = False
         x2Points = 1
@@ -523,16 +572,24 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
             isLastFive = True
             x2Points = 2.5
         facedTeam = teams.split("_")[0]
-        if facedTeam not in data.allTeam:
-            #print(f"skiipping {facedTeam} team not in the list of team")
-            index+=1
-            continue
+        
+        if national == False:
+            if facedTeam not in data.allTeam:
+                index+=1
+                continue
+        else:
+            if facedTeam.lower() not in national_team_list:
+                #print("cacacacac " , facedTeam)
+                index+=1
+                continue
+        
         #print("faceeeeee " , facedTeam)
         win_rate_nb = 0
+
         try:
             x_team_score , win_rate_nb = get_the_score_of_a_team(facedTeam)
         except:
-            x_team_score = get_score_based_on_the_league(facedTeam)
+            x_team_score = get_score_based_on_the_league(facedTeam,national)
         #print("Scooore of my team " , score_based_on_league_and_league_place , " Oppenent score " , x_team_score)
         #print("----Next----")
         teamScore = x_team_score
@@ -675,50 +732,22 @@ def is_num(nb):
     except:
         return False
 
-
-def check_data_entered_is_good(country_nb,leen):
-    if is_num(country_nb) == False:
-        print("Wrong data entered exiting the program")
-        quit()
-    
-    if is_num(country_nb) == True and (int(country_nb) < 1 or int(country_nb) > leen):
-        print("Wrong data entered exiting the program")
-        exit()
-
-
-def choose_a_team(nbnb):
-    for i in range(len(data.country_of_the_team)):
-        print(f"{i+1}. {data.country_of_the_team[i]}")
-    print()
-    print()
-    country_nb = input(f"Country of Team {nbnb} (choose between 1 and {len(data.country_of_the_team)}): ")
-    check_data_entered_is_good(country_nb , len(data.country_of_the_team))
-
-    inputError = 0
-    specialInput = False
-    for i in range(len(data.allTeam_[int(country_nb) - 1])):
-        if len(data.allTeam_[int(country_nb) - 1][0].strip()) > 1:
-            print(f"{i + 1}. {data.allTeam_[int(country_nb) - 1][i].strip()}")    
-            specialInput = True
-        elif len(data.allTeam_[int(country_nb) - 1][i].strip()) > 1:
-            print(f"{i}. {data.allTeam_[int(country_nb) - 1][i].strip()}")
-        else:
-            inputError+=1
-
-    team_nb = input(f"Choose your team (choose between 1 and {len(data.allTeam_[int(country_nb) - 1]) - inputError}): ")
-    team_nb = int(team_nb)
-    if specialInput == True:
-        team_nb-=1
-    check_data_entered_is_good(team_nb , len(data.allTeam_[int(country_nb) - 1]) - inputError)
-    
-    return data.allTeam_[int(country_nb) - 1][int(team_nb)].strip()
-
 def calc_pourcent_of_win(nb1,nb2):
     try:
         return (round(nb1/(nb2/100),1))
     except:
         return 1
 
+def keep_num_from_string(string):
+    result = ""
+    number_ok = "0123456789.,"
+    if "\n" in string:
+        string = string.split("\n")[0]
+    for letter in string:
+        if letter in number_ok:
+            result+=letter
+    
+    return result
 
 def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
     print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
@@ -733,8 +762,6 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
     country_team_1 = get_team_country(team1)
     country_team_2 = get_team_country(team2)
     
-    
-    print("iiiiddddxxxxx " , idxx)
     
     whereIsTheMatch = ""
     if league_team_1 == league_team_2:
@@ -753,39 +780,45 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
     else:
         whereIsTheMatch = league_team_1
 
+    national_team = print_file_info("nationalTeam.txt").lower()
+    national = False
+    if team1.lower() in national_team:
+        national = True
+    
     write_into_file(f"txtFiles/league{idxx}.txt", whereIsTheMatch + "\n")
+    chatgpt = GptScraper()
     if score_of_team1 > score_of_team2:
         if score_of_team2 * 1.25 < score_of_team1:
             print(f"{team2} will loose against {team1}")
             #send_message_discord(f"{team2} will loose against {team1}")
             #send_message_discord(f"{team2} {p2} will loose against {team1} {p1}")
-            odds = get_odds(S,team1,team2,"W",True)
+            #odds = get_odds(S,team1,team2,"W",True)
+            chatgpt.maker([f"What are the odds of the {team1} VS {team2} football match with {team1} as winner just give the odds , the number no text needed just the result just write the number I don't need text"])
+            odds = chatgpt.answer_list[0]
+            keep_num_from_string(odds)
 
-            if len(odds) > 2 and "." not in odds or odds == "-999":
-                odds = get_odds(Z,team1,team2,"W",True)
+            if national:
+                send_message_discord(f"{team1} {p1} WIN VS {team2} {p2} ODDS {keep_num_from_string(odds)}")
+            else:
+                send_message_discord(f"{team1} {p1} WIN VS {team2} {p2} ODDS {keep_num_from_string(odds)} LEAGUE {whereIsTheMatch}")
             
-            if len(odds) > 2 and "." not in odds:
-                odds = "-999"            
-            
-            send_message_discord(f"{team1} {p1} WIN VS {team2} {p2} ODDS {odds} LEAGUE {whereIsTheMatch}")
+            send_message_discord("-"*40)
             write_into_file(f"txtFiles/match{idxx}.txt",  team1 + " " + team2 + "\n")
             write_into_file(f"txtFiles/result{idxx}.txt", team1 + "\n")
             write_into_file(f"txtFiles/odds{idxx}.txt", odds + "\n")
             write_into_file(f"txtFiles/percent{idxx}.txt", p1+ "-" + p2 + "\n")
 
         else:
+            chatgpt.maker([f"What are the odds of the {team1} VS {team2} football match with draw as result just give the odds , the number no text needed just the result just write the number I don't need text"])
             print(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
             #send_message_discord(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
-            odds = get_odds(S,team1,team2,"D",True)
-            if len(odds) > 2 and "." not in odds or odds == "-999":
-                odds = get_odds(Z,team1,team2,"D",True)
-            
-            if len(odds) > 2 and "." not in odds:
-                odds = "-999"
-            
-            odds = str(odds)
-
-            send_message_discord(f"{team1} {p1} DRAW VS {team2} {p2} ODDS {odds} LEAGUE {whereIsTheMatch}")
+            odds = chatgpt.answer_list[0]
+            keep_num_from_string(odds)
+            if national:
+                send_message_discord(f"{team1} {p1} DRAW VS {team2} {p2} ODDS {keep_num_from_string(odds)}")
+            else:
+                send_message_discord(f"{team1} {p1} DRAW VS {team2} {p2} ODDS {keep_num_from_string(odds)} LEAGUE {whereIsTheMatch}")
+            send_message_discord("-"*40)
             write_into_file(f"txtFiles/match{idxx}.txt",  team1 + " " + team2 + "\n")
             write_into_file(f"txtFiles/result{idxx}.txt", team1 + " DRAW" + "\n")
             write_into_file(f"txtFiles/odds{idxx}.txt", odds + "\n")
@@ -798,31 +831,32 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
         # send_message_discord(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
     else:
         if score_of_team1 * 1.25 < score_of_team2:
+            chatgpt.maker([f"What are the odds of the {team1} VS {team2} football match with {team2} as winner just give the odds , the number no text needed just the result just write the number I don't need text"])
             print(f"{team1} will loose against {team2}")
             #send_message_discord(f"{team1} will loose against {team2}")
-            odds = get_odds(S,team1,team2,"L",True)
-            if len(odds) > 2 and "." not in odds or odds == "-999":
-                odds = get_odds(Z,team1,team2,"L",True)
+            odds = chatgpt.answer_list[0]
+            keep_num_from_string(odds)
+            if national:
+                send_message_discord(f"{team2} {p2} WIN VS {team1} {p1} ODDS {keep_num_from_string(odds)}")
+            else:
+                send_message_discord(f"{team2} {p2} WIN VS {team1} {p1} ODDS {keep_num_from_string(odds)} LEAGUE {whereIsTheMatch}")
             
-            if len(odds) > 2 and "." not in odds:
-                odds = "-999"
-            
-            
-            send_message_discord(f"{team2} {p2} WIN VS {team1} {p1} ODDS {odds} LEAGUE {whereIsTheMatch}")
+            send_message_discord("-"*40)
             write_into_file(f"txtFiles/match{idxx}.txt",  team1 + " " + team2 + "\n")
             write_into_file(f"txtFiles/result{idxx}.txt", team2 + "\n")
             write_into_file(f"txtFiles/odds{idxx}.txt", odds + "\n")
             write_into_file(f"txtFiles/percent{idxx}.txt", p2+ "-" + p1 + "\n")
         else:
+            chatgpt.maker([f"What are the odds of the {team1} VS {team2} football match with draw as result just give the odds , the number no text needed just the result just write the number I don't need text"])
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
             #send_message_discord(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
-            odds = get_odds(S,team1,team2,"D",True)
-            if len(odds) > 2 and "." not in odds or odds == "-999":
-                odds = get_odds(Z,team1,team2,"D",True)
-            if len(odds) > 2 and "." not in odds:
-                odds = "-999"
-            
-            send_message_discord(f"{team2} {p2} DRAW VS {team1} {p1} ODDS {odds} LEAGUE {whereIsTheMatch}")
+            odds = chatgpt.answer_list[0]
+            keep_num_from_string(odds)
+            if national:
+                send_message_discord(f"{team2} {p2} DRAW VS {team1} {p1} ODDS {keep_num_from_string(odds)}")
+            else:
+                send_message_discord(f"{team2} {p2} DRAW VS {team1} {p1} ODDS {keep_num_from_string(odds)} LEAGUE {whereIsTheMatch}")
+            send_message_discord("-"*40)
             write_into_file(f"txtFiles/match{idxx}.txt",  team1 + " " + team2 + "\n")
             write_into_file(f"txtFiles/result{idxx}.txt", team2 + " DRAW" + "\n")
             write_into_file(f"txtFiles/odds{idxx}.txt", odds + "\n")
@@ -890,10 +924,14 @@ def generate_alphabet_list():
 
 
 
+
+
+
 from os import sys
 
 try:
-    time.sleep(50 * int(sys.argv[1]))
+    #time.sleep(50 * int(sys.argv[1]))
+    time.sleep(1)
 except:
     print("You need to put argument after the autofoot like this: python autoFoot.py 1")
     quit()
@@ -912,10 +950,13 @@ reset_file(f"txtFiles/league{int(sys.argv[1])}.txt")
 reset_file("ckk.txt")
 matches = get_match_of_the_day(S)
 
-if len(matches) < 4:
+try:
+    if len(matches) < 4:
+        print("not enough matches")
+        quit()
+except:
     print("not enough matches")
     quit()
-
 def balanced_sublists(lst, n):
     # Calculate the size of each sublist
     avg = len(lst) / n
@@ -953,7 +994,8 @@ print(current_list)
 print("Match of the day to analyze " , current_list)
 
 allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
-
+allTeamNational = print_file_info("nationalTeam.txt").lower().split("\n")
+nation_team = False
 if int(sys.argv[1]) == 1:
     send_message_discord("New Day New Match but Cristiano Ronaldo is still the goat")
 
@@ -961,9 +1003,17 @@ for match in current_list:
     m = match.split("#####")
     print(m[0],m[1])
     time.sleep(10)
-    team_pos1 , team_pos2 = allTeamTxt.index(m[0].lower()),allTeamTxt.index(m[1].lower())
-    played1 , played2 = has_Team_Played_since_september(S,m[0],team_pos1),has_Team_Played_since_september(S,m[1],team_pos2)
-    if len(m[0]) > 0 and len(m[1]) > 0 and played1 == True and played2 == True:
+    try:
+        team_pos1 , team_pos2 = allTeamTxt.index(m[0].lower()),allTeamTxt.index(m[1].lower())
+    except:
+        team_pos1 , team_pos2 = allTeamNational.index(m[0].lower()),allTeamNational.index(m[1].lower())
+        nation_team = True
+    
+    played1 , played2 = True , True
+    if nation_team == False:
+        played1 , played2 = has_Team_Played_since_september(S,m[0],team_pos1),has_Team_Played_since_september(S,m[1],team_pos2)
+    
+    if len(m[0]) > 0 and len(m[1]) > 0 and played1 is True and played2 is True:
         team_vs_team(m[0],m[1],int(sys.argv[1]))
         time.sleep(60)
     
