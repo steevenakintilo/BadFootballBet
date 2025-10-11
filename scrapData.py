@@ -74,8 +74,8 @@ class SZcraper:
 def accept_cookie(S,stop=False):
 
     #time.sleep(1000)
-    # if print_file_info("ckk.txt") == "1":
-    #     return
+    if print_file_info("ckk.txt") == "1":
+        return
     time.sleep(1)
     try:
         try:

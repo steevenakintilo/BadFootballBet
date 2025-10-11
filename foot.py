@@ -584,6 +584,7 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
         last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,0,nbOfGameToAnalyze,True),urlOfTeam,True)
     if NoPrint:
         print_all_data(statsTeam)
+        return
         
     diffScore = 0
     finalScore = 0
@@ -924,7 +925,7 @@ if int(choose) == 1:
         team_nb = int(input(f"Choose your team (choose between 1 and {len(national_team_list_in_alphabetic_order)}): ")) - 1
         
         team1 = national_team_list_in_alphabetic_order[team_nb] 
-        get_the_score_of_the_main_team(team1,20,False,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
+        get_the_score_of_the_main_team(team1,20,True,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
 
     if int(chooose) == 1:
         for i in range(len(national_team_list_in_alphabetic_order)):
@@ -951,7 +952,7 @@ elif int(choose) == 2:
 
     if int(chooose) == 2:
         team1 = choose_a_team(1).replace(" ","-")
-        get_the_score_of_the_main_team(team1,20,False)
+        get_the_score_of_the_main_team(team1,20,True)
 
     elif int(chooose) == 1:
         team1 = choose_a_team(1).replace(" ","-")

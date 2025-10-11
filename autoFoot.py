@@ -930,8 +930,7 @@ def generate_alphabet_list():
 from os import sys
 
 try:
-    #time.sleep(50 * int(sys.argv[1]))
-    time.sleep(1)
+    time.sleep(50 * int(sys.argv[1]))
 except:
     print("You need to put argument after the autofoot like this: python autoFoot.py 1")
     quit()
