@@ -1,7 +1,7 @@
 
 # BadFootballBet
 
-All the info used for this project come from this websites: https://www.footmercato.net/ https://www.sportytrader.com/
+All the info used for this project come from this websites: https://www.footmercato.net/ https://chatgpt.com/
 
 ## Requirements
 To make the code work you will need to have Python and Pip installed in your computer
