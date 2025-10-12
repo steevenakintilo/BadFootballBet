@@ -86,6 +86,7 @@ Result of Arsenal VS Dortmund using only the last 3 games of each team (Test don
 ## Disclamer
 
 This program was made for fun therefore the calculus are not 100% right and it will never be, it's impossible to guess the result of all the possible game.
+Result are even less reliable on National Team mode since there is less game to analyse
 Don't use this program to bet money you could loose money.
 Afterall the calculus are made with real time stats to make the result as close as possible.
 
