@@ -83,6 +83,18 @@ Result of Arsenal VS Dortmund using only the last 3 games of each team (Test don
 
 ![image](https://github.com/user-attachments/assets/bd4d3f6f-4a6e-434f-89aa-eed276633b05)
 
+
+## Update
+
+On a 2.0 version to get even better result here are the things I could add:
+
+-XG
+-XG against
+-Injuries
+-Relative form (last 8 games performances)
+-Big chances & Big chances missed
+And more...
+
 ## Disclamer
 
 This program was made for fun therefore the calculus are not 100% right and it will never be, it's impossible to guess the result of all the possible game.
