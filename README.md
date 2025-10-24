@@ -88,11 +88,18 @@ Result of Arsenal VS Dortmund using only the last 3 games of each team (Test don
 
 On a 2.0 version to get even better result here are the things I could add:
 
+-A Gui to visualise everything better
+
 -XG
+
 -XG against
--Injuries
+
+-Injuries (Based on the importance of the player)
+
 -Relative form (last 8 games performances)
+
 -Big chances & Big chances missed
+
 And more...
 
 ## Disclamer
