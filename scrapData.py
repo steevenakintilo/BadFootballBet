@@ -615,14 +615,17 @@ def add_new_team(S,url):
                 EC.presence_of_element_located((By.XPATH, f"/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a")))
             except:
                 return
-            if element.text.replace(" ","-").lower() not in all_team_url_data:
+            if (element.text.replace(" ","-").lower() not in all_team_url_data):
                 print(element.text)
                 write_into_file("allteam.txt",element.text.replace(" ","-")+"\n")
+                
+                print(all_team_url_data.index(element.text.replace(" ","-").lower()))
                 element.click()
 
                 current_url = S.driver.current_url
                 #print(current_url)
-                if current_url.lower() not in all_team_url_data:
+                if current_url.lower() not in print_file_info("teamUrl.txt").lower():
+                    print(current_url.lower())
                     write_into_file("teamUrl.txt",current_url+"\n")
                 
                 S.driver.back()
@@ -674,6 +677,27 @@ def get_url_of_national_team(S,team):
             return False , ""
     except:
             return False , ""            
+
+def get_starting_xi_of_a_team(S,team_url,national=False):
+    try:
+        if national:
+            print("caca")
+            print(team_url.replace("/calendrier","")+"/effectif/"+"#tabMainFormation")
+            S.driver.get(team_url.replace("/calendrier","")+"/effectif/"+"#tabMainFormation")
+        else:
+            S.driver.get(f"{team_url}effectif/#tabMainFormation")
+        players = WebDriverWait(S.driver,1.5).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, "matchTeamPlayer__name")))
+        
+        list_of_players = []
+
+        for player in players:
+            list_of_players.append(player.text)
+    
+
+        return list_of_players
+    except:
+        return [None]
 
 def write_into_file(path, x):
     with open(path, "ab") as f:

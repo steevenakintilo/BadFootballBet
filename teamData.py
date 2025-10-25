@@ -1070,6 +1070,7 @@ class TeamStat:
     name = ""
     point = 0
     score = 0
+    starting_xi = []
     pos_on_the_league = ""
     league_of_the_team = ""
     last_x_game_list = []

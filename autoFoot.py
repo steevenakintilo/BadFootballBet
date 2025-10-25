@@ -2,6 +2,7 @@ from scrapData import *
 from teamData import *
 from discord_webhook import DiscordWebhook
 from gpt import GptScraper
+from os import sys
 import itertools
 
 S = Scraper()
@@ -563,7 +564,6 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
         print("The outcome: ")
         print(statsTeam.last_x_game_win_draw_or_loose)
     
-    print(statsTeam.last_x_game_list)
     for teams in statsTeam.last_x_game_list:
         isLastFive = False
         x2Points = 1
@@ -923,39 +923,6 @@ def generate_alphabet_list():
     return result
 
 
-
-
-
-
-from os import sys
-
-try:
-    time.sleep(50 * int(sys.argv[1]))
-except:
-    print("You need to put argument after the autofoot like this: python autoFoot.py 1")
-    quit()
-reset_file("result.txt")
-reset_file("percent.txt")
-reset_file("match.txt")
-reset_file("odds.txt")
-reset_file("league.txt")
-
-reset_file(f"txtFiles/result{int(sys.argv[1])}.txt")
-reset_file(f"txtFiles/percent{int(sys.argv[1])}.txt")
-reset_file(f"txtFiles/match{int(sys.argv[1])}.txt")
-reset_file(f"txtFiles/odds{int(sys.argv[1])}.txt")
-reset_file(f"txtFiles/league{int(sys.argv[1])}.txt")
-
-reset_file("ckk.txt")
-matches = get_match_of_the_day(S)
-
-try:
-    if len(matches) < 4:
-        print("not enough matches")
-        quit()
-except:
-    print("not enough matches")
-    quit()
 def balanced_sublists(lst, n):
     # Calculate the size of each sublist
     avg = len(lst) / n
@@ -970,6 +937,37 @@ def balanced_sublists(lst, n):
         sublists.append(lst[start:end])
 
     return sublists
+
+try:
+    time.sleep(50 * int(sys.argv[1]))
+except:
+    print("You need to put argument after the autofoot like this: python autoFoot.py 1")
+    quit()
+
+reset_file("result.txt")
+reset_file("percent.txt")
+reset_file("match.txt")
+reset_file("odds.txt")
+reset_file("league.txt")
+reset_file(f"txtFiles/result{int(sys.argv[1])}.txt")
+reset_file(f"txtFiles/percent{int(sys.argv[1])}.txt")
+reset_file(f"txtFiles/match{int(sys.argv[1])}.txt")
+reset_file(f"txtFiles/odds{int(sys.argv[1])}.txt")
+reset_file(f"txtFiles/league{int(sys.argv[1])}.txt")
+
+if int(sys.argv[1]) == 1:
+    reset_file("current_game.txt")
+
+reset_file("ckk.txt")
+matches = get_match_of_the_day(S)
+
+try:
+    if len(matches) < 4:
+        print("not enough matches")
+        quit()
+except:
+    print("not enough matches")
+    quit()
 
 # Distribute the original list into 5 balanced sublists
 sublists = balanced_sublists(matches, 5)
@@ -992,27 +990,32 @@ except:
 print(current_list)
 print("Match of the day to analyze " , current_list)
 
+for match in current_list:
+    write_into_file("current_game.txt",match.lower()+"\n")
+
 allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
 allTeamNational = print_file_info("nationalTeam.txt").lower().split("\n")
 nation_team = False
 if int(sys.argv[1]) == 1:
     send_message_discord("New Day New Match but Cristiano Ronaldo is still the goat")
 
+current_match = print_file_info("current_game.txt").split("\n")
 for match in current_list:
-    m = match.split("#####")
-    print(m[0],m[1])
-    time.sleep(10)
-    try:
-        team_pos1 , team_pos2 = allTeamTxt.index(m[0].lower()),allTeamTxt.index(m[1].lower())
-    except:
-        team_pos1 , team_pos2 = allTeamNational.index(m[0].lower()),allTeamNational.index(m[1].lower())
-        nation_team = True
-    
-    played1 , played2 = True , True
-    if nation_team == False:
-        played1 , played2 = has_Team_Played_since_september(S,m[0],team_pos1),has_Team_Played_since_september(S,m[1],team_pos2)
-    
-    if len(m[0]) > 0 and len(m[1]) > 0 and played1 is True and played2 is True:
-        team_vs_team(m[0],m[1],int(sys.argv[1]))
-        time.sleep(60)
+    if match not in current_match:
+        m = match.split("#####")
+        print(m[0],m[1])
+        time.sleep(10)
+        try:
+            team_pos1 , team_pos2 = allTeamTxt.index(m[0].lower()),allTeamTxt.index(m[1].lower())
+        except:
+            team_pos1 , team_pos2 = allTeamNational.index(m[0].lower()),allTeamNational.index(m[1].lower())
+            nation_team = True
+        
+        played1 , played2 = True , True
+        if nation_team == False:
+            played1 , played2 = has_Team_Played_since_september(S,m[0],team_pos1),has_Team_Played_since_september(S,m[1],team_pos2)
+        
+        if len(m[0]) > 0 and len(m[1]) > 0 and played1 is True and played2 is True:
+            team_vs_team(m[0],m[1],int(sys.argv[1]))
+            time.sleep(60)
     
