@@ -1,6 +1,7 @@
 from posixpath import split
 from scrapData import * 
 from teamData import *
+
 S = Scraper()
 data = teamData()
 
@@ -31,7 +32,7 @@ def last_X_Games_Result(stats,listOfResult,url="",national=False):
     stats.last_x_game_win_draw_or_loose = []
     stats.last_x_game_win_draw_or_loose_away = []
     stats.last_x_game_win_draw_or_loose_home = []
-
+    stats.starting_xi = []
     
     for result in listOfResult:
         result = result.split()
@@ -221,6 +222,17 @@ def last_X_Games_Result(stats,listOfResult,url="",national=False):
     stats.nb_of_goal_scored_per_match = round(float(stats.nb_of_goal_scored/stats.nb_of_game),1)
     stats.nb_of_goal_conceded_per_match = round(float(stats.nb_of_goal_conceded/stats.nb_of_game),1)
     
+    if national:
+        try:
+            stats.starting_xi = print_file_info("starting_xi_national_team.txt").lower().split("\n")[print_file_info("nationalTeam.txt").lower().split("\n").index(stats.name)]
+        except:
+            stats.starting_xi = [None]
+    else:
+        try:
+            stats.starting_xi = print_file_info("starting_xi_league_team.txt").lower().split("\n")[print_file_info("allteam.txt").lower().split("\n").index(stats.name)]
+        except:
+            stats.starting_xi = [None]
+        
     stats.score = get_score_based_on_the_league(stats.name,national)
     if stats.nb_of_game_away > 0:
         stats.win_rate_percent_away = int((stats.nb_of_win_away/stats.nb_of_game_away) * 100)
@@ -246,6 +258,7 @@ def print_all_data(stats,national=False):
         print(f"League of the Team: {stats.league_of_the_team}")
     else:
         print("Current country ranking: " , stats.pos_on_the_league + 1 , "/210")
+    print(f"Starting XI: {stats.starting_xi}")
     print(f"Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_list}")
     print(f"Last X Game Win Draw or Loose: {stats.last_x_game_win_draw_or_loose}")
     print(f"Last X Game League or Not: {stats.last_x_game_list_league_or_not}")
@@ -553,7 +566,7 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
     statsTeam = TeamStat()
     statsTeam.name = team
     statsTeam.name = statsTeam.name.lower()
-    
+    #NoPrint = True
     national_team_list = print_file_info("nationalTeamAlphabeticOrder.txt").lower().split("\n")
     national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
     
@@ -582,7 +595,7 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
     else:
         urlOfTeam = national_team_list_url[national_team_list.index(statsTeam.name)]
         last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,0,nbOfGameToAnalyze,True),urlOfTeam,True)
-    if NoPrint:
+    if NoPrint and nbOfGameToAnalyze == 999:
         print_all_data(statsTeam)
         return
         
@@ -597,6 +610,7 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
         if National == False:
             print(f"Country {data.country_of_the_team[data.pos_league_team]}")
             print(f"Default score of {team}:  {score} (based on it position on the league and the league the team play in)")
+            print(f"Power of the {data.all_league_name[data.pos_league_team]} :{data.default_score_based_on_the_league[data.pos_league_team]}")
             print(f"Position of team on the {data.all_league_name[data.pos_league_team]}: {statsTeam.pos_on_the_league}")
         else:
             print(team)
@@ -925,7 +939,7 @@ if int(choose) == 1:
         team_nb = int(input(f"Choose your team (choose between 1 and {len(national_team_list_in_alphabetic_order)}): ")) - 1
         
         team1 = national_team_list_in_alphabetic_order[team_nb] 
-        get_the_score_of_the_main_team(team1,20,True,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
+        get_the_score_of_the_main_team(team1,999,True,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
 
     if int(chooose) == 1:
         for i in range(len(national_team_list_in_alphabetic_order)):
@@ -952,7 +966,7 @@ elif int(choose) == 2:
 
     if int(chooose) == 2:
         team1 = choose_a_team(1).replace(" ","-")
-        get_the_score_of_the_main_team(team1,20,True)
+        get_the_score_of_the_main_team(team1,999,True)
 
     elif int(chooose) == 1:
         team1 = choose_a_team(1).replace(" ","-")

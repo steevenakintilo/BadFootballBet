@@ -299,10 +299,7 @@ def get_score_based_on_the_league(team,national=False):
 
 def little_ratio_based_on_team_place_on_league(team,team2,teamScore,score_based_on_league_and_league_place,type=2):
     try:
-        pos_on_the_league = Position_Of_A_Team_On_Its_League(S,team)
-        pos_on_the_league2 = Position_Of_A_Team_On_Its_League(S,team2)
         data.pos_league_team = pos_league_team(team)
-        d2 = pos_league_team(team2)
         z = ((teamScore-score_based_on_league_and_league_place)/teamScore)
         if score_based_on_league_and_league_place >= teamScore:
             z = ((score_based_on_league_and_league_place-teamScore)/score_based_on_league_and_league_place)
@@ -587,7 +584,7 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
         win_rate_nb = 0
 
         try:
-            x_team_score , win_rate_nb = get_the_score_of_a_team(facedTeam)
+            x_team_score , win_rate_nb = get_the_score_of_a_team(facedTeam,20,national)
         except:
             x_team_score = get_score_based_on_the_league(facedTeam,national)
         #print("Scooore of my team " , score_based_on_league_and_league_place , " Oppenent score " , x_team_score)
@@ -726,6 +723,7 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
 
 
 def is_num(nb):
+
     try:
         int(nb)
         return True
@@ -988,7 +986,7 @@ except:
     quit()
 
 print(current_list)
-print("Match of the day to analyze " , current_list)
+print("Match of the day to analyze " , current_list , len(current_list))
 
 for match in current_list:
     write_into_file("current_game.txt",match.lower()+"\n")
