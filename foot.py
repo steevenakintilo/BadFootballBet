@@ -881,13 +881,24 @@ def calc_pourcent_of_win(nb1,nb2):
         return 1
 
 
+def player_out_from_starting_xi(starting_xi,player_out):
+
+    player_out_from_the_starting_xi_list = []
+
+    for player in player_out:
+        if player in starting_xi:
+            player_out_from_the_starting_xi_list.append(player)
+
+    return player_out_from_the_starting_xi_list
+    
+    
 def team_vs_team(team1,team2,nbOfGameToAnalyze,national=False):
     national_team_list = print_file_info("nationalTeam.txt").split("\n")
     national_team_list_in_alphabetic_order = print_file_info("nationalTeamAlphabeticOrder.txt").split("\n")
 
     if national == True:
-        x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),True,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
-        y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),True,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
+        x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),True,True,national_team_list.index(team1))
+        y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),True,True,national_team_list.index(team2))
     else:
         x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False)
         y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False)
@@ -900,8 +911,57 @@ def team_vs_team(team1,team2,nbOfGameToAnalyze,national=False):
     if x < 0 and y > 0:
         score_of_team2 += abs(x) * 2
     
-
+    out_power = 25
+    out_power_of_player = (out_power / 11)
     print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
+    
+    try:
+        if national is False:
+            player_out_team1 = get_unavaible_player_of_a_team(S,print_file_info("teamUrl.txt").lower().split("\n")[print_file_info("allteam.txt").lower().split("\n").index(team1.lower())],False)
+            if "none" not in str(player_out_team1):
+                team1_starting_xi = print_file_info("starting_xi_league_team.txt").lower().split("\n")[print_file_info("allteam.txt").lower().split("\n").index(team1.lower())]
+                player_out_from_starting_xi_list = player_out_from_starting_xi(team1_starting_xi,player_out_team1)
+                if len(player_out_from_starting_xi_list) > 0:
+                    print("Before out player " , score_of_team1)
+                    score_of_team1 = int(score_of_team1 * ((100 - (out_power_of_player * len(player_out_from_starting_xi_list)))/100))
+                    print("After out player " , score_of_team1 , " list of out player " , player_out_from_starting_xi_list)
+        else:
+            player_out_team1 = get_unavaible_player_of_a_team(S,print_file_info("nationalTeamUrl.txt").lower().split("\n")[print_file_info("nationalTeam.txt").lower().split("\n").index(team1.lower())],True)
+            if "none" not in str(player_out_team1):
+                team1_starting_xi = print_file_info("starting_xi_national_team.txt").lower().split("\n")[print_file_info("nationalTeam.txt").lower().split("\n").index(team1.lower())]
+                player_out_from_starting_xi_list = player_out_from_starting_xi(team1_starting_xi,player_out_team1)
+                if len(player_out_from_starting_xi_list) > 0:
+                    print("Before out player " , score_of_team1)
+                    score_of_team1 = int(score_of_team1 * ((100 - (out_power_of_player * len(player_out_from_starting_xi_list)))/100))
+                    print("After out player " , score_of_team1 , " list of out player " , player_out_from_starting_xi_list)
+    except:
+        pass    
+    
+    try:
+        if national is False:
+            player_out_team2 = get_unavaible_player_of_a_team(S,print_file_info("teamUrl.txt").lower().split("\n")[print_file_info("allteam.txt").lower().split("\n").index(team1.lower())],False)
+            if "none" not in str(player_out_team1):
+                team2_starting_xi = print_file_info("starting_xi_league_team.txt").lower().split("\n")[print_file_info("allteam.txt").lower().split("\n").index(team1.lower())]
+                player_out_from_starting_xi_list = player_out_from_starting_xi(team2_starting_xi,player_out_team2)
+                #print("Score Before out player " , score_of_team1)
+                if len(player_out_from_starting_xi_list) > 0:
+                    print("Before out player " , score_of_team2)
+                    score_of_team2 = int(score_of_team1 * ((100 - (out_power_of_player * len(player_out_from_starting_xi_list)))/100))
+                    print("After out player " , score_of_team2 , " list of out player " , player_out_from_starting_xi_list)
+                #print("Score After out player " , score_of_team1 , " list of out player " , player_out_from_starting_xi_list)
+        else:
+            player_out_team1 = get_unavaible_player_of_a_team(S,print_file_info("nationalTeamUrl.txt").lower().split("\n")[print_file_info("nationalTeam.txt").lower().split("\n").index(team1.lower())],True)
+            if "none" not in str(player_out_team1):
+                team2_starting_xi = print_file_info("starting_xi_national_team.txt").lower().split("\n")[print_file_info("nationalTeam.txt").lower().split("\n").index(team1.lower())]
+                player_out_from_starting_xi_list = player_out_from_starting_xi(team2_starting_xi,player_out_team2)
+                if len(player_out_from_starting_xi_list) > 0:
+                    print("Before out player " , score_of_team2)
+                    score_of_team2 = int(score_of_team1 * ((100 - (out_power_of_player * len(player_out_from_starting_xi_list)))/100))
+                    print("After out player " , score_of_team2 , " list of out player " , player_out_from_starting_xi_list)      
+    except:
+        pass    
+    
+    #player_out_team1 = get_unavaible_player_of_a_team(S,team_url,False)
 
     if score_of_team1 > score_of_team2:
         if score_of_team2 * 1.25 < score_of_team1:

@@ -86,7 +86,7 @@ Result of Arsenal VS Dortmund using only the last 3 games of each team (Test don
 
 ## Update
 
-On a 2.0 version to get even better result here are the things I could add:
+Woring a 2.0 version to get even better result here are the things I want to add:
 
 -A Gui to visualise everything better
 
@@ -94,13 +94,15 @@ On a 2.0 version to get even better result here are the things I could add:
 
 -XG against
 
--Injuries (Based on the importance of the player)
+-Injuries ✅
 
 -Relative form (last 8 games performances)
 
 -Big chances & Big chances missed
 
 And more...
+
+To see the 1.0 version go here: https://github.com/steevenakintilo/BadFootballBet/tree/928aed515bde7e2a5168e43851ac31aa74034132
 
 ## Disclamer
 

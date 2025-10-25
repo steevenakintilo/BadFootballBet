@@ -74,6 +74,7 @@ class SZcraper:
 def accept_cookie(S,stop=False):
 
     #time.sleep(1000)
+
     if print_file_info("ckk.txt") == "1":
         return
     time.sleep(1)
@@ -681,8 +682,6 @@ def get_url_of_national_team(S,team):
 def get_starting_xi_of_a_team(S,team_url,national=False):
     try:
         if national:
-            print("caca")
-            print(team_url.replace("/calendrier","")+"/effectif/"+"#tabMainFormation")
             S.driver.get(team_url.replace("/calendrier","")+"/effectif/"+"#tabMainFormation")
         else:
             S.driver.get(f"{team_url}effectif/#tabMainFormation")
@@ -698,6 +697,42 @@ def get_starting_xi_of_a_team(S,team_url,national=False):
         return list_of_players
     except:
         return [None]
+
+def get_unavaible_player_of_a_team(S,team_url,national=False):
+    try:
+        if national:
+            S.driver.get(team_url.replace("/calendrier","")+"/effectif")
+        else:
+            S.driver.get(f"{team_url}effectif")
+        
+        list_of_players = []
+        time.sleep(10)
+        element = WebDriverWait(S.driver,1.5).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/div[1]/div/ul/li[2]/a")))
+        element.click()
+        time.sleep(5)
+        players = WebDriverWait(S.driver,1.5).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, "personCardCell__name")))
+        
+        for player in players:
+            if len(player.text) > 1:
+                list_of_players.append(player.text.lower())
+    
+        element = WebDriverWait(S.driver,1.5).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/div[1]/div/ul/li[3]/a")))
+        element.click()
+        time.sleep(5)
+        players = WebDriverWait(S.driver,1.5).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, "personCardCell__name")))
+        
+        for player in players:
+            if len(player.text) > 1:
+                list_of_players.append(player.text.lower())
+
+        list_of_players = list(set(list_of_players))
+        return list_of_players    
+    except:
+        return []
 
 def write_into_file(path, x):
     with open(path, "ab") as f:

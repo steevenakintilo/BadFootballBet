@@ -747,8 +747,64 @@ def keep_num_from_string(string):
     
     return result
 
+def player_out_from_starting_xi(starting_xi,player_out):
+
+    player_out_from_the_starting_xi_list = []
+
+    for player in player_out:
+        if player in starting_xi:
+            player_out_from_the_starting_xi_list.append(player)
+
+    return player_out_from_the_starting_xi_list
+    
+
 def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
     print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
+    national_team = print_file_info("nationalTeam.txt").lower()
+    national = False
+    if team1.lower() in national_team:
+        national = True
+    
+    out_power = 25
+    out_power_of_player = (out_power / 11)
+    
+    try:
+        if national is False:
+            player_out_team1 = get_unavaible_player_of_a_team(S,print_file_info("teamUrl.txt").lower().split("\n")[print_file_info("allteam.txt").lower().split("\n").index(team1.lower())],False)
+            if "none" not in str(player_out_team1):
+                team1_starting_xi = print_file_info("starting_xi_league_team.txt").lower().split("\n")[print_file_info("allteam.txt").lower().split("\n").index(team1.lower())]
+                player_out_from_starting_xi_list = player_out_from_starting_xi(team1_starting_xi,player_out_team1)
+                if len(player_out_from_starting_xi_list) > 0:
+                    score_of_team1 = int(score_of_team1 * ((100 - (out_power_of_player * len(player_out_from_starting_xi_list)))/100))
+        else:
+            player_out_team1 = get_unavaible_player_of_a_team(S,print_file_info("nationalTeamUrl.txt").lower().split("\n")[print_file_info("nationalTeam.txt").lower().split("\n").index(team1.lower())],True)
+            if "none" not in str(player_out_team1):
+                team1_starting_xi = print_file_info("starting_xi_national_team.txt").lower().split("\n")[print_file_info("nationalTeam.txt").lower().split("\n").index(team1.lower())]
+                player_out_from_starting_xi_list = player_out_from_starting_xi(team1_starting_xi,player_out_team1)
+                if len(player_out_from_starting_xi_list) > 0:
+                    score_of_team1 = int(score_of_team1 * ((100 - (out_power_of_player * len(player_out_from_starting_xi_list)))/100))
+                
+    except:
+        pass    
+    
+    try:
+        if national is False:
+            player_out_team2 = get_unavaible_player_of_a_team(S,print_file_info("teamUrl.txt").lower().split("\n")[print_file_info("allteam.txt").lower().split("\n").index(team1.lower())],False)
+            if "none" not in str(player_out_team1):
+                team2_starting_xi = print_file_info("starting_xi_league_team.txt").lower().split("\n")[print_file_info("allteam.txt").lower().split("\n").index(team1.lower())]
+                player_out_from_starting_xi_list = player_out_from_starting_xi(team2_starting_xi,player_out_team2)
+                if len(player_out_from_starting_xi_list) > 0:
+                    score_of_team2 = int(score_of_team1 * ((100 - (out_power_of_player * len(player_out_from_starting_xi_list)))/100))
+        else:
+            player_out_team1 = get_unavaible_player_of_a_team(S,print_file_info("nationalTeamUrl.txt").lower().split("\n")[print_file_info("nationalTeam.txt").lower().split("\n").index(team1.lower())],True)
+            if "none" not in str(player_out_team1):
+                team2_starting_xi = print_file_info("starting_xi_national_team.txt").lower().split("\n")[print_file_info("nationalTeam.txt").lower().split("\n").index(team1.lower())]
+                player_out_from_starting_xi_list = player_out_from_starting_xi(team2_starting_xi,player_out_team2)
+                if len(player_out_from_starting_xi_list) > 0:
+                    score_of_team2 = int(score_of_team1 * ((100 - (out_power_of_player * len(player_out_from_starting_xi_list)))/100))
+    except:
+        pass    
+    
     score_of_team1 = abs(score_of_team1)
     score_of_team2 = abs(score_of_team2)
     
@@ -778,11 +834,6 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
     else:
         whereIsTheMatch = league_team_1
 
-    national_team = print_file_info("nationalTeam.txt").lower()
-    national = False
-    if team1.lower() in national_team:
-        national = True
-    
     write_into_file(f"txtFiles/league{idxx}.txt", whereIsTheMatch + "\n")
     chatgpt = GptScraper()
     if score_of_team1 > score_of_team2:
