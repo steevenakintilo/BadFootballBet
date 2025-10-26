@@ -685,13 +685,13 @@ def get_starting_xi_of_a_team(S,team_url,national=False):
             S.driver.get(team_url.replace("/calendrier","")+"/effectif/"+"#tabMainFormation")
         else:
             S.driver.get(f"{team_url}effectif/#tabMainFormation")
-        players = WebDriverWait(S.driver,1.5).until(
+        players = WebDriverWait(S.driver,5).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, "matchTeamPlayer__name")))
         
         list_of_players = []
 
         for player in players:
-            list_of_players.append(player.text)
+            list_of_players.append(player.text.lower())
     
 
         return list_of_players
@@ -711,27 +711,49 @@ def get_unavaible_player_of_a_team(S,team_url,national=False):
         EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/div[1]/div/ul/li[2]/a")))
         element.click()
         time.sleep(5)
+        
+        if national == False:
+            element = WebDriverWait(S.driver,1.5).until(
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/div[3]/div")))
+        else:
+            element = WebDriverWait(S.driver,1.5).until(
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/div[2]/div")))
+
+        tablePlayer = element.text
+        
         players = WebDriverWait(S.driver,1.5).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, "personCardCell__name")))
         
         for player in players:
-            if len(player.text) > 1:
+            if len(player.text) > 1 and player.text in tablePlayer:
                 list_of_players.append(player.text.lower())
-    
+
         element = WebDriverWait(S.driver,1.5).until(
         EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/div[1]/div/ul/li[3]/a")))
         element.click()
         time.sleep(5)
+        if national == False:
+            element = WebDriverWait(S.driver,1.5).until(
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/div[3]/div")))
+
+        else:
+            element = WebDriverWait(S.driver,1.5).until(
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/div[2]/div")))
+            
+        tablePlayer = element.text
+        
         players = WebDriverWait(S.driver,1.5).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, "personCardCell__name")))
         
         for player in players:
-            if len(player.text) > 1:
+            if len(player.text) > 1 and player.text in tablePlayer:
                 list_of_players.append(player.text.lower())
 
         list_of_players = list(set(list_of_players))
         return list_of_players    
     except:
+        import traceback
+        traceback.print_exc()            
         return []
 
 def write_into_file(path, x):
