@@ -6,6 +6,7 @@ from os import system
 import pickle
 from selenium.webdriver.common.action_chains import ActionChains
 
+from teamData import *
 from selenium.webdriver.common.by import By
 
 from selenium import webdriver
@@ -525,7 +526,7 @@ def Position_Of_A_Team_On_Its_League(S,team,national=False):
     try:
        S.driver.get(data.all_league_url[x])
     except:
-       time.sleep(100)
+       time.sleep(10)
        S.driver.refresh()
        time.sleep(20)
        S.driver.get(data.all_league_url[x])
@@ -541,8 +542,34 @@ def Position_Of_A_Team_On_Its_League(S,team,national=False):
             return -999
 
     return -999
-    
 
+def convert_nb_to_100(nb,len_all_nb):
+    return int((nb*100)/len_all_nb) + 30
+
+def number_of_team_on_a_league(S,team):
+    data = teamData()
+    try:
+        x = pos_league_team(team)
+        try:
+            S.driver.get(data.all_league_url[x])
+        except:
+            time.sleep(10)
+            S.driver.refresh()
+            time.sleep(20)
+            S.driver.get(data.all_league_url[x])
+        team = team.lower()
+        nb = 0
+        for i in range(1,40):
+            try:
+                element = WebDriverWait(S.driver,2).until(
+                EC.presence_of_element_located((By.XPATH, f"/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{i}]/td[2]")))
+                nb=nb+1
+            except:
+                pass
+
+        return nb
+    except:
+        return 0
 def get_team_of_a_league(S,nb):
     data = teamData()
     S.driver.get(data.all_league_url[nb])
@@ -713,36 +740,36 @@ def get_unavaible_player_of_a_team(S,team_url,national=False):
         time.sleep(5)
         
         if national == False:
-            element = WebDriverWait(S.driver,1.5).until(
+            element = WebDriverWait(S.driver,5).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/div[3]/div")))
         else:
-            element = WebDriverWait(S.driver,1.5).until(
+            element = WebDriverWait(S.driver,5).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/div[2]/div")))
 
         tablePlayer = element.text
         
-        players = WebDriverWait(S.driver,1.5).until(
+        players = WebDriverWait(S.driver,5).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, "personCardCell__name")))
         
         for player in players:
             if len(player.text) > 1 and player.text in tablePlayer:
                 list_of_players.append(player.text.lower())
 
-        element = WebDriverWait(S.driver,1.5).until(
+        element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/div[1]/div/ul/li[3]/a")))
         element.click()
         time.sleep(5)
         if national == False:
-            element = WebDriverWait(S.driver,1.5).until(
+            element = WebDriverWait(S.driver,5).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/div[3]/div")))
 
         else:
-            element = WebDriverWait(S.driver,1.5).until(
+            element = WebDriverWait(S.driver,5).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[2]/div/div[2]/div")))
             
         tablePlayer = element.text
         
-        players = WebDriverWait(S.driver,1.5).until(
+        players = WebDriverWait(S.driver,5).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, "personCardCell__name")))
         
         for player in players:
@@ -752,9 +779,126 @@ def get_unavaible_player_of_a_team(S,team_url,national=False):
         list_of_players = list(set(list_of_players))
         return list_of_players    
     except:
-        import traceback
-        traceback.print_exc()            
+
         return []
+
+def goal_scored_on_league(S,team_url):
+    try:
+        S.driver.get(f"{team_url}stats")
+        element = WebDriverWait(S.driver,5).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[9]/div[2]/div/div[1]/div/span[1]/span[1]")))
+        return int(element.text.split("#")[1])
+    except:
+        return None
+
+def goal_conceded_on_league(S,team_url):
+    try:
+        S.driver.get(f"{team_url}stats")
+        element = WebDriverWait(S.driver,5).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[14]/div[2]/div/div/div/span[1]/span[1]")))
+        return int(element.text.split("#")[1])
+    except:
+        return None
+
+def target_shot_on_league(S,team_url):
+    try:
+        S.driver.get(f"{team_url}stats")
+        element = WebDriverWait(S.driver,5).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[10]/div[2]/div/div[1]/div/span[1]/span[1]")))
+        return int(element.text.split("#")[1])
+    except:
+        return None
+
+def dribble_on_league(S,team_url):
+    try:
+        S.driver.get(f"{team_url}stats")
+        element = WebDriverWait(S.driver,5).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[10]/div[2]/div/div[2]/div/span[1]/span[1]")))
+        return int(element.text.split("#")[1])
+    except:
+        return None
+
+def possession_on_league(S,team_url):
+    try:
+        S.driver.get(f"{team_url}stats")
+        element = WebDriverWait(S.driver,5).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[11]/div[2]/div/div[1]/div/span[1]/span[1]")))
+        return int(element.text.split("#")[1])
+    except:
+        return None
+
+def passing_accuracy_on_league(S,team_url):
+    try:
+        S.driver.get(f"{team_url}stats")
+        element = WebDriverWait(S.driver,5).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[11]/div[2]/div/div[2]/div/span[1]/span[1]")))
+        return int(element.text.split("#")[1])
+    except:
+        return None
+
+def center_accuracy_on_league(S,team_url):
+    try:
+        S.driver.get(f"{team_url}stats")
+        element = WebDriverWait(S.driver,5).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[11]/div[2]/div/div[3]/div/span[1]/span[1]")))
+        return int(element.text.split("#")[1])
+    except:
+        return None
+
+def duel_won_on_league(S,team_url):
+    try:
+        S.driver.get(f"{team_url}stats")
+        element = WebDriverWait(S.driver,5).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[12]/div[2]/div/div[1]/div/span[1]/span[1]")))
+        return int(element.text.split("#")[1])
+    except:
+        return None
+
+def good_tackle_on_league(S,team_url):
+    try:
+        S.driver.get(f"{team_url}stats")
+        element = WebDriverWait(S.driver,5).until(
+        EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[12]/div[2]/div/div[2]/div/span[1]/span[1]")))
+        return int(element.text.split("#")[1])
+    except:
+        return None
+
+def score_of_team_based_on_stat(S,team_url,team):
+    try:
+        data = teamData()
+        goal_scored = goal_scored_on_league(S,team_url)
+        goal_conced = goal_conceded_on_league(S,team_url)
+        target_shot = target_shot_on_league(S,team_url)
+        dribble = dribble_on_league(S,team_url)
+        possession = possession_on_league(S,team_url)
+        passing_accuracy = passing_accuracy_on_league(S,team_url)
+        center_accuracy = center_accuracy_on_league(S,team_url)
+        good_tackle = good_tackle_on_league(S,team_url)
+        duel_won = duel_won_on_league(S,team_url)
+        nb_of_team_on_league = number_of_team_on_a_league(S,team)
+
+        # print(goal_conced)
+        # print(goal_scored)
+        # print(target_shot)
+        # print(dribble)
+        # print(possession)
+        # print(passing_accuracy)
+        # print(center_accuracy)
+        # print(duel_won)
+        # print(good_tackle)
+        stats_list = [goal_scored * 5,(nb_of_team_on_league - goal_conced) * 5,target_shot*4,dribble*3,possession*3,passing_accuracy * 4,center_accuracy*3,good_tackle * 2,duel_won*2]
+        if None in stats_list:
+            return 0
+        #print(stats_list)
+        stats_nb = 5 + 5 + 4 + 3 + 4 + 3 + 2 + 2
+        position_based_on_league = int(sum(stats_list)/stats_nb)
+        score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - position_based_on_league - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
+        # score_based_on_ranking = 10 * 210 + position_based_on_league
+        # score_based_on_league_and_league_place = int(score_based_on_ranking * convert_nb_to_100(position_based_on_league , x))
+        #print("score_based_on_stat: " , score_based_on_league_and_league_place , team)
+        return score_based_on_league_and_league_place
+    except:
+        return 0
 
 def write_into_file(path, x):
     with open(path, "ab") as f:

@@ -390,6 +390,9 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20,national=False):
     national_team_list = print_file_info("nationalTeam.txt").lower().split("\n")
     national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
     
+    league_team_list = print_file_info("allteam.txt").lower().split("\n")
+    league_team_list_url = print_file_info("teamUrl.txt").lower().split("\n")
+    
     if national == False:
         if statsT.name not in data.allTeam:
             #print("ici 1")
@@ -410,7 +413,7 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20,national=False):
     else:
         team_pos = 0
     try:
-        x = last_X_Games_Result(statsT,Get_Last_X_Games_Result(S,statsT.name,team_pos,nbOfGameToAnalyze,True),national)
+        x = last_X_Games_Result(statsT,Get_Last_X_Games_Result(S,statsT.name,team_pos,nbOfGameToAnalyze,national),national)
         
         if x == -1:
             print("Team didnt play a game this year or a bug happend so the score is 1")
@@ -550,19 +553,30 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20,national=False):
         
         #print("zebi " , statsT.last_x_game_list_away_or_home, " zebo")
         index+=1
+    
     finalScore = int(finalScore)
+
+    if national is False:
+        team_url = league_team_list_url[league_team_list.index(statsT.name.lower())]
+        stat_score = score_of_team_based_on_stat(S,team_url,team)
+        
+        if stat_score > 2500:
+            if finalScore < 2500:
+                finalScore = score_based_on_league_and_league_place
+            finalScore = int((finalScore + stat_score)/2)
+        
     #print("Score basique " , score_based_on_league_and_league_place)
     if finalScore < 0:
-        return score_based_on_league_and_league_place - abs(finalScore) , statsT.win_rate_percent
+        return score_based_on_league_and_league_place - abs(finalScore)
     else:
-        return score_based_on_league_and_league_place + finalScore , statsT.win_rate_percent
+        return score_based_on_league_and_league_place + finalScore
 
     
 def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,National=False,coutry_rank=0):
     if NoPrint == True:
         print("Program could take long time to run depending on how many games to analyze you put :)")
     if NoPrint == False:
-        print("Wait beetween 1 to 3 minutes until it get the data of your team")
+        print("Wait beetween 1 to 15 minutes until it get the data of your team")
     x_team_score = 0
     index = 0
     statsTeam = TeamStat()
@@ -571,6 +585,9 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
     #NoPrint = True
     national_team_list = print_file_info("nationalTeamAlphabeticOrder.txt").lower().split("\n")
     national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
+    
+    league_team_list = print_file_info("allteam.txt").lower().split("\n")
+    league_team_list_url = print_file_info("teamUrl.txt").lower().split("\n")
     
     if National == False:
         if statsTeam.name not in data.allTeam:
@@ -646,9 +663,8 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
         #print("faceeeeee " , facedTeam)
         win_rate_nb = 0
         try:
-            x_team_score , win_rate_nb = get_the_score_of_a_team(facedTeam,nbOfGameToAnalyze,National)
-        except:
-            
+            x_team_score = get_the_score_of_a_team(facedTeam,nbOfGameToAnalyze,National)
+        except:        
             x_team_score = get_score_based_on_the_league(facedTeam,National)
         
         if x_team_score < 300:
@@ -789,8 +805,16 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
         index+=1
     if NoPrint == True:
         print(f"Score final de  {team} : {score}")
-    return score
     
+    if National is False:
+        team_url = league_team_list_url[league_team_list.index(statsTeam.name.lower())]
+        stat_score = score_of_team_based_on_stat(S,team_url,team)
+        if stat_score < 2500:
+            return score
+        return_score = (score + stat_score)/2
+        return int(return_score)
+    else:
+        return score    
 def is_num(nb):
     try:
         int(nb)

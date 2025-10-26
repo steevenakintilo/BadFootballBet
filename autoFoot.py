@@ -330,6 +330,9 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20,national=False):
     national_team_list = print_file_info("nationalTeam.txt").lower().split("\n")
     national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
     
+    league_team_list = print_file_info("allteam.txt").lower().split("\n")
+    league_team_list_url = print_file_info("teamUrl.txt").lower().split("\n")
+    
     if national == False:
         if statsT.name not in data.allTeam:
             return 1
@@ -488,6 +491,16 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20,national=False):
         #print("zebi " , statsT.last_x_game_list_away_or_home, " zebo")
         index+=1
     finalScore = int(finalScore)
+
+    if national is False:
+        team_url = league_team_list_url[league_team_list.index(statsT.name.lower())]
+        stat_score = score_of_team_based_on_stat(S,team_url,team)
+        
+        if stat_score > 2500:
+            if finalScore < 2500:
+                finalScore = score_based_on_league_and_league_place
+            finalScore = int((finalScore + stat_score)/2)
+    
     #print("Score basique " , score_based_on_league_and_league_place)
     if finalScore < 0:
         return score_based_on_league_and_league_place - abs(finalScore) , statsT.win_rate_percent
@@ -510,6 +523,9 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
     national_team_list = print_file_info("nationalTeamAlphabeticOrder.txt").lower().split("\n")
     national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
     national = False
+    
+    league_team_list = print_file_info("allteam.txt").lower().split("\n")
+    league_team_list_url = print_file_info("teamUrl.txt").lower().split("\n")
     
     if statsTeam.name.lower() in allTeamNational:
         national = True
@@ -720,12 +736,21 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
             score-=abs(finalScore)
         else:
             score+=finalScore
-        #if NoPrint == True:
-        print(f"Score de base du {team}: {score_based_on_league_and_league_place} , Score actuel du {team}: {score} et de {facedTeam}: {x_team_score}" , f" result: {statsTeam.last_x_game_win_draw_or_loose[index]} is oppenent weaker ? {teamScore < score_based_on_league_and_league_place}")
+        if NoPrint == True:
+            print(f"Score de base du {team}: {score_based_on_league_and_league_place} , Score actuel du {team}: {score} et de {facedTeam}: {x_team_score}" , f" result: {statsTeam.last_x_game_win_draw_or_loose[index]} is oppenent weaker ? {teamScore < score_based_on_league_and_league_place}")
         index+=1
     if NoPrint == True:
         print(f"Score final de  {team} : {score}")
-    return score
+    
+    if national is False:
+        team_url = league_team_list_url[league_team_list.index(statsTeam.name.lower())]
+        stat_score = score_of_team_based_on_stat(S,team_url,team)
+        if stat_score < 2500:
+            return score
+        return_score = (score + stat_score)/2
+        return int(return_score)
+    else:
+        return score
     
 
 
