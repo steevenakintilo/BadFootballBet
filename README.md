@@ -43,6 +43,7 @@ To use just do python foot.py then it will displayay a menu with three choices
 ![image](https://github.com/user-attachments/assets/962d1e41-7660-4699-aa84-d5f89cf3aa59)
 If you choose 1 it will display the list of available country then you will need to choose ![image](https://github.com/user-attachments/assets/af4e3b1b-943d-4578-b578-51642d74b24d)
 Then depending of your choice it will display all the team of the country ![image](https://github.com/user-attachments/assets/5cb4dac9-296c-4acf-a27b-7631770ab7a3)
+
 And after it will do the same process for team B and then it will start to compare both teams and give you the result at the end.
 
 If you choose 2 it will ask you the same things as choice 1 but for one team only then at the end will give you the stats of the team.
@@ -73,9 +74,13 @@ If you want to analyze all the games available of the next day just run
     python autoFoot.py 5
 ```
 Run each command on a different window/terminal prompt
-It will analyze automaticaly all the game available of the day and will send all the result (Match,Winner,Percent and Odds) to your discord channel
-You can also analyze all the games available of the next X days by adding the number you want to the dayNb.txt file, for example if you want to analyze the games comming in 4 days put 4 on the dayNb.txt file
-Then If you want all the data on the .txt files just run printData.py and it will store all the data into result.txt,percent.txt,odds.txt and match.txt files 
+It will analyze automaticaly all the game available of the day and will send all the result (Match,Winner,Percent and Odds) to your discord channel.
+
+You can also analyze all the games available of the next X days by adding the number you want to the dayNb.txt file
+
+For example if you want to analyze the games comming in 4 days put 4 on the dayNb.txt file.
+
+Then If you want all the data on the .txt files just run printData.py and it will store all the data into result.txt,percent.txt,odds.txt and match.txt files.
 
 ## Result
 
@@ -90,9 +95,9 @@ Woring a 2.0 version to get even better result here are the things I want to add
 
 -A Gui to visualise everything better
 
--XG
+-XG ✅
 
--XG against
+-XG against ✅
 
 -Injuries ✅
 
