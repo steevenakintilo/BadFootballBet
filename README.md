@@ -48,6 +48,8 @@ Depending on the score of both team it will either display loose draw or win.
 
 It works the same with the national team mode but instead of club league it's taking national team.
 
+If you want to see detailed of all the main action did during it's computing just write anythin into the NoPrint.txt file
+
 ## How to use it ?
 
 To use just do python foot.py then it will displayay a menu with 2 choices:
