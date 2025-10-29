@@ -73,7 +73,7 @@ If you choose 4 it will ask you the same things as choice 1 but for one random t
 If you choose 5 it will just quit the program
 
 # Auto Mode
-Before using it make sure to put your webhook url into discordWebhookUrl.txt file
+Before using it make sure to put your webhook url into discordWebhookUrl.txt file and created your own discord server to see all the data. https://support.discord.com/hc/en-us/articles/204849977-How-do-I-create-a-server 
 If you want to analyze all the games available of the next day just run 
 
 ```bash
