@@ -135,6 +135,14 @@ And more...
 
 To see the 1.0 version go here: https://github.com/steevenakintilo/BadFootballBet/tree/928aed515bde7e2a5168e43851ac31aa74034132
 
+## Math behind it
+
+The math behind my bot is really easy and could be understand by any high school student since it's just statistics, multiplication, addition, subtraction, division, and cross-multiplication.
+
+All the key data number used such as the score of each league come from the league ranking of each leagues and for some I asked chatgpt and review it's result online for smaller and lesser-known league.
+
+And for the computing of the score of teams it's just home-made formula using importance of the value such as goal,score etc.
+
 ## Disclamer
 
 This program was made for fun therefore the calculus are not 100% right and it will never be, it's impossible to guess the result of all the possible game.
