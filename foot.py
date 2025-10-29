@@ -6,6 +6,7 @@ S = Scraper()
 data = teamData()
 
 def last_X_Games_Result(stats,listOfResult,url="",national=False,more_stat=False):
+    print("Loading wait !!!")
     if len(listOfResult) == 0:
         return -1
     team =  stats.name
@@ -47,8 +48,10 @@ def last_X_Games_Result(stats,listOfResult,url="",national=False,more_stat=False
         stats.ranking_based_on_stat = []
         stats.starting_xi = get_starting_xi_of_a_team(Se,url,national)
         stats.list_of_player_out = get_unavaible_player_of_a_team(Se,url,national)
-        if national:
+        if national is False:
             stats.score_based_on_stat , stats.ranking_based_on_stat = score_of_team_based_on_stat(Se,url,team.lower(),True)
+            stats.number_of_team_on_the_league = number_of_team_on_a_league(Se,team)
+            
     for result in listOfResult:
         result = result.split()
         #print("res " , result)
@@ -258,11 +261,13 @@ def print_all_data(stats,national=False):
     print(f"Team url: {stats.team_url}")
     print(f"Team default score {stats.score}")
     if national == False:
-        print(f"Position in the League: {stats.pos_on_the_league}")
+        print(f"Position in the League: {stats.pos_on_the_league}/{stats.number_of_team_on_the_league}")
         print(f"League of the Team: {stats.league_of_the_team}")
         if stats.score_based_on_stat != 0:
             print(f"Score based on stat on the league: {stats.score_based_on_stat}")
-            print(f"Ranking based on stat on the league: {stats.ranking_based_on_stat}")
+            print(f"Ranking based on stat on the league: {stats.ranking_based_on_stat}/{stats.number_of_team_on_the_league}")
+            print(f"Overall score: {int((stats.score_based_on_stat + stats.score)/2)}")
+            print(f"Overall ranking: {int((stats.ranking_based_on_stat + stats.pos_on_the_league)/2)}/{stats.number_of_team_on_the_league}")
 
 
     else:
@@ -272,9 +277,7 @@ def print_all_data(stats,national=False):
     
     stats.ranking_based_on_stat = []
     stats.list_of_player_out = get_unavaible_player_of_a_team(S,stats.team_url,national)
-    if national:
-        stats.score_based_on_stat , stats.ranking_based_on_stat = score_of_team_based_on_stat(S,stats.team_url,team.lower(),True)
-
+    
     print(f"Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_list}")
     print(f"Last X Game Win Draw or Loose: {stats.last_x_game_win_draw_or_loose}")
     print(f"Last X Game League or Not: {stats.last_x_game_list_league_or_not}")
@@ -610,7 +613,7 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20,national=False):
 
     
 def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,National=False,coutry_rank=0):
-    if NoPrint == True:
+    if NoPrint == True and nbOfGameToAnalyze < 999:
         print("Program could take long time to run depending on how many games to analyze you put :)")
     if NoPrint == False:
         print("Wait beetween 1 to 15 minutes until it get the data of your team")
