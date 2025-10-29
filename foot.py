@@ -294,12 +294,14 @@ def print_all_data(stats,national=False):
     if national == False:
         print(f"Position in the League: {stats.pos_on_the_league}/{stats.number_of_team_on_the_league}")
         print(f"League of the Team: {stats.league_of_the_team}")
-        if stats.score_based_on_stat != 0:
-            print(f"Score based on stat on the league: {stats.score_based_on_stat}")
-            print(f"Ranking based on stat on the league: {stats.ranking_based_on_stat}/{stats.number_of_team_on_the_league}")
-            print(f"Overall score: {int((stats.score_based_on_stat + stats.score)/2)}")
-            print(f"Overall ranking: {int((stats.ranking_based_on_stat + stats.pos_on_the_league)/2)}/{stats.number_of_team_on_the_league}")
-
+        try:
+            if stats.score_based_on_stat != 0:
+                print(f"Score based on stat on the league: {stats.score_based_on_stat}")
+                print(f"Ranking based on stat on the league: {stats.ranking_based_on_stat}/{stats.number_of_team_on_the_league}")
+                print(f"Overall score: {int((stats.score_based_on_stat + stats.score)/2)}")
+                print(f"Overall ranking: {int((stats.ranking_based_on_stat + stats.pos_on_the_league)/2)}/{stats.number_of_team_on_the_league}")
+        except:
+            pass
 
     else:
         print("Current country ranking: " , stats.pos_on_the_league + 1 , "/210")
