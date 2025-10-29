@@ -1,9 +1,9 @@
 from scrapData import * 
 from teamData import *
 from discord_webhook import DiscordWebhook
-from gpt import GptScraper
 from os import sys
 import itertools
+from winamax import get_oods_of_a_match
 
 S = Scraper()
 data = teamData()
@@ -522,11 +522,10 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
     allTeamNational = print_file_info("nationalTeam.txt").lower().split("\n")
     national_team_list = print_file_info("nationalTeamAlphabeticOrder.txt").lower().split("\n")
     national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
-    national = False
     
     league_team_list = print_file_info("allteam.txt").lower().split("\n")
     league_team_list_url = print_file_info("teamUrl.txt").lower().split("\n")
-    
+    national = False
     if statsTeam.name.lower() in allTeamNational:
         national = True
     if (statsTeam.name not in data.allTeam) and  (statsTeam.name.lower() not in allTeamNational):
@@ -599,11 +598,25 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
         #print("faceeeeee " , facedTeam)
         win_rate_nb = 0
 
-        try:
-            x_team_score , win_rate_nb = get_the_score_of_a_team(facedTeam,20,national)
-        except:
-            x_team_score = get_score_based_on_the_league(facedTeam,national)
+        fast_result = True
+        if fast_result:
+            try:
+                team_url = league_team_list_url[league_team_list.index(facedTeam.lower())]
+                stat_score = score_of_team_based_on_stat(S,team_url,team)
+                
+                if stat_score > 2500:
+                    x_team_score = int((get_score_based_on_the_league(facedTeam,national)+stat_score)/2)
+                else:
+                    x_team_score = get_score_based_on_the_league(facedTeam,national)
+            except:
+                x_team_score = get_score_based_on_the_league(facedTeam,national)
         
+        else:
+            try:
+                x_team_score = get_the_score_of_a_team(facedTeam,20,national)
+            except:        
+                x_team_score = get_score_based_on_the_league(facedTeam,national)
+
         if x_team_score < 300:
             if NoPrint:
                 print(f"Error on {facedTeam} strange score {x_team_score}")
@@ -798,7 +811,7 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
     national = False
     if team1.lower() in national_team:
         national = True
-    
+
     out_power = 25
     out_power2 = 10
 
@@ -911,18 +924,16 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
         whereIsTheMatch = "America Competition"
     else:
         whereIsTheMatch = league_team_1
-
+    
     write_into_file(f"txtFiles/league{idxx}.txt", whereIsTheMatch + "\n")
-    chatgpt = GptScraper()
+        
     if score_of_team1 > score_of_team2:
         if score_of_team2 * 1.25 < score_of_team1:
             print(f"{team2} will loose against {team1}")
             #send_message_discord(f"{team2} will loose against {team1}")
             #send_message_discord(f"{team2} {p2} will loose against {team1} {p1}")
             #odds = get_odds(S,team1,team2,"W",True)
-            chatgpt.maker([f"What are the odds of the {team1} VS {team2} football match with {team1} as winner just give the odds , the number no text needed just the result just write the number I don't need text"])
-            odds = chatgpt.answer_list[0]
-            keep_num_from_string(odds)
+            odds = get_oods_of_a_match(team1,team2,team1)
 
             if national:
                 send_message_discord(f"{team1} {p1} WIN VS {team2} {p2} ODDS {keep_num_from_string(odds)}")
@@ -936,11 +947,8 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             write_into_file(f"txtFiles/percent{idxx}.txt", p1+ "-" + p2 + "\n")
 
         else:
-            chatgpt.maker([f"What are the odds of the {team1} VS {team2} football match with draw as result just give the odds , the number no text needed just the result just write the number I don't need text"])
             print(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
-            #send_message_discord(f"{team1} have a win ratio a little bit higher than {team2} but the most likely outcome is a draw")
-            odds = chatgpt.answer_list[0]
-            keep_num_from_string(odds)
+            odds = get_oods_of_a_match(team1,team2,"draw")
             if national:
                 send_message_discord(f"{team1} {p1} DRAW VS {team2} {p2} ODDS {keep_num_from_string(odds)}")
             else:
@@ -958,11 +966,8 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
         # send_message_discord(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
     else:
         if score_of_team1 * 1.25 < score_of_team2:
-            chatgpt.maker([f"What are the odds of the {team1} VS {team2} football match with {team2} as winner just give the odds , the number no text needed just the result just write the number I don't need text"])
             print(f"{team1} will loose against {team2}")
-            #send_message_discord(f"{team1} will loose against {team2}")
-            odds = chatgpt.answer_list[0]
-            keep_num_from_string(odds)
+            odds = get_oods_of_a_match(team1,team2,team2)
             if national:
                 send_message_discord(f"{team2} {p2} WIN VS {team1} {p1} ODDS {keep_num_from_string(odds)}")
             else:
@@ -974,11 +979,9 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
             write_into_file(f"txtFiles/odds{idxx}.txt", odds + "\n")
             write_into_file(f"txtFiles/percent{idxx}.txt", p2+ "-" + p1 + "\n")
         else:
-            chatgpt.maker([f"What are the odds of the {team1} VS {team2} football match with draw as result just give the odds , the number no text needed just the result just write the number I don't need text"])
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
             #send_message_discord(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
-            odds = chatgpt.answer_list[0]
-            keep_num_from_string(odds)
+            odds = get_oods_of_a_match(team1,team2,"draw")
             if national:
                 send_message_discord(f"{team2} {p2} DRAW VS {team1} {p1} ODDS {keep_num_from_string(odds)}")
             else:
@@ -1021,6 +1024,22 @@ def team_vs_team(team1,team2,idxx):
         x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False)
         print("+"*200)
         y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False)
+        national = False
+        allTeamNational = print_file_info("nationalTeam.txt").lower().split("\n")
+        if team1.lower() in allTeamNational:
+            national = True
+            return
+        
+        if national == False:
+            league_team_list = print_file_info("allteam.txt").lower().split("\n")
+    
+            head_to_head_score = get_head_to_head_result_of_two_teams(S,league_team_list.index(team1.lower()),team1.lower(),team2.lower())
+            if head_to_head_score != 0:
+                if head_to_head_score < 0:
+                    x = int(x * (1 - (abs(head_to_head_score)/100)))
+                else:
+                    x = int(x * (1 + (abs(head_to_head_score)/100)))
+        
         score_of_team1 = abs(x)
         if x > 0 and y < 0 :
             score_of_team1 += abs(y) * 2
@@ -1037,7 +1056,7 @@ def team_vs_team(team1,team2,idxx):
             print_result_info(team1,score_of_team1,team2,score_of_team2,idxx)
         else:
             print_result_info(team1,score_of_team1,team2,score_of_team2,idxx)
-    except:
+    except:            
         pass
 
 
@@ -1066,7 +1085,7 @@ def balanced_sublists(lst, n):
     return sublists
 
 try:
-    time.sleep(50 * int(sys.argv[1]))
+    time.sleep(5 * int(sys.argv[1]))
 except:
     print("You need to put argument after the autofoot like this: python autoFoot.py 1")
     quit()
@@ -1084,12 +1103,14 @@ reset_file(f"txtFiles/league{int(sys.argv[1])}.txt")
 
 if int(sys.argv[1]) == 1:
     reset_file("current_game.txt")
+    reset_file("recent_game_url.txt")
 
 reset_file("ckk.txt")
 matches = get_match_of_the_day(S)
 
 try:
     if len(matches) < 4:
+        print(matches)
         print("not enough matches")
         quit()
 except:

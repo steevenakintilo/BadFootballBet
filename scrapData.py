@@ -44,8 +44,8 @@ class Scraper:
     options.add_argument('--log-level=1')
     options.add_argument("--log-level=3")  # Suppress all logging levels
     
-    # if len(str(print_pkl_info())) > 20:
-    #     options.add_argument('headless')
+    if len(str(print_pkl_info())) > 20:
+        options.add_argument('headless')
     
     #options.add_argument('--blink-settings=imagesEnabled=false')
     options.add_argument("--disable-gpu")  # Disable GPU (helpful in headless mode)
@@ -177,6 +177,8 @@ def get_match_of_the_day(S):
         #print(page_text)
         #print("-"*200)
         skipMatches = page_text.split("Amicaux Club")
+        skipMatches2 = page_text.split("Amicaux (femmes)")
+
         list_of_matches = []
         error = 0
         skip = False
@@ -192,6 +194,11 @@ def get_match_of_the_day(S):
                     if len(skipMatches) > 1:
                         if element.text in skipMatches[1]:
                             skip = True
+                    
+                    if len(skipMatches2) > 1:
+                        if element.text in skipMatches2[1]:
+                            skip = True
+                    
                     if ((matches[0].lower() in allTeam and matches[1].lower() in allTeam) or (matches[0].lower() in allTeamNational and matches[1].lower() in allTeamNational)) and skip != True:
                         list_of_matches.append(matches[0] + "#####" + matches[1])
                     
@@ -209,6 +216,140 @@ def get_match_of_the_day(S):
     except:
         import traceback
         traceback.print_exc()
+
+def get_head_to_head_result_of_two_teams(S,posTeam,team,team2):
+    try:
+        team = team.replace("-"," ")
+        team2 = team2.replace("-"," ")
+        
+        team = team.lower()
+        team2 = team2.lower()
+        all_url = print_file_info("teamUrl.txt").split("\n")
+        national_team_list = print_file_info("nationalTeam.txt").lower().split("\n")
+        national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
+        reverse =  False
+        S.driver.get(f"{all_url[posTeam]}calendrier/#tabPlayed")
+        
+        matchs_url = WebDriverWait(S.driver,10).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, "matchFull__link")))
+
+        matchs_team_name = WebDriverWait(S.driver,10).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, "matchFull__teams")))
+        
+
+        matchs_team_name = WebDriverWait(S.driver,10).until(
+        EC.presence_of_all_elements_located((By.CLASS_NAME, "matchFull__teams")))
+
+
+        index = 0
+        skipSearch = False
+        for url , name in zip(matchs_url,matchs_team_name):
+            if team2.lower() in name.text.lower().replace("-"," "):
+                skipSearch = True
+                skipSearch = True
+                try:
+                    matchs_url[index].click()
+                except:
+                    pass
+                time.sleep(5)
+                break
+            index += 1
+        
+        if skipSearch is False:
+            S.driver.get(f"{all_url[posTeam]}calendrier")            
+            matchs_url = WebDriverWait(S.driver,15).until(
+            EC.presence_of_all_elements_located((By.CLASS_NAME, "matchFull__link")))
+
+            matchs_team_name = WebDriverWait(S.driver,15).until(
+            EC.presence_of_all_elements_located((By.CLASS_NAME, "matchFull__teams")))
+
+            
+
+            index = 0
+            skipSearch = False
+            for url , name in zip(matchs_url,matchs_team_name):
+                if team2.lower() in name.text.lower().replace("-"," "):
+                    skipSearch = True
+                    try:
+                        matchs_url[index].click()
+                    except:
+                        pass
+                    break
+                index += 1
+        
+        
+        try:
+            t1_name = WebDriverWait(S.driver,5).until(
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[3]/div/div[2]/div[2]/div/a[1]/span[2]")))
+        except:
+            t1_name = WebDriverWait(S.driver,5).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "scoreboard__teamName")))
+            
+        all_game_url = print_file_info("all_game_url.txt").lower().split("\n")
+        if S.driver.current_url.lower() not in all_game_url:
+            write_into_file("all_game_url.txt",S.driver.current_url+"\n")
+
+        write_into_file("recent_game_url.txt",S.driver.current_url+"\n")
+        if team.replace("-"," ").strip().lower() == t1_name.text.replace("-"," ").strip().lower():
+            reverse = True
+        
+        try:
+            element = WebDriverWait(S.driver,2).until(
+            EC.presence_of_all_elements_located((By.CLASS_NAME, "verticalPercentageBar__legend")))
+        except:
+            return 0
+
+        nb_win = int(element[0].text.split(" ")[0])
+        nb_draw = int(element[1].text.split(" ")[0])
+        nb_loose = int(element[2].text.split(" ")[0])
+    
+        
+        total = nb_win + nb_draw + nb_loose
+        nb_win = nb_win + nb_draw/2
+        nb_loose = nb_loose + nb_draw/2
+        try:
+            pourcent_win = (nb_win/total)*100
+        except:
+            pourcent_win = 1
+        
+        try:
+            pourcent_loose = (nb_loose/total)*100
+        except:
+            pourcent_loose = 1
+        # print(nb_win,pourcent_win)
+        # print(nb_loose,pourcent_loose)
+        
+        if (pourcent_win < 60 and pourcent_win > 40) or (pourcent_loose < 60 and pourcent_loose > 40):
+            return 0
+        
+        if nb_win == 0:
+            return 20
+        
+        if nb_loose == 0:
+            return -20
+        
+        # 1.5 to 100
+        # 5% to 20%
+        percent_start = 5
+        if pourcent_loose < pourcent_win:
+            pourcent_win = (nb_win/total)*100
+            pourcent_loose = (nb_loose/total)*100
+            if reverse == False:
+                return  - (percent_start + ((pourcent_win - 60)*0.375))
+            
+            return  (percent_start + ((pourcent_win - 60)*0.375))
+        else:
+            pourcent_win = (nb_win/total)*100
+            pourcent_loose = (nb_loose/total)*100
+            if reverse == False:
+                return  (percent_start + ((pourcent_loose - 60)*0.375))        
+            return  -(percent_start + ((pourcent_loose - 60)*0.375))        
+    except:
+        print(f"flopppp {team},{team2} {posTeam}")
+        import traceback
+        traceback.print_exc()
+        return 0
+
 
 def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20,National=False):
     
@@ -526,10 +667,7 @@ def Position_Of_A_Team_On_Its_League(S,team,national=False):
     try:
        S.driver.get(data.all_league_url[x])
     except:
-       time.sleep(10)
-       S.driver.refresh()
-       time.sleep(20)
-       S.driver.get(data.all_league_url[x])
+        return -999
     team = team.lower()
     accept_cookie(S)
     for i in range(1,40):
@@ -549,14 +687,12 @@ def convert_nb_to_100(nb,len_all_nb):
 def number_of_team_on_a_league(S,team):
     data = teamData()
     try:
+
         x = pos_league_team(team)
         try:
             S.driver.get(data.all_league_url[x])
         except:
-            time.sleep(10)
-            S.driver.refresh()
-            time.sleep(20)
-            S.driver.get(data.all_league_url[x])
+            return -1
         team = team.lower()
         nb = 0
         for i in range(1,40):
@@ -565,11 +701,12 @@ def number_of_team_on_a_league(S,team):
                 EC.presence_of_element_located((By.XPATH, f"/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{i}]/td[2]")))
                 nb=nb+1
             except:
-                pass
+                return nb
 
+        
         return nb
     except:
-        return 0
+        return -1
 def get_team_of_a_league(S,nb):
     data = teamData()
     S.driver.get(data.all_league_url[nb])
@@ -626,13 +763,6 @@ def list_of_team_league(S,url):
 
 def add_new_team(S,url):
     S.driver.get(url)
-    
-    time.sleep(3)
-    accept_cookie(S)
-
-    write_into_file("teamUrl.txt"," "+"\n")
-    write_into_file("allteam.txt"," "+"\n")
-    print(" ")
     team_url_data = print_file_info("teamUrl.txt").lower().split("\n")
     all_team_url_data = print_file_info("allteam.txt").lower().split("\n")
     
@@ -642,12 +772,14 @@ def add_new_team(S,url):
                 element = WebDriverWait(S.driver,5).until(
                 EC.presence_of_element_located((By.XPATH, f"/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/table/tbody/tr[{str(i)}]/td[2]/a")))
             except:
+
                 return
             if (element.text.replace(" ","-").lower() not in all_team_url_data):
                 print(element.text)
                 write_into_file("allteam.txt",element.text.replace(" ","-")+"\n")
                 
-                print(all_team_url_data.index(element.text.replace(" ","-").lower()))
+                # print(all_team_url_data.index(element.text.replace(" ","-").lower()))
+                # time.sleep(3000)
                 element.click()
 
                 current_url = S.driver.current_url
@@ -661,7 +793,8 @@ def add_new_team(S,url):
         except:
             #import traceback
             #traceback.print_exc()
-            return
+            
+            pass
 
 def pos_league_team(team):
     data = teamData()
@@ -712,6 +845,8 @@ def get_starting_xi_of_a_team(S,team_url,national=False):
             S.driver.get(team_url.replace("/calendrier","")+"/effectif/"+"#tabMainFormation")
         else:
             S.driver.get(f"{team_url}effectif/#tabMainFormation")
+        
+        time.sleep(1)
         players = WebDriverWait(S.driver,5).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, "matchTeamPlayer__name")))
         
@@ -779,12 +914,12 @@ def get_unavaible_player_of_a_team(S,team_url,national=False):
         list_of_players = list(set(list_of_players))
         return list_of_players    
     except:
-
         return []
 
 def goal_scored_on_league(S,team_url):
     try:
         S.driver.get(f"{team_url}stats")
+        time.sleep(2)
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[9]/div[2]/div/div[1]/div/span[1]/span[1]")))
         return int(element.text.split("#")[1])
@@ -793,7 +928,6 @@ def goal_scored_on_league(S,team_url):
 
 def goal_conceded_on_league(S,team_url):
     try:
-        S.driver.get(f"{team_url}stats")
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[14]/div[2]/div/div/div/span[1]/span[1]")))
         return int(element.text.split("#")[1])
@@ -802,7 +936,6 @@ def goal_conceded_on_league(S,team_url):
 
 def target_shot_on_league(S,team_url):
     try:
-        S.driver.get(f"{team_url}stats")
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[10]/div[2]/div/div[1]/div/span[1]/span[1]")))
         return int(element.text.split("#")[1])
@@ -811,7 +944,6 @@ def target_shot_on_league(S,team_url):
 
 def dribble_on_league(S,team_url):
     try:
-        S.driver.get(f"{team_url}stats")
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[10]/div[2]/div/div[2]/div/span[1]/span[1]")))
         return int(element.text.split("#")[1])
@@ -820,7 +952,6 @@ def dribble_on_league(S,team_url):
 
 def possession_on_league(S,team_url):
     try:
-        S.driver.get(f"{team_url}stats")
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[11]/div[2]/div/div[1]/div/span[1]/span[1]")))
         return int(element.text.split("#")[1])
@@ -829,7 +960,6 @@ def possession_on_league(S,team_url):
 
 def passing_accuracy_on_league(S,team_url):
     try:
-        S.driver.get(f"{team_url}stats")
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[11]/div[2]/div/div[2]/div/span[1]/span[1]")))
         return int(element.text.split("#")[1])
@@ -838,7 +968,6 @@ def passing_accuracy_on_league(S,team_url):
 
 def center_accuracy_on_league(S,team_url):
     try:
-        S.driver.get(f"{team_url}stats")
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[11]/div[2]/div/div[3]/div/span[1]/span[1]")))
         return int(element.text.split("#")[1])
@@ -847,7 +976,6 @@ def center_accuracy_on_league(S,team_url):
 
 def duel_won_on_league(S,team_url):
     try:
-        S.driver.get(f"{team_url}stats")
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[12]/div[2]/div/div[1]/div/span[1]/span[1]")))
         return int(element.text.split("#")[1])
@@ -856,27 +984,45 @@ def duel_won_on_league(S,team_url):
 
 def good_tackle_on_league(S,team_url):
     try:
-        S.driver.get(f"{team_url}stats")
         element = WebDriverWait(S.driver,5).until(
         EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div/div[1]/div[12]/div[2]/div/div[2]/div/span[1]/span[1]")))
         return int(element.text.split("#")[1])
     except:
         return None
 
-def score_of_team_based_on_stat(S,team_url,team):
+def score_of_team_based_on_stat(S,team_url,team,more_stat=False):
     try:
         data = teamData()
         goal_scored = goal_scored_on_league(S,team_url)
+        if goal_scored == None:
+            return 0
         goal_conced = goal_conceded_on_league(S,team_url)
+        if goal_conced == None:
+            return 0
         target_shot = target_shot_on_league(S,team_url)
+        if target_shot == None:
+            return 0
         dribble = dribble_on_league(S,team_url)
+        if dribble == None:
+            return 0
         possession = possession_on_league(S,team_url)
+        if possession == None:
+            return 0
         passing_accuracy = passing_accuracy_on_league(S,team_url)
+        if passing_accuracy == None:
+            return 0
         center_accuracy = center_accuracy_on_league(S,team_url)
+        if center_accuracy == None:
+            return 0
         good_tackle = good_tackle_on_league(S,team_url)
+        if good_tackle == None:
+            return 0
         duel_won = duel_won_on_league(S,team_url)
+        if duel_won == None:
+            return 0
         nb_of_team_on_league = number_of_team_on_a_league(S,team)
-
+        if nb_of_team_on_league == -1:
+            return 0
         # print(goal_conced)
         # print(goal_scored)
         # print(target_shot)
@@ -887,16 +1033,21 @@ def score_of_team_based_on_stat(S,team_url,team):
         # print(duel_won)
         # print(good_tackle)
         stats_list = [goal_scored * 5,(nb_of_team_on_league - goal_conced) * 5,target_shot*4,dribble*3,possession*3,passing_accuracy * 4,center_accuracy*3,good_tackle * 2,duel_won*2]
-        if None in stats_list:
+        if None in stats_list and more_stat:
+            return 0,0
+        if None in stats_list and more_stat is False:
             return 0
         #print(stats_list)
-        stats_nb = 5 + 5 + 4 + 3 + 4 + 3 + 2 + 2
+        stats_nb = 5 + 5 + 4 + 3 + 3 + 4 + 3 + 2 + 2
         position_based_on_league = int(sum(stats_list)/stats_nb)
         score_based_on_league_and_league_place = int(data.default_score_based_on_the_league[data.pos_league_team] * convert_nb_to_100(data.nb_of_team_on_all_league[data.pos_league_team] - position_based_on_league - 1, data.nb_of_team_on_all_league[data.pos_league_team]))
         # score_based_on_ranking = 10 * 210 + position_based_on_league
         # score_based_on_league_and_league_place = int(score_based_on_ranking * convert_nb_to_100(position_based_on_league , x))
         #print("score_based_on_stat: " , score_based_on_league_and_league_place , team)
-        return score_based_on_league_and_league_place
+        if more_stat:
+            return score_based_on_league_and_league_place , position_based_on_league
+        else:
+            return score_based_on_league_and_league_place
     except:
         return 0
 

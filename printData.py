@@ -20,6 +20,7 @@ reset_file("odds.txt")
 reset_file("league.txt")
 idx = 0
 for i in range(1,6):
+    print("-"*500)
     matches = print_file_info(f"txtFiles/match{i}.txt").split("\n")
     results = print_file_info(f"txtFiles/result{i}.txt").split("\n")
     odds = print_file_info(f"txtFiles/odds{i}.txt").split("\n")
@@ -69,7 +70,8 @@ for i in range(1,6):
         idx+=1
     idx = 0
 
-# print(matches)
-# print(results)
-# print(odds)
-# print(percent)
+    print(matches)
+    print(results)
+    print(odds)
+    print(percent)
+    print(name)

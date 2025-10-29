@@ -60,7 +60,7 @@ Arabie-Saoudite
 RD-du-Congo
 Irlande
 Jordanie
-Macédoine-du-nord
+Macédoine
 Burkina-Faso
 Honduras
 Albanie
@@ -70,7 +70,7 @@ Jamaïque
 Cabo-Verde
 Finlande
 Irlande-du-Nord
-Bosnie-Herzégovine
+Bosnie
 Islande
 Ghana
 Israël

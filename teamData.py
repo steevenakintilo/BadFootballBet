@@ -1137,4 +1137,6 @@ class TeamStat:
 
     team_url = ""
     
-    
+    list_of_player_out = []
+    score_based_on_stat = []
+    ranking_based_on_stat = []

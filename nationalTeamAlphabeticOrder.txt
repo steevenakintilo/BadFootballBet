@@ -24,7 +24,7 @@ Bermudes
 Bhoutan
 Biélorussie
 Bolivie
-Bosnie-Herzégovine
+Bosnie
 Botswana
 Brunei-Darussalam
 Brésil
@@ -117,7 +117,7 @@ Liechtenstein
 Lituanie
 Luxembourg
 Macau
-Macédoine-du-nord
+Macédoine
 Madagascar
 Malaisie
 Malawi

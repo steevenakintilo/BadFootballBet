@@ -5,7 +5,7 @@ from teamData import *
 S = Scraper()
 data = teamData()
 
-def last_X_Games_Result(stats,listOfResult,url="",national=False):
+def last_X_Games_Result(stats,listOfResult,url="",national=False,more_stat=False):
     if len(listOfResult) == 0:
         return -1
     team =  stats.name
@@ -33,7 +33,22 @@ def last_X_Games_Result(stats,listOfResult,url="",national=False):
     stats.last_x_game_win_draw_or_loose_away = []
     stats.last_x_game_win_draw_or_loose_home = []
     stats.starting_xi = []
-    
+
+
+    if more_stat:
+        Se = Scraper()
+        reset_file("ckk.txt")
+        Se.driver.get("https://www.footmercato.net/club/real-madrid/")
+        time.sleep(2)
+        accept_cookie(Se)
+
+        stats.list_of_player_out = []
+        stats.score_based_on_stat = []
+        stats.ranking_based_on_stat = []
+        stats.starting_xi = get_starting_xi_of_a_team(Se,url,national)
+        stats.list_of_player_out = get_unavaible_player_of_a_team(Se,url,national)
+        if national:
+            stats.score_based_on_stat , stats.ranking_based_on_stat = score_of_team_based_on_stat(Se,url,team.lower(),True)
     for result in listOfResult:
         result = result.split()
         #print("res " , result)
@@ -221,18 +236,7 @@ def last_X_Games_Result(stats,listOfResult,url="",national=False):
     stats.loose_rate_percent = int((loose/totalOfGame) * 100)
     stats.nb_of_goal_scored_per_match = round(float(stats.nb_of_goal_scored/stats.nb_of_game),1)
     stats.nb_of_goal_conceded_per_match = round(float(stats.nb_of_goal_conceded/stats.nb_of_game),1)
-    
-    if national:
-        try:
-            stats.starting_xi = print_file_info("starting_xi_national_team.txt").lower().split("\n")[print_file_info("nationalTeam.txt").lower().split("\n").index(stats.name)]
-        except:
-            stats.starting_xi = [None]
-    else:
-        try:
-            stats.starting_xi = print_file_info("starting_xi_league_team.txt").lower().split("\n")[print_file_info("allteam.txt").lower().split("\n").index(stats.name)]
-        except:
-            stats.starting_xi = [None]
-        
+            
     stats.score = get_score_based_on_the_league(stats.name,national)
     if stats.nb_of_game_away > 0:
         stats.win_rate_percent_away = int((stats.nb_of_win_away/stats.nb_of_game_away) * 100)
@@ -256,9 +260,21 @@ def print_all_data(stats,national=False):
     if national == False:
         print(f"Position in the League: {stats.pos_on_the_league}")
         print(f"League of the Team: {stats.league_of_the_team}")
+        if stats.score_based_on_stat != 0:
+            print(f"Score based on stat on the league: {stats.score_based_on_stat}")
+            print(f"Ranking based on stat on the league: {stats.ranking_based_on_stat}")
+
+
     else:
         print("Current country ranking: " , stats.pos_on_the_league + 1 , "/210")
     print(f"Starting XI: {stats.starting_xi}")
+    print(f"List of player out: {stats.list_of_player_out}")
+    
+    stats.ranking_based_on_stat = []
+    stats.list_of_player_out = get_unavaible_player_of_a_team(S,stats.team_url,national)
+    if national:
+        stats.score_based_on_stat , stats.ranking_based_on_stat = score_of_team_based_on_stat(S,stats.team_url,team.lower(),True)
+
     print(f"Last {len(stats.last_x_game_list)} Games: {stats.last_x_game_list}")
     print(f"Last X Game Win Draw or Loose: {stats.last_x_game_win_draw_or_loose}")
     print(f"Last X Game League or Not: {stats.last_x_game_list_league_or_not}")
@@ -407,6 +423,26 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20,national=False):
             
 
     score_based_on_league_and_league_place = get_score_based_on_the_league(statsT.name,national)
+    skip_compute = False
+    if skip_compute:
+        finalScore = int(score_based_on_league_and_league_place)
+
+        if national is False:
+            team_url = league_team_list_url[league_team_list.index(statsT.name.lower())]
+            stat_score = score_of_team_based_on_stat(S,team_url,team)
+            
+            if stat_score > 2500:
+                if finalScore < 2500:
+                    finalScore = score_based_on_league_and_league_place
+                
+                finalScore = int((finalScore + stat_score)/2)
+            
+        #print("Score basique " , score_based_on_league_and_league_place)
+        if finalScore < 0:
+            return score_based_on_league_and_league_place - abs(finalScore)
+        else:
+            return int((score_based_on_league_and_league_place + finalScore)/2)
+
     allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
     if national == False:
         team_pos = allTeamTxt.index(statsT.name.lower())
@@ -563,13 +599,14 @@ def get_the_score_of_a_team(team,nbOfGameToAnalyze=20,national=False):
         if stat_score > 2500:
             if finalScore < 2500:
                 finalScore = score_based_on_league_and_league_place
+            
             finalScore = int((finalScore + stat_score)/2)
         
     #print("Score basique " , score_based_on_league_and_league_place)
     if finalScore < 0:
         return score_based_on_league_and_league_place - abs(finalScore)
     else:
-        return score_based_on_league_and_league_place + finalScore
+        return int((score_based_on_league_and_league_place + finalScore)/2)
 
     
 def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,National=False,coutry_rank=0):
@@ -610,7 +647,10 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
         allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
         team_pos = allTeamTxt.index(statsTeam.name.lower())
         urlOfTeam = get_url_of_a_team(team_pos)
-        last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos,nbOfGameToAnalyze),urlOfTeam)
+        if nbOfGameToAnalyze == 999 and NoPrint == True:
+            last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos,nbOfGameToAnalyze),urlOfTeam,False,True)
+        else:
+            last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos,nbOfGameToAnalyze),urlOfTeam)
     else:
         urlOfTeam = national_team_list_url[national_team_list.index(statsTeam.name)]
         last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,0,nbOfGameToAnalyze,True),urlOfTeam,True)
@@ -651,22 +691,36 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
         facedTeam = teams.split("_")[0]
         if National == False:
             if facedTeam not in data.allTeam:
-                print(f"skiipping {facedTeam} team not in the list of team")
+                #print(f"skiipping {facedTeam} team not in the list of team")
                 index+=1
                 continue
         else:
             if facedTeam.lower() not in national_team_list:
-                print(f"skiipping {facedTeam} team not in the list of team")
+                #print(f"skiipping {facedTeam} team not in the list of team")
                 index+=1
                 continue
         
         #print("faceeeeee " , facedTeam)
         win_rate_nb = 0
-        try:
-            x_team_score = get_the_score_of_a_team(facedTeam,nbOfGameToAnalyze,National)
-        except:        
-            x_team_score = get_score_based_on_the_league(facedTeam,National)
-        
+        fast_result = True
+        if fast_result:
+            try:
+                team_url = league_team_list_url[league_team_list.index(facedTeam.lower())]
+                stat_score = score_of_team_based_on_stat(S,team_url,team)
+                
+                if stat_score > 2500:
+                    x_team_score = int((get_score_based_on_the_league(facedTeam,National)+stat_score)/2)
+                else:
+                    x_team_score = get_score_based_on_the_league(facedTeam,National)
+            except:
+                x_team_score = get_score_based_on_the_league(facedTeam,National)
+                
+        else:
+            try:
+                x_team_score = get_the_score_of_a_team(facedTeam,nbOfGameToAnalyze,National)
+            except:        
+                x_team_score = get_score_based_on_the_league(facedTeam,National)
+            
         if x_team_score < 300:
             if NoPrint:
                 print(f"Error on {facedTeam} strange score {x_team_score}")
@@ -802,6 +856,8 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
             score+=finalScore
         if NoPrint == True:
             print(f"Score de base du {team}: {score_based_on_league_and_league_place} , Score actuel du {team}: {score} et de {facedTeam}: {x_team_score}" , f" result: {statsTeam.last_x_game_win_draw_or_loose[index]} is oppenent weaker ? {teamScore < score_based_on_league_and_league_place}")
+        #print(f"Base score of {team}: {score_based_on_league_and_league_place}, current score of {team}: {score}, and of {facedTeam}: {x_team_score}", f"result: {statsTeam.last_x_game_win_draw_or_loose[index]} — is the opponent weaker? {teamScore < score_based_on_league_and_league_place}")
+
         index+=1
     if NoPrint == True:
         print(f"Score final de  {team} : {score}")
@@ -811,7 +867,10 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
         stat_score = score_of_team_based_on_stat(S,team_url,team)
         if stat_score < 2500:
             return score
+        
+        
         return_score = (score + stat_score)/2
+
         return int(return_score)
     else:
         return score    
@@ -928,6 +987,7 @@ def player_out_from_starting_xi(starting_xi,player_out):
     
     
 def team_vs_team(team1,team2,nbOfGameToAnalyze,national=False):
+    start = time.time()
     national_team_list = print_file_info("nationalTeam.txt").split("\n")
     national_team_list_in_alphabetic_order = print_file_info("nationalTeamAlphabeticOrder.txt").split("\n")
 
@@ -937,6 +997,17 @@ def team_vs_team(team1,team2,nbOfGameToAnalyze,national=False):
     else:
         x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False)
         y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False)
+    
+    if national == False:
+        league_team_list = print_file_info("allteam.txt").lower().split("\n")
+        league_team_list_url = print_file_info("teamUrl.txt").lower().split("\n")
+
+        head_to_head_score = get_head_to_head_result_of_two_teams(S,league_team_list.index(team1.lower()),team1.lower(),team2.lower())
+        if head_to_head_score != 0:
+            if head_to_head_score < 0:
+                x = int(x * (1 - (abs(head_to_head_score)/100)))
+            else:
+                x = int(x * (1 + (abs(head_to_head_score)/100)))
     
     score_of_team1 = abs(x)
     if x > 0 and y < 0 :
@@ -1047,6 +1118,8 @@ def team_vs_team(team1,team2,nbOfGameToAnalyze,national=False):
             print(f"{team2} have a win ratio a little bit higher than {team1} but the most likely outcome is a draw")
         print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
         print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
+    end = time.time()
+    print(end - start)
 
 reset_file("ckk.txt")
 choose = input(f"1. National Team \n2. League team \n3. Exit\n:")

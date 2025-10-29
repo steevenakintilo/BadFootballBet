@@ -1,4 +1,4 @@
-from scrapData import add_new_team , Scraper , teamData , get_national_team_list , get_team_of_a_league, get_url_of_national_team
+from scrapData import add_new_team , Scraper , teamData , get_national_team_list , get_team_of_a_league, get_url_of_national_team , accept_cookie
 
 from printData import write_into_file , reset_file , print_file_info
 import time
@@ -85,10 +85,10 @@ def update_team():
 
 def add_new_team_to_data():
     print("yooooh")
+    index = 1
     for url in data.all_league_url:
         add_new_team(S,url)
-        time.sleep(5)
-
+        time.sleep(0.1)
 
 def add_national_team():
     get_national_team_list(S)
@@ -97,7 +97,6 @@ def add_national_team_url():
     allTeam = print_file_info("nationalTeam.txt").split("\n")
     allTeamUrlList = []
     for team in allTeam:
-    
         fake,teamUrl = get_url_of_national_team(S,team)
         if fake == True:
             allTeamUrlList.append(teamUrl)
@@ -106,5 +105,10 @@ def add_national_team_url():
             print("Flop: " , team)
     print(allTeamUrlList)
 
-#add_national_team()
-
+S = Scraper()
+data = teamData()
+reset_file("ckk.txt")
+S.driver.get("https://www.footmercato.net/club/real-madrid/")
+time.sleep(2)
+accept_cookie(S)
+add_new_team_to_data()
