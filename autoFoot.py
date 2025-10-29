@@ -526,6 +526,8 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True):
     league_team_list = print_file_info("allteam.txt").lower().split("\n")
     league_team_list_url = print_file_info("teamUrl.txt").lower().split("\n")
     national = False
+    if len(print_file_info("NoPrint.txt")) > 0:
+        NoPrint = True
     if statsTeam.name.lower() in allTeamNational:
         national = True
     if (statsTeam.name not in data.allTeam) and  (statsTeam.name.lower() not in allTeamNational):
@@ -1084,6 +1086,10 @@ def balanced_sublists(lst, n):
 
     return sublists
 
+weebhok = print_file_info("discordWebhookUrl.txt")
+if len(weebhok) < 10:
+    print("You need to create a weebhook and add it into the discordWebhookUrl.txt file to use this mode\nHere is how to create a discord webhook https://www.svix.com/resources/guides/how-to-make-webhook-discord/")
+    quit()
 try:
     time.sleep(5 * int(sys.argv[1]))
 except:
