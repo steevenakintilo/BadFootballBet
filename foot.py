@@ -6,7 +6,8 @@ S = Scraper()
 data = teamData()
 
 def last_X_Games_Result(stats,listOfResult,url="",national=False,more_stat=False):
-    print("Loading wait !!!")
+    if more_stat:
+        print("Loading wait !!!")
     if len(listOfResult) == 0:
         return -1
     team =  stats.name
@@ -35,7 +36,21 @@ def last_X_Games_Result(stats,listOfResult,url="",national=False,more_stat=False
     stats.last_x_game_win_draw_or_loose_home = []
     stats.starting_xi = []
 
-
+    if national:
+        national_team = print_file_info("nationalTeam.txt").lower().split("\n")
+        pos_national = national_team.index(stats.name)
+        national_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
+        
+        Se = Scraper()
+        reset_file("ckk.txt")
+        Se.driver.get("https://www.footmercato.net/club/real-madrid/")
+        time.sleep(2)
+        accept_cookie(Se)
+        stats.list_of_player_out = []
+        stats.score_based_on_stat = []
+        stats.starting_xi = get_starting_xi_of_a_team(Se,national_url[pos_national],national)
+        stats.list_of_player_out = get_unavaible_player_of_a_team(Se,national_url[pos_national],national)
+        
     if more_stat:
         Se = Scraper()
         reset_file("ckk.txt")
@@ -49,9 +64,11 @@ def last_X_Games_Result(stats,listOfResult,url="",national=False,more_stat=False
         stats.starting_xi = get_starting_xi_of_a_team(Se,url,national)
         stats.list_of_player_out = get_unavaible_player_of_a_team(Se,url,national)
         if national is False:
-            stats.score_based_on_stat , stats.ranking_based_on_stat = score_of_team_based_on_stat(Se,url,team.lower(),True)
-            stats.number_of_team_on_the_league = number_of_team_on_a_league(Se,team)
-            
+            try:
+                stats.score_based_on_stat , stats.ranking_based_on_stat = score_of_team_based_on_stat(Se,url,team.lower(),True)
+                stats.number_of_team_on_the_league = number_of_team_on_a_league(Se,team)
+            except:
+                pass        
     for result in listOfResult:
         result = result.split()
         #print("res " , result)
@@ -257,8 +274,22 @@ def last_X_Games_Result(stats,listOfResult,url="",national=False,more_stat=False
     return
 
 def print_all_data(stats,national=False):
+    national_team = print_file_info("nationalTeam.txt").lower().split("\n")
+    national_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
+    
+    if stats.name.lower() in national_team:
+        national = True
+        pos_national = national_team.index(stats.name)
+
     print(f"Team Name: {stats.name}")
-    print(f"Team url: {stats.team_url}")
+    if national:
+        print("gregreg " , pos_national)
+        try:
+            print(f"Team url: {national_url[pos_national]}")
+        except:
+            pass
+    else:
+        print(f"Team url: {stats.team_url}")    
     print(f"Team default score {stats.score}")
     if national == False:
         print(f"Position in the League: {stats.pos_on_the_league}/{stats.number_of_team_on_the_league}")
@@ -648,7 +679,11 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
         data.pos_league_team = pos_league_team(statsTeam.name)
         statsTeam.league_of_the_team = data.all_league_name[data.pos_league_team]
         allTeamTxt = print_file_info("allteam.txt").lower().split("\n")
-        team_pos = allTeamTxt.index(statsTeam.name.lower())
+        try:
+            team_pos = allTeamTxt.index(statsTeam.name.lower())
+        except:
+            print(f"{team} error bye bye")
+            exit()
         urlOfTeam = get_url_of_a_team(team_pos)
         if nbOfGameToAnalyze == 999 and NoPrint == True:
             last_X_Games_Result(statsTeam,Get_Last_X_Games_Result(S,statsTeam.name,team_pos,nbOfGameToAnalyze),urlOfTeam,False,True)
@@ -989,7 +1024,7 @@ def player_out_from_starting_xi(starting_xi,player_out):
     return player_out_from_the_starting_xi_list
     
     
-def team_vs_team(team1,team2,nbOfGameToAnalyze,national=False):
+def team_vs_team(team1,team2,nbOfGameToAnalyze,national=False,random_game=False):
     start = time.time()
     national_team_list = print_file_info("nationalTeam.txt").split("\n")
     national_team_list_in_alphabetic_order = print_file_info("nationalTeamAlphabeticOrder.txt").split("\n")
@@ -998,9 +1033,14 @@ def team_vs_team(team1,team2,nbOfGameToAnalyze,national=False):
         x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False,True,national_team_list.index(team1))
         y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False,True,national_team_list.index(team2))
     else:
-        x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False)
-        y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False)
-    
+        if random_game:
+            x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),True)
+            y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),True)
+
+        else:
+            x = get_the_score_of_the_main_team(team1,int(nbOfGameToAnalyze),False)
+            y = get_the_score_of_the_main_team(team2,int(nbOfGameToAnalyze),False)
+        
     if national == False:
         league_team_list = print_file_info("allteam.txt").lower().split("\n")
         league_team_list_url = print_file_info("teamUrl.txt").lower().split("\n")
@@ -1122,7 +1162,7 @@ def team_vs_team(team1,team2,nbOfGameToAnalyze,national=False):
         print(f"{team2} have a win rate of {calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2)} against {team1}")
         print(f"{team1} have a win rate of {calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2)} against {team2}")
     end = time.time()
-    print(end - start)
+    #print(end - start)
 
 reset_file("ckk.txt")
 choose = input(f"1. National Team \n2. League team \n3. Exit\n:")
@@ -1134,10 +1174,11 @@ if int(choose) == 1:
     national_team_list = print_file_info("nationalTeam.txt").split("\n")
     national_team_list_in_alphabetic_order = print_file_info("nationalTeamAlphabeticOrder.txt").split("\n")
     
-    chooose = input(f"1. Team VS Team \n2. Stat of a team \n3. Exit\n:")
-    check_data_entered_is_good(chooose,3)
+    chooose = input(f"1. Team VS Team \n2. Random Team VS Random Team \n3. Stat of a team\n4. Stat of a random team\n5. Exit\n:")
 
-    if int(chooose) == 2:
+    check_data_entered_is_good(chooose,5)
+
+    if int(chooose) == 3:
         for i in range(len(national_team_list_in_alphabetic_order)):
             print(f"{i + 1} {national_team_list_in_alphabetic_order[i]}")
         
@@ -1145,6 +1186,11 @@ if int(choose) == 1:
         
         team1 = national_team_list_in_alphabetic_order[team_nb] 
         get_the_score_of_the_main_team(team1,999,True,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
+
+    if int(chooose) == 4:
+        x = randint(0,len(national_team_list_in_alphabetic_order))
+        team1 = national_team_list_in_alphabetic_order[x] 
+        get_the_score_of_the_main_team(team1,999,True,True,national_team_list.index(national_team_list_in_alphabetic_order[x]))
 
     if int(chooose) == 1:
         for i in range(len(national_team_list_in_alphabetic_order)):
@@ -1165,14 +1211,47 @@ if int(choose) == 1:
         nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
         team_vs_team(team1,team2,nbOfGameToAnalyze,True)
     
-elif int(choose) == 2:
-    chooose = input(f"1. Team VS Team \n2. Stat of a team \n3. Exit\n:")
-    check_data_entered_is_good(chooose,3)
-
     if int(chooose) == 2:
+        x1 , x2 = randint(0,len(national_team_list)) , randint(0,len(national_team_list))
+        if x1 == x2 and x1 != 0:
+            x2-=1
+        if x1 == x2 and x1 == 0:
+            x2+=1
+        team1 = national_team_list_in_alphabetic_order[x1] 
+        #get_the_score_of_the_main_team(team1,20,False,True,national_team_list.index(national_team_list_in_alphabetic_order[team_nb]))
+        
+        
+        team2 = national_team_list_in_alphabetic_order[x2]
+        nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
+        team_vs_team(team1,team2,nbOfGameToAnalyze,True)
+    
+elif int(choose) == 2:
+    league_team_list = print_file_info("allteam.txt").lower().split("\n")
+    chooose = input(f"1. Team VS Team \n2. Random Team VS Random Team \n3. Stat of a team\n4. Stat of a random team\n5. Exit\n:")
+    check_data_entered_is_good(chooose,5)
+    x1 , x2 = randint(0,len(league_team_list)) , randint(0,len(league_team_list))
+    if x1 == x2 and x1 != 0:
+        x2-=1
+    if x1 == x2 and x1 == 0:
+        x2+=1
+    
+    if int(chooose) == 3:
         team1 = choose_a_team(1).replace(" ","-")
         get_the_score_of_the_main_team(team1,999,True)
+    
+    elif int(chooose) == 4:
+        get_the_score_of_the_main_team(league_team_list[randint(0,len(league_team_list))],999,True)
 
+    elif int(chooose) == 2:
+        team1 = league_team_list[x1]
+        team2 = league_team_list[x2]
+
+        nbOfGameToAnalyze = input("How many games to you want the bot to analyze? (Min 1 Max 20)" + "\n" + "The bigger the number is the better the analyze will be:")
+        check_data_entered_is_good(nbOfGameToAnalyze,20)
+        #nbOfGameToAnalyze = 20
+        print(f"{team1} vs {team2}")
+        team_vs_team(team1,team2,nbOfGameToAnalyze,False,True)
+    
     elif int(chooose) == 1:
         team1 = choose_a_team(1).replace(" ","-")
         team2 = choose_a_team(2).replace(" ","-")
