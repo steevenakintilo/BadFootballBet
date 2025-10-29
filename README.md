@@ -33,22 +33,45 @@ To start the bot just do
 This bot have 2 modes: 
 - "Stat of team" that will get the recent stats of a team depending on it's 20 last games.
 - "Team vs Team" this mode will try to calculate the score of a Team A and a Team B based on it's last X recent games and will at the end tell the result between Team A and Team B Loose,Draw or Win.
-  To get the best score possible the bot will give a default score of a team based on the power of it's league (for exemple a Premier League team will get the best score because it's the best league in the world) and it's position on the league then it will look into the last X games of the team and will also look into the last X games of each oppenents and will calculate a score based on several factor like: win, loose, home game, away game or if the team beaten was stronger...  then at the end it will get a final score and will reapeat the process for team B.
-  Depending on the score of both team it will either display loose draw or win.
+- "Random Stat of team" that will get the recent stats of a random team depending on it's 20 last games.
+- "Random Team vs Random Team" this mode will try to calculate the score of a random Team A and a random Team B based on it's last X recent games and will at the end tell the result between Team A and Team B Loose,Draw or Win.
+
+  To get the best score possible the bot will give a default score of a team based on the power of it's league (for exemple a Premier League team will get the best score because it's the best league in the world) and it's position on the league then it will look into the last X games of the team and will also look into the last stat of each oppenents and calculate a score based on several factor like: win, loose, home game, away game or if the team beaten was stronger...
+
+Then at the end it will get a final score and will reapeat the process for team B.
+
+After that it will look at head to head if enough games where played between the 2 teams and adjust both score
+
+To end it will look at all the player out on both team and adjust both team score based on that.
+
+Depending on the score of both team it will either display loose draw or win.
+
 It works the same with the national team mode but instead of club league it's taking national team.
 
 ## How to use it ?
 
-To use just do python foot.py then it will displayay a menu with three choices
+To use just do python foot.py then it will displayay a menu with 2 choices
+<img width="728" height="143" alt="image" src="https://github.com/user-attachments/assets/0cf8353a-12dd-44de-9b69-78101e395642" />
+If you choose 1 it will display game for National team
+<img width="729" height="308" alt="image" src="https://github.com/user-attachments/assets/226fe7cf-7f39-46c5-9069-212135458416" />
+
+If you choose 2 it will display game for League team
+<img width="719" height="285" alt="image" src="https://github.com/user-attachments/assets/83b7e474-932e-4e99-8b4a-2a68812e4cb1" />
+
+
 ![image](https://github.com/user-attachments/assets/962d1e41-7660-4699-aa84-d5f89cf3aa59)
-If you choose 1 it will display the list of available country then you will need to choose ![image](https://github.com/user-attachments/assets/af4e3b1b-943d-4578-b578-51642d74b24d)
+Then if you choose 1 it will display the list of available country then you will need to choose ![image](https://github.com/user-attachments/assets/af4e3b1b-943d-4578-b578-51642d74b24d)
 Then depending of your choice it will display all the team of the country ![image](https://github.com/user-attachments/assets/5cb4dac9-296c-4acf-a27b-7631770ab7a3)
+
+If you choose 2 it will do the same as 1 but with random team
 
 And after it will do the same process for team B and then it will start to compare both teams and give you the result at the end.
 
-If you choose 2 it will ask you the same things as choice 1 but for one team only then at the end will give you the stats of the team.
+If you choose 3 it will ask you the same things as choice 1 but for one team only then at the end will give you the stats of the team.
 
-If you choose 3 it will just quit the program
+If you choose 4 it will ask you the same things as choice 1 but for one random team only then at the end will give you the stats of the team.
+
+If you choose 5 it will just quit the program
 
 # Auto Mode
 Before using it make sure to put your webhook url into discordWebhookUrl.txt file
@@ -101,7 +124,9 @@ Woring a 2.0 version to get even better result here are the things I want to add
 
 -Injuries ✅
 
--Relative form (last 8 games performances)
+-Relative form (last 8 games performances) ✅
+
+-Head to Head between 2 teams ✅
 
 -Big chances & Big chances missed
 
