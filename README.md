@@ -50,16 +50,15 @@ It works the same with the national team mode but instead of club league it's ta
 
 ## How to use it ?
 
-To use just do python foot.py then it will displayay a menu with 2 choices
+To use just do python foot.py then it will displayay a menu with 2 choices:
 <img width="728" height="143" alt="image" src="https://github.com/user-attachments/assets/0cf8353a-12dd-44de-9b69-78101e395642" />
+
 If you choose 1 it will display game for National team
 <img width="729" height="308" alt="image" src="https://github.com/user-attachments/assets/226fe7cf-7f39-46c5-9069-212135458416" />
 
 If you choose 2 it will display game for League team
 <img width="719" height="285" alt="image" src="https://github.com/user-attachments/assets/83b7e474-932e-4e99-8b4a-2a68812e4cb1" />
 
-
-![image](https://github.com/user-attachments/assets/962d1e41-7660-4699-aa84-d5f89cf3aa59)
 Then if you choose 1 it will display the list of available country then you will need to choose ![image](https://github.com/user-attachments/assets/af4e3b1b-943d-4578-b578-51642d74b24d)
 Then depending of your choice it will display all the team of the country ![image](https://github.com/user-attachments/assets/5cb4dac9-296c-4acf-a27b-7631770ab7a3)
 
