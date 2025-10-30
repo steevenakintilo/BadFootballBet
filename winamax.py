@@ -45,18 +45,34 @@ class Scrapper:
         self.driver.set_page_load_timeout(15)
 
 
+def print_file_info(path):
+    f = open(path, 'r',encoding="utf-8")
+    content = f.read()
+    f.close()
+    return(content)
 
 def get_oods_of_a_match(team1,team2,result,prono=False):
     try:
         S = Scrapper()
-        team1 = team1.replace("-" ," ")
-        team2 = team2.replace("-" ," ")
-        
+        team1 = team1.lower().replace("-" ," ")
+        team2 = team2.lower().replace("-" ," ")
+        result = result.lower().replace("-"," ")
         team_to_rename = {"psg":"Paris SG",
         "calcio padova":"padoue",
         "husa":"Hassania Agadir",
         "wydad":"Wydad Casablanca",
-        "raja":"Raja Casablanca"}
+        "raja":"Raja Casablanca",
+        "fateh":"Al fateh",
+        "khenchela":"USM Khenchela",
+        "ahli ":"Al Ahli SC",
+        "riyadh":"Al Riyadh",
+        "young boys":"Young Boys Berne",
+        "gc zurich":"Grasshopper Zurich",
+        "pise":"Pisa",
+        "olympic safi":"OC Safi",
+        "fateh":"Al Fateh"
+        
+        }
 
         try:
             team1 = team_to_rename[team1].lower()
@@ -126,15 +142,19 @@ def get_oods_of_a_match(team1,team2,result,prono=False):
             
             if result.lower() in str(right_result).lower().replace("-"," "):
                 S.driver.close()
-                return right_result[1]    
+                return right_result[1]
             S.driver.close()
+            if f"Fail {team1} VS {team2}" not in print_file_info("rename_team_for_odds.txt").split("\n"):
+                write_into_file("rename_team_for_odds.txt",f"Fail {team1} VS {team2}"+"\n")
+        
             return f"Fail {team1} VS {team2}"
         
         data = [left_result,middle_result,right_result]
         sorted_data = sorted(data, key=lambda x: float(x[1].replace(',', '.')))
         S.driver.close()
-        return sorted_data[0][0]    
-    except:
+        return sorted_data[0][0] , sorted_data[0][1] 
+    except:            
         S.driver.close()
-        write_into_file("rename_team_for_odds.txt",f"Fail {team1} VS {team2}"+"\n")
+        if f"Fail {team1} VS {team2}" not in print_file_info("rename_team_for_odds.txt").split("\n"):
+            write_into_file("rename_team_for_odds.txt",f"Fail {team1} VS {team2}"+"\n")
         return f"Fail {team1} VS {team2}"

@@ -656,6 +656,9 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
     statsTeam.name = team
     statsTeam.name = statsTeam.name.lower()
     #NoPrint = True
+
+    if len(print_file_info("NoPrint.txt")) > 0:
+        NoPrint = True
     national_team_list = print_file_info("nationalTeamAlphabeticOrder.txt").lower().split("\n")
     national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
     
@@ -895,8 +898,8 @@ def get_the_score_of_the_main_team(team,nbOfGameToAnalyze=20,NoPrint=True,Nation
         else:
             score+=finalScore
         if NoPrint == True:
-            print(f"Score de base du {team}: {score_based_on_league_and_league_place} , Score actuel du {team}: {score} et de {facedTeam}: {x_team_score}" , f" result: {statsTeam.last_x_game_win_draw_or_loose[index]} is oppenent weaker ? {teamScore < score_based_on_league_and_league_place}")
-        #print(f"Base score of {team}: {score_based_on_league_and_league_place}, current score of {team}: {score}, and of {facedTeam}: {x_team_score}", f"result: {statsTeam.last_x_game_win_draw_or_loose[index]} — is the opponent weaker? {teamScore < score_based_on_league_and_league_place}")
+            #print(f"Score de base du {team}: {score_based_on_league_and_league_place} , Score actuel du {team}: {score} et de {facedTeam}: {x_team_score}" , f" result: {statsTeam.last_x_game_win_draw_or_loose[index]} is oppenent weaker ? {teamScore < score_based_on_league_and_league_place}")
+            print(f"Base score of {team}: {score_based_on_league_and_league_place}, current score of {team}: {score}, and of {facedTeam}: {x_team_score}", f"result: {statsTeam.last_x_game_win_draw_or_loose[index]} — is the opponent weaker? {teamScore < score_based_on_league_and_league_place}")
 
         index+=1
     if NoPrint == True:

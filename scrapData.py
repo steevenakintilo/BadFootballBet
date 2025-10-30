@@ -345,96 +345,98 @@ def get_head_to_head_result_of_two_teams(S,posTeam,team,team2):
                 return  (percent_start + ((pourcent_loose - 60)*0.375))        
             return  -(percent_start + ((pourcent_loose - 60)*0.375))        
     except:
-        print(f"flopppp {team},{team2} {posTeam}")
-        import traceback
-        traceback.print_exc()
+                    
+        #print(f"flopppp {team},{team2} {posTeam}")
         return 0
 
 
 def Get_Last_X_Games_Result(S,team,posTeam,nbOfGameToAnalyze=20,National=False):
     
-    years = ["2024","2025","2026"]
-    all_url = print_file_info("teamUrl.txt").split("\n")
-    #S.driver.get(all_url[posTeam])
+    try:
+        years = ["2024","2025","2026"]
+        all_url = print_file_info("teamUrl.txt").split("\n")
+        #S.driver.get(all_url[posTeam])
 
-    if National == True:
-        accept_cookie(S)
+        if National == True:
+            accept_cookie(S)
 
-    #time.sleep(5)
-    national_team_list = print_file_info("nationalTeam.txt").lower().split("\n")
-    national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
-    
-    if National == False:
-        S.driver.get(f"{all_url[posTeam]}calendrier/#tabPlayed")
-    else:
-        S.driver.get(f"{national_team_list_url[national_team_list.index(team)]}/#tabPlayed")
-    lastResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/nav/a[2]"
-    
-    calendarXpath = "/html/body/div[3]/div[4]/div/div/nav/ul/li[4]/a"
-
-    tabResultXpath = "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div"
-
-    element = WebDriverWait(S.driver,15).until(
-    EC.presence_of_element_located((By.XPATH, tabResultXpath)))
-
-    listOfResult = []
-    lastXmatch = element.text
-    lastXmatchSplit = lastXmatch.split("\n")
-    index = 1
-    string = ""
-    first = True
-    team = team.lower()
-    change = False
-    
-    for i in range(len(lastXmatchSplit)):
-        if "2022" in lastXmatchSplit[i] or "2023" in lastXmatchSplit[i] or "2024" in lastXmatchSplit[i] or "2025" in lastXmatchSplit[i] or "2026" in lastXmatchSplit[i] or "terminé" in lastXmatchSplit[i].lower() or isSlash(lastXmatchSplit[i].lower()) == True:
-            continue
+        #time.sleep(5)
+        national_team_list = print_file_info("nationalTeam.txt").lower().split("\n")
+        national_team_list_url = print_file_info("nationalTeamUrl.txt").lower().split("\n")
+        
+        if National == False:
+            S.driver.get(f"{all_url[posTeam]}calendrier/#tabPlayed")
         else:
-            if is_num(lastXmatchSplit[i].replace(" ","-")) == False and lastXmatchSplit[i].replace(" ","-") in string:
-                string+= remove_first_two_elem(lastXmatchSplit[i].replace(" ","-")) + " "
-                #print("dzdzd " ,  remove_first_two_elem(lastXmatchSplit[i].replace(" ","-")))
+            S.driver.get(f"{national_team_list_url[national_team_list.index(team)]}/#tabPlayed")
+        lastResultXpath = "/html/body/div[3]/div[5]/div[1]/div[2]/div[2]/nav/a[2]"
+        
+        calendarXpath = "/html/body/div[3]/div[4]/div/div/nav/ul/li[4]/a"
+
+        tabResultXpath = "/html/body/div[4]/div[5]/div[1]/div[2]/div[2]/div"
+
+        element = WebDriverWait(S.driver,15).until(
+        EC.presence_of_element_located((By.XPATH, tabResultXpath)))
+
+        listOfResult = []
+        lastXmatch = element.text
+        lastXmatchSplit = lastXmatch.split("\n")
+        index = 1
+        string = ""
+        first = True
+        team = team.lower()
+        change = False
+        
+        for i in range(len(lastXmatchSplit)):
+            if "2022" in lastXmatchSplit[i] or "2023" in lastXmatchSplit[i] or "2024" in lastXmatchSplit[i] or "2025" in lastXmatchSplit[i] or "2026" in lastXmatchSplit[i] or "terminé" in lastXmatchSplit[i].lower() or isSlash(lastXmatchSplit[i].lower()) == True:
+                continue
             else:
-                string+= lastXmatchSplit[i].replace(" ","-") + " "
-            if index % 4 == 0 and index > 0:
-                checkStr = string.split(" ")
-                notNb = 0
-                lst = []
-                for str in checkStr:
-                    if len(lst) > 4:
-                        lst = []
-                        break
-                    if is_num(str) == False:
-                        notNb+=1
-                        lst.append(str.lower())
-                    else:
-                        notNb = 0
-                    if notNb == 2:
-                        index-=1
-                        change = True
-                    
-                    if notNb == 3:
-                        string = string.lower().replace(lst[0],"",1).replace(lst[1],"",1)
-                        index-=1
-                        change = True
-                    
-                lst = []
-                digit_count = sum(char.isdigit() for char in string.strip().lower())
-                if index == 4 or (change == True and index == 2) and len(string.split()) == 4 and "/" not in string.strip().lower():
-                    #print("on est al " , string.strip().lower())
-                    if checkNum(string.strip().lower()) == True:
-                        listOfResult.append(string.strip().lower())
-                    string = ""
-                    change = False
-                    index = 0
-            if len(listOfResult) >= nbOfGameToAnalyze:
-                break
-            #print("dendex " , index)
-            index+=1
-    if len(listOfResult) == 0:
+                if is_num(lastXmatchSplit[i].replace(" ","-")) == False and lastXmatchSplit[i].replace(" ","-") in string:
+                    string+= remove_first_two_elem(lastXmatchSplit[i].replace(" ","-")) + " "
+                    #print("dzdzd " ,  remove_first_two_elem(lastXmatchSplit[i].replace(" ","-")))
+                else:
+                    string+= lastXmatchSplit[i].replace(" ","-") + " "
+                if index % 4 == 0 and index > 0:
+                    checkStr = string.split(" ")
+                    notNb = 0
+                    lst = []
+                    for str in checkStr:
+                        if len(lst) > 4:
+                            lst = []
+                            break
+                        if is_num(str) == False:
+                            notNb+=1
+                            lst.append(str.lower())
+                        else:
+                            notNb = 0
+                        if notNb == 2:
+                            index-=1
+                            change = True
+                        
+                        if notNb == 3:
+                            string = string.lower().replace(lst[0],"",1).replace(lst[1],"",1)
+                            index-=1
+                            change = True
+                        
+                    lst = []
+                    digit_count = sum(char.isdigit() for char in string.strip().lower())
+                    if index == 4 or (change == True and index == 2) and len(string.split()) == 4 and "/" not in string.strip().lower():
+                        #print("on est al " , string.strip().lower())
+                        if checkNum(string.strip().lower()) == True:
+                            listOfResult.append(string.strip().lower())
+                        string = ""
+                        change = False
+                        index = 0
+                if len(listOfResult) >= nbOfGameToAnalyze:
+                    break
+                #print("dendex " , index)
+                index+=1
+        if len(listOfResult) == 0:
+            return []
+        if len(listOfResult) > 20:
+            listOfResult = listOfResult[0:20]
+        return listOfResult
+    except:
         return []
-    if len(listOfResult) > 20:
-        listOfResult = listOfResult[0:20]
-    return listOfResult
 
 
 def has_Team_Played_since_september(S,team,posTeam):
