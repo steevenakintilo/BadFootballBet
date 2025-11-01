@@ -1072,7 +1072,9 @@ def team_vs_team(team1,team2,nbOfGameToAnalyze,national=False,random_game=False)
     out_power_of_player2 = (out_power2 / 11)
     
     print(f"Score of {team1}: {score_of_team1} , Score of {team2}: {score_of_team2}")
-    
+    if score_of_team1 < 250 or score_of_team2 < 250:
+        print("Error try again")
+        quit()
     try:
         if national is False:
             player_out_team1 = get_unavaible_player_of_a_team(S,print_file_info("teamUrl.txt").lower().split("\n")[print_file_info("allteam.txt").lower().split("\n").index(team1.lower())],False)
