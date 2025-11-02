@@ -903,8 +903,8 @@ def print_result_info(team1,score_of_team1,team2,score_of_team2,idxx):
 
     p1 = str(calc_pourcent_of_win(score_of_team1,score_of_team1+score_of_team2))
     p2 = str(calc_pourcent_of_win(score_of_team2,score_of_team1+score_of_team2))
-    if int(p1) > 90 or int(p2) > 90:
-        return
+    # if int(p1) > 90 or int(p2) > 90:
+    #     return
     league_team_1 = get_team_league(team1)
     league_team_2 = get_team_league(team2)
     
