@@ -178,6 +178,7 @@ def get_match_of_the_day(S):
         #print("-"*200)
         skipMatches = page_text.split("Amicaux Club")
         skipMatches2 = page_text.split("Amicaux (femmes)")
+        skipMatches3 = page_text.split("Serie C")
 
         list_of_matches = []
         error = 0
@@ -197,6 +198,10 @@ def get_match_of_the_day(S):
                     
                     if len(skipMatches2) > 1:
                         if element.text in skipMatches2[1]:
+                            skip = True
+                    
+                    if len(skipMatches3) > 1:
+                        if element.text in skipMatches3[1]:
                             skip = True
                     
                     if ((matches[0].lower() in allTeam and matches[1].lower() in allTeam) or (matches[0].lower() in allTeamNational and matches[1].lower() in allTeamNational)) and skip != True:

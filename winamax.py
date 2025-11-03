@@ -53,7 +53,22 @@ def print_file_info(path):
 
 def get_oods_of_a_match(team1,team2,result,prono=False):
     try:
+
         S = Scrapper()
+        data = teamData()
+
+        for team in data.bolivianTeam:
+            if team.lower().strip().replace("-"," ") == team1.lower().strip().replace("-"," ") or team.lower().strip().replace("-"," ") == team2.lower().strip().replace("-"," "):
+                return "Winamax don't have oods from bolivian team"
+        
+        for team in data.russianTeam:
+            if team.lower().strip().replace("-"," ") == team1.lower().strip().replace("-"," ") or team.lower().strip().replace("-"," ") == team2.lower().strip().replace("-"," "):
+                return "Winamax don't have oods from russian team"
+        
+        for team in data.qatarTeam:
+            if team.lower().strip().replace("-"," ") == team1.lower().strip().replace("-"," ") or team.lower().strip().replace("-"," ") == team2.lower().strip().replace("-"," "):
+                return "Winamax don't have oods from quatar team"
+        
         team1 = team1.lower().replace("-" ," ")
         team2 = team2.lower().replace("-" ," ")
         result = result.lower().replace("-"," ")
@@ -110,13 +125,35 @@ def get_oods_of_a_match(team1,team2,result,prono=False):
         "gak":"Grazer AK",
         "altach":"SCR Altach",
         "juventus":"Juventus Turin",
-        "casa-pia":"Casa Pia AC",
+        "casa pia":"Casa Pia AC",
         "estrela":"CF Estrela Amadora",
         "vitória-sc":"Vitoria Guimaraes",
         "hartberg":"TSV Hartberg",
         "Austria":"Austria Vienne",
         "slobozia":"Unirea Slobozia",
         "argeș":"Argeș Pitești",
+        "atlético mg":"Atlético Mineiro",
+        "kasımpaşa":"Kasimpasa",
+        "modena":"Modène",
+        "groningen":"Groningue",
+        "cadix":"CF Cadiz",
+        "saragosse":"Real Saragosse",
+        "deportivo":"Deportivo La Corogne",
+        "maghreb fès":"MAS Fès",
+        "wydad ac":"Wydad Casablanca",
+        "ir tanger":"Ittihad Tanger",
+        "tijuana":"Club Tijuana",
+        "pumas":"U.N.A.M.",
+        "hermannstadt":"FC Hermannstadt",
+        "oţelul":"SC Otelul Galati",
+        "rapid":"Rapid Bucarest",
+        "u-craiova":"CS Universitatea Craiova",
+        "hamkam":"Ham-Kam",
+        "tromsø":"Tromso",
+        "wac":"Wolfsberger AC",
+        "wsg tirol":"WSG Swarovski Tirol",
+        "salzbourg":"Red Bull Salzbourg",
+        "ried":"SV Ried"
 
         }
 
